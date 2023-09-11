@@ -1,13 +1,15 @@
 (function() {
     'use strict';
 
-    class DeezBox {
+    class Deezbox {
         pusherKey = '54c230647abc0f6ac73d';
         pusherCluster = 'eu';
 
         deezerAppId = '632324';
 
         constructor() {
+            this.getDomNodes();
+
             /*this.pusher = new Pusher(this.pusherKey, {
               cluster: this.pusherCluster
             });
@@ -34,9 +36,13 @@
                 radio: null,
             });*/
         }
+
+        getDomNodes() {
+
+        }
     }
 
-    document.addEventListener('alpine:init', function() {
-        new DeezBox();
+    document.addEventListener('DOMContentLoaded', function() {
+        const db = new Deezbox();
     });
 }());
