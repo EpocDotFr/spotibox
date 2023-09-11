@@ -6,7 +6,6 @@
         pusherCluster = 'eu';
 
         deezerAppId = '632324';
-        deezerSecretKey = '881dcaf57780e1248aa589af44925c04';
 
         constructor() {
             /*this.pusher = new Pusher(this.pusherKey, {
