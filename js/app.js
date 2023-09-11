@@ -8,18 +8,21 @@
         deezerAppId = '632324';
 
         constructor() {
-            this.getDomNodes();
-
             /*this.pusher = new Pusher(this.pusherKey, {
               cluster: this.pusherCluster
             });
 
-            this.pusherChannel = this.pusher.subscribe('deezbox');
+            this.pusherChannel = this.pusher.subscribe('deezbox');*/
 
-            this.deezer = DZ.init({
+            DZ.init({
                 appId: this.deezerAppId,
-                //channelUrl: 'http://developers.deezer.com/examples/channel.php'
-            });*/
+                channelUrl: 'http://localhost:8080/channel.html'
+            });
+
+            DZ.api('/playlist/10919883502', function(response) {
+                console.log(response.tracks);
+                Alpine.store('playlist', response.tracks.data);
+            });
 
             /*Alpine.store('radios', [
                 {
@@ -35,10 +38,6 @@
 
                 radio: null,
             });*/
-        }
-
-        getDomNodes() {
-
         }
     }
 

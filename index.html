@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="/css/app.css">
 </head>
 <body class="p-3">
+    <div id="dz-root"></div>
+
     <header class="fs-1 text-center mb-3">
         <i class="bi bi-disc"></i> <strong>Deez</strong>box
     </header>
@@ -38,13 +40,15 @@
 
             <div class="card">
                 <div class="list-group list-group-flush">
-                    <div class="list-group-item p-0 d-flex flex-row align-items-center">
-                        <div>
-                            <img src="https://e-cdns-images.dzcdn.net/images/cover/57622bc1321abc48013a0920a01227a1/56x56-000000-80-0-0.jpg" class="rounded-start" width="56" height="56">
-                        </div>
-                        <div class="ps-3">
-                            Raising from Ruins • Judas Priest
-                        </div>
+                    <div class="list-group-item p-0 d-flex flex-row align-items-center" x-data>
+                        <template x-for="track in $store.playlist">
+                            <div>
+                                <img :src="track.album.cover_small" class="rounded-start" width="56" height="56">
+                            </div>
+                            <div class="ps-3">
+                                <span x-text="track.title">Title</span> • <span x-text="track.artist.name">Artist</span>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
