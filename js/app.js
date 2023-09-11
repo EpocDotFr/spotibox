@@ -20,7 +20,6 @@
             });
 
             DZ.api('/playlist/10919883502', function(response) {
-                console.log(response.tracks);
                 Alpine.store('playlist', response.tracks.data);
             });
 
@@ -40,6 +39,10 @@
             });*/
         }
     }
+
+    document.addEventListener('alpine:init', function() {
+        Alpine.store('playlist', []);
+    });
 
     document.addEventListener('DOMContentLoaded', function() {
         const db = new Deezbox();
