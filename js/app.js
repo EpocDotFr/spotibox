@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    class Deezbox {
+    window.Deezbox = class {
         pusherKey = '54c230647abc0f6ac73d';
         pusherCluster = 'eu';
 
@@ -14,23 +14,67 @@
 
             this.pusherChannel = this.pusher.subscribe('room');*/
 
+            Alpine.store('playlist', {
+                tracks: [],
+                queue: function (track) {
+                    this.tracks.push(track);
+                },
+                remove: function (track) {
+                    const i = this.tracks.indexOf(track);
+
+                    if (i > -1) {
+                        this.tracks.splice(i, 1);
+                    }
+                }
+            });
+
+            Alpine.store('nowPlaying', {});
+
             DZ.init({
                 appId: this.deezerAppId,
-                channelUrl: `${window.location.origin}/channel.html`
+                channelUrl: `${window.location.origin}/channel.html?`,
+                player: {
+                    onload: function (player) {
+                        console.log(player);
+                    }
+                }
             });
+        }
+
+        static transformTracks(tracks) {
+            return tracks.map(function (track) {
+                return {
+                    id: track.id,
+                    title: track.title,
+                    artist_name: track.artist.name,
+                    album_cover_small: track.album.cover_small,
+                    album_cover_medium: track.album.cover_medium
+                };
+            });
+        }
+
+        // ---------------------------------------------------------------------------
+        // Player
+
+        static playerComponent() {
+            return {
+
+            }
         }
 
         // ---------------------------------------------------------------------------
         // Playlist
 
-        playlistFragment() {
+        static playlistComponent() {
             return {
-                playlist: [],
-                requeue() {
-                    console.log('requeue');
+                requeue(track) {
+                    Alpine.store('playlist').queue(track);
                 },
-                remove() {
-                    console.log('remove');
+                remove(track) {
+                    Alpine.store('playlist').remove(track);
+                },
+                clear() {
+                    console.log('clear');
                 }
             }
         }
@@ -38,25 +82,32 @@
         // ---------------------------------------------------------------------------
         // Search
 
-        searchFragment() {
+        static searchComponent() {
             return {
                 results: [],
                 q: '',
+                submitted: false,
                 search() {
                     const self = this;
 
                     DZ.api(`search?q=${this.q}`, function(response) {
-                        self.results = response.data;
+                        self.submitted = true;
+                        self.results = window.Deezbox.transformTracks(response.data);
                     });
                 },
-                queue() {
-                    console.log('queue');
+                queue(track) {
+                    Alpine.store('playlist').queue(track);
+                },
+                clear() {
+                    this.submitted = false;
+                    this.q = '';
+                    this.results = [];
                 }
             }
         }
     }
 
     document.addEventListener('alpine:init', function() {
-        window.deezbox = new Deezbox();
+        window.db = new window.Deezbox();
     });
 })();
