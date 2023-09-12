@@ -12,31 +12,16 @@
               cluster: this.pusherCluster
             });
 
-            this.pusherChannel = this.pusher.subscribe('deezbox');*/
+            this.pusherChannel = this.pusher.subscribe('room');*/
 
             DZ.init({
                 appId: this.deezerAppId,
-                channelUrl: 'http://localhost:8080/channel.html'
+                channelUrl: `${window.location.origin}/channel.html`
             });
 
             DZ.api('/playlist/10919883502', function(response) {
                 Alpine.store('playlist', response.tracks.data);
             });
-
-            /*Alpine.store('radios', [
-                {
-                    title: 'PulsRadio 00s',
-                    websiteUrl: 'https://www.pulsradio.com',
-                    source: 'http://icecast.pulsradio.com/puls00HD.mp3',
-                }
-            ]);
-            Alpine.store('nowPlaying', {
-                init() {
-                    this.radio = {name: 'PulsRadio 00s', url: 'https://www.pulsradio.com'};
-                },
-
-                radio: null,
-            });*/
         }
     }
 
@@ -45,6 +30,6 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-        const db = new Deezbox();
+        window.deezbox = new Deezbox();
     });
-}());
+})();

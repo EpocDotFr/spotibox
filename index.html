@@ -40,13 +40,13 @@
 
             <div class="card">
                 <div class="list-group list-group-flush" x-data>
-                    <template x-for="track in $store.playlist">
-                        <div class="list-group-item p-0 d-flex flex-row align-items-center">
+                    <template x-for="(track, index) in $store.playlist">
+                        <div class="list-group-item p-0 d-flex flex-row align-items-center" :class="{'rounded-top': index == 0, 'rounded-bottom': index == $store.playlist.length - 1}">
                             <div>
-                                <img :src="track.album.cover_small" class="{'rounded-start': !show}" width="56" height="56">
+                                <img :src="track.album.cover_small" :class="{'rounded-start': index == 0 || index == $store.playlist.length - 1}" width="56" height="56">
                             </div>
                             <div class="ps-3">
-                                <span x-text="track.title">Title</span> • <span x-text="track.artist.name">Artist</span>
+                                <span x-text="track.title"></span> • <span x-text="track.artist.name"></span>
                             </div>
                         </div>
                     </template>
@@ -54,7 +54,7 @@
             </div>
         </div>
         <div class="col">
-          2 of 2
+          TODO
         </div>
     </main>
 
