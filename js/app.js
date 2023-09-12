@@ -17,7 +17,7 @@
             Alpine.store('playlist', {
                 tracks: [],
                 queue: function (track) {
-                    this.tracks.push(track);
+                    this.tracks.push(Object.assign({}, track));
                 },
                 remove: function (track) {
                     const i = this.tracks.indexOf(track);
