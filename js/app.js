@@ -18,18 +18,45 @@
                 appId: this.deezerAppId,
                 channelUrl: `${window.location.origin}/channel.html`
             });
+        }
 
-            DZ.api('/playlist/10919883502', function(response) {
-                Alpine.store('playlist', response.tracks.data);
-            });
+        // ---------------------------------------------------------------------------
+        // Playlist
+
+        playlistFragment() {
+            return {
+                playlist: [],
+                requeue() {
+                    console.log('requeue');
+                },
+                remove() {
+                    console.log('remove');
+                }
+            }
+        }
+
+        // ---------------------------------------------------------------------------
+        // Search
+
+        searchFragment() {
+            return {
+                results: [],
+                q: '',
+                search() {
+                    const self = this;
+
+                    DZ.api(`search?q=${this.q}`, function(response) {
+                        self.results = response.data;
+                    });
+                },
+                queue() {
+                    console.log('queue');
+                }
+            }
         }
     }
 
     document.addEventListener('alpine:init', function() {
-        Alpine.store('playlist', []);
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
         window.deezbox = new Deezbox();
     });
 })();
