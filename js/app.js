@@ -14,19 +14,30 @@
 
             this.pusherChannel = this.pusher.subscribe('room');*/
 
-            Alpine.store('playlist', {
+            DZ.init({
+                appId: this.deezerAppId,
+                channelUrl: `${window.location.origin}/channel.html`,
+                player: {
+                    onload: this.onDeezerPlayerLoaded
+                }
+            });
+
+            Alpine.store('playlistComponent', {
                 tracks: [],
-                queue: function (track) {
+                track(index) {
+                    return this.tracks[index];
+                },
+                queue(track) {
                     this.tracks.push(Object.assign({}, track));
                 },
-                remove: function (track) {
+                remove(track) {
                     const index = this.tracks.indexOf(track);
 
                     if (index > -1) {
                         this.tracks.splice(index, 1);
                     }
                 },
-                clear: function () {
+                clear() {
                     this.tracks = [];
                 },
                 moveUp(track) {
@@ -46,17 +57,73 @@
                 }
             });
 
-            Alpine.store('nowPlaying', {});
-
-            DZ.init({
-                appId: this.deezerAppId,
-                channelUrl: `${window.location.origin}/channel.html?`,
-                player: {
-                    onload: function (player) {
-                        console.log(player);
+            Alpine.store('playerComponent', {
+                nowPlaying: {},
+                isPlaying: false,
+                get canUseControls() {
+                    return !Alpine.store('playlistComponent').isEmpty();
+                },
+                prev() {
+                    DZ.player.prev();
+                },
+                playPause() {
+                    if (DZ.player.isPlaying) {
+                        DZ.player.pause();
+                    } else {
+                        DZ.player.play();
                     }
+                },
+                next() {
+                    DZ.player.next();
                 }
             });
+        }
+
+        onDeezerPlayerLoaded(player) {
+            DZ.Event.subscribe('player_play', function () {
+                Alpine.store('playerComponent').isPlaying = true;
+            });
+
+            DZ.Event.subscribe('player_paused', function () {
+                Alpine.store('playerComponent').isPlaying = false;
+            });
+
+            DZ.Event.subscribe('current_track', function (track) {
+                Alpine.store('playerComponent').nowPlaying = Alpine.store('playlistComponent').track(track.index);
+            });
+        }
+
+        searchComponent() {
+            return {
+                results: [],
+                q: '',
+                submitted: false,
+                search() {
+                    const self = this;
+
+                    DZ.api(`search?q=${this.q}`, function (response) {
+                        self.submitted = true;
+                        self.results = Deezbox.transformTracks(response.data);
+                    });
+                },
+                queue(track) {
+                    Alpine.store('playlistComponent').queue(track);
+                },
+                clear() {
+                    this.submitted = false;
+                    this.q = '';
+                    this.results = [];
+                },
+                isFirst(track) {
+                    return Deezbox.isFirst(this.results, track);
+                },
+                isLast(track) {
+                    return Deezbox.isLast(this.results, track);
+                },
+                isEmpty() {
+                    return Deezbox.isEmpty(this.results);
+                }
+            }
         }
 
         static transformTracks(tracks) {
@@ -102,45 +169,6 @@
             if (index > -1 && newIndex >= 0 && newIndex <= array.length) {
                 array.splice(index, 1);
                 array.splice(newIndex , 0, item);
-            }
-        }
-
-        playerComponent() {
-            return {
-
-            }
-        }
-
-        searchComponent() {
-            return {
-                results: [],
-                q: '',
-                submitted: false,
-                search() {
-                    const self = this;
-
-                    DZ.api(`search?q=${this.q}`, function (response) {
-                        self.submitted = true;
-                        self.results = Deezbox.transformTracks(response.data);
-                    });
-                },
-                queue(track) {
-                    Alpine.store('playlist').queue(track);
-                },
-                clear() {
-                    this.submitted = false;
-                    this.q = '';
-                    this.results = [];
-                },
-                isFirst(track) {
-                    return Deezbox.isFirst(this.results, track);
-                },
-                isLast(track) {
-                    return Deezbox.isLast(this.results, track);
-                },
-                isEmpty() {
-                    return Deezbox.isEmpty(this.results);
-                }
             }
         }
     }
