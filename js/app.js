@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    window.Deezbox = class {
+    class Deezbox {
         pusherKey = '54c230647abc0f6ac73d';
         pusherCluster = 'eu';
 
@@ -25,6 +25,9 @@
                     if (i > -1) {
                         this.tracks.splice(i, 1);
                     }
+                },
+                clear: function () {
+                    this.tracks = [];
                 }
             });
 
@@ -56,7 +59,7 @@
         // ---------------------------------------------------------------------------
         // Player
 
-        static playerComponent() {
+        playerComponent() {
             return {
 
             }
@@ -65,7 +68,7 @@
         // ---------------------------------------------------------------------------
         // Playlist
 
-        static playlistComponent() {
+        playlistComponent() {
             return {
                 requeue(track) {
                     Alpine.store('playlist').queue(track);
@@ -74,7 +77,7 @@
                     Alpine.store('playlist').remove(track);
                 },
                 clear() {
-                    console.log('clear');
+                    Alpine.store('playlist').clear();
                 }
             }
         }
@@ -82,7 +85,7 @@
         // ---------------------------------------------------------------------------
         // Search
 
-        static searchComponent() {
+        searchComponent() {
             return {
                 results: [],
                 q: '',
@@ -90,9 +93,9 @@
                 search() {
                     const self = this;
 
-                    DZ.api(`search?q=${this.q}`, function(response) {
+                    DZ.api(`search?q=${this.q}`, function (response) {
                         self.submitted = true;
-                        self.results = window.Deezbox.transformTracks(response.data);
+                        self.results = Deezbox.transformTracks(response.data);
                     });
                 },
                 queue(track) {
@@ -107,7 +110,7 @@
         }
     }
 
-    document.addEventListener('alpine:init', function() {
-        window.db = new window.Deezbox();
+    document.addEventListener('alpine:init', function () {
+        window.deezbox = new Deezbox();
     });
 })();

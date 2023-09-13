@@ -25,9 +25,12 @@
     <main class="d-flex flex-row w-100 column-gap-3">
         <div class="col d-flex flex-column row-gap-3">
             <div class="card">
-                <div class="d-flex flex-row w-100" x-data="Deezbox.playerComponent()">
+                <div class="card-header">
+                    Now playing
+                </div>
+                <div class="d-flex flex-row w-100" x-data="deezbox.playerComponent()">
                     <div>
-                        <img :src="$store.nowPlaying.album_cover_medium ?? '/images/no_cover.png'" class="rounded-start" width="250" height="250">
+                        <img :src="$store.nowPlaying.album_cover_medium ?? '/images/no_cover.png'" class="rounded-start-bottom" width="250" height="250">
                     </div>
                     <div class="card-body d-flex flex-column row-gap-2">
                         <h5 class="card-title fs-4" x-text="$store.nowPlaying.title ?? '[Nothing]'"></h5>
@@ -41,8 +44,11 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="list-group list-group-flush" x-data="Deezbox.playlistComponent()">
+            <div class="card" x-data="deezbox.playlistComponent()">
+                <div class="card-header">
+                    Playlist <button type="button" class="btn btn-outline-secondary btn-sm" @click="clear()"><i class="bi bi-eraser"></i></button>
+                </div>
+                <div class="list-group list-group-flush">
                     <div class="list-group-item list-group-item-info text-center" x-show="$store.playlist.tracks.length === 0">
                         Add tracks to the playlist by first searching using the input on the right.
                     </div>
@@ -50,7 +56,7 @@
                     <template x-for="(track, index) in $store.playlist.tracks">
                         <div class="list-group-item p-0 d-flex flex-row align-items-center column-gap-2" :class="{'rounded-top': index === 0, 'rounded-bottom': index === $store.playlist.tracks.length - 1}">
                             <div>
-                                <img :src="track.album_cover_small" :class="{'rounded-start-top': index === 0, 'rounded-start-bottom': index === $store.playlist.tracks.length - 1}" width="56" height="56">
+                                <img :src="track.album_cover_small" :class="{'rounded-start-bottom': index === $store.playlist.tracks.length - 1}" width="56" height="56">
                             </div>
                             <div class="flex-grow-1">
                                 <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
@@ -64,33 +70,39 @@
                 </div>
             </div>
         </div>
-        <div class="col d-flex flex-column row-gap-3" x-data="Deezbox.searchComponent()">
-            <form @submit.prevent="search()">
-                <div class="input-group input-group-lg">
-                    <input type="search" id="q" class="form-control" placeholder="Search..." required x-model="q">
-                    <button type="button" class="btn btn-outline-secondary" @click="clear()"><i class="bi bi-eraser"></i></button>
+        <div class="col d-flex flex-column row-gap-3" x-data="deezbox.searchComponent()">
+
+            <div class="card">
+                <div class="card-header">
+                    Search on <img src="/images/deezer.png">
                 </div>
-            </form>
-
-            <div class="card" x-show="submitted">
-                <div class="list-group list-group-flush">
-                    <div class="list-group-item list-group-item-info text-center" x-show="submitted && results.length === 0">
-                        No results.
-                    </div>
-
-                    <template x-for="(track, index) in results">
-                        <div class="list-group-item p-0 d-flex flex-row align-items-center column-gap-2" :class="{'rounded-top': index === 0, 'rounded-bottom': index === results.length - 1}">
-                            <div>
-                                <img :src="track.album_cover_small" :class="{'rounded-start-top': index === 0, 'rounded-start-bottom': index === results.length - 1}" width="56" height="56">
-                            </div>
-                            <div class="flex-grow-1">
-                                <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
-                            </div>
-                            <div class="pe-2">
-                                <button type="button" class="btn btn-secondary btn-sm" @click="queue(track)"><i class="bi bi-plus"></i></button>
-                            </div>
+                <div class="card-body">
+                    <form @submit.prevent="search()">
+                        <div class="input-group input-group-lg">
+                            <input type="search" id="q" class="form-control" placeholder="Artist, title, album, ..." required x-model="q">
+                            <button type="button" class="btn btn-outline-secondary" @click="clear()"><i class="bi bi-eraser"></i></button>
                         </div>
-                    </template>
+                    </form>
+
+                    <div class="list-group mt-3" x-show="submitted">
+                        <div class="list-group-item list-group-item-info text-center" x-show="submitted && results.length === 0">
+                            No results.
+                        </div>
+
+                        <template x-for="(track, index) in results">
+                            <div class="list-group-item p-0 d-flex flex-row align-items-center column-gap-2" :class="{'rounded-top': index === 0, 'rounded-bottom': index === results.length - 1}">
+                                <div>
+                                    <img :src="track.album_cover_small" :class="{'rounded-start-top': index === 0, 'rounded-start-bottom': index === results.length - 1}" width="56" height="56">
+                                </div>
+                                <div class="flex-grow-1">
+                                    <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
+                                </div>
+                                <div class="pe-2">
+                                    <button type="button" class="btn btn-secondary btn-sm" @click="queue(track)"><i class="bi bi-plus"></i></button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
                 </div>
             </div>
         </div>
