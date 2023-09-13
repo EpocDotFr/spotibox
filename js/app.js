@@ -20,14 +20,29 @@
                     this.tracks.push(Object.assign({}, track));
                 },
                 remove: function (track) {
-                    const i = this.tracks.indexOf(track);
+                    const index = this.tracks.indexOf(track);
 
-                    if (i > -1) {
-                        this.tracks.splice(i, 1);
+                    if (index > -1) {
+                        this.tracks.splice(index, 1);
                     }
                 },
                 clear: function () {
                     this.tracks = [];
+                },
+                moveUp(track) {
+
+                },
+                moveDown(track) {
+
+                },
+                isFirst(track) {
+                    return Deezbox.isFirst(this.tracks, track);
+                },
+                isLast(track) {
+                    return Deezbox.isLast(this.tracks, track);
+                },
+                isEmpty() {
+                    return Deezbox.isEmpty(this.tracks);
                 }
             });
 
@@ -56,34 +71,35 @@
             });
         }
 
-        // ---------------------------------------------------------------------------
-        // Player
+        static isFirst(array, item) {
+            const index = array.indexOf(item);
+
+            if (index > -1) {
+                return index === 0;
+            }
+
+            return false;
+        }
+
+        static isLast(array, item) {
+            const index = array.indexOf(item);
+
+            if (index > -1) {
+                return index === array.length - 1;
+            }
+
+            return false;
+        }
+
+        static isEmpty(array) {
+            return array.length === 0;
+        }
 
         playerComponent() {
             return {
 
             }
         }
-
-        // ---------------------------------------------------------------------------
-        // Playlist
-
-        playlistComponent() {
-            return {
-                requeue(track) {
-                    Alpine.store('playlist').queue(track);
-                },
-                remove(track) {
-                    Alpine.store('playlist').remove(track);
-                },
-                clear() {
-                    Alpine.store('playlist').clear();
-                }
-            }
-        }
-
-        // ---------------------------------------------------------------------------
-        // Search
 
         searchComponent() {
             return {
@@ -105,6 +121,15 @@
                     this.submitted = false;
                     this.q = '';
                     this.results = [];
+                },
+                isFirst(track) {
+                    return Deezbox.isFirst(this.results, track);
+                },
+                isLast(track) {
+                    return Deezbox.isLast(this.results, track);
+                },
+                isEmpty() {
+                    return Deezbox.isEmpty(this.results);
                 }
             }
         }

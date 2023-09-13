@@ -44,26 +44,28 @@
                 </div>
             </div>
 
-            <div class="card" x-data="deezbox.playlistComponent()">
+            <div class="card" x-data="$store.playlist">
                 <div class="card-header">
-                    Playlist <button type="button" class="btn btn-outline-secondary btn-sm" @click="clear()"><i class="bi bi-eraser"></i></button>
+                    Playlist <button type="button" class="btn btn-danger btn-sm" @click="clear()"><i class="bi bi-eraser"></i></button>
                 </div>
                 <div class="list-group list-group-flush">
-                    <div class="list-group-item list-group-item-info text-center" x-show="$store.playlist.tracks.length === 0">
+                    <div class="list-group-item list-group-item-info text-center" x-show="isEmpty()">
                         Add tracks to the playlist by first searching using the input on the right.
                     </div>
 
-                    <template x-for="(track, index) in $store.playlist.tracks">
-                        <div class="list-group-item p-0 d-flex flex-row align-items-center column-gap-2" :class="{'rounded-top': index === 0, 'rounded-bottom': index === $store.playlist.tracks.length - 1}">
+                    <template x-for="track in tracks">
+                        <div class="list-group-item p-0 d-flex flex-row align-items-center column-gap-2" :class="{'rounded-top': isFirst(track), 'rounded-bottom': isLast(track)}">
                             <div>
-                                <img :src="track.album_cover_small" :class="{'rounded-start-bottom': index === $store.playlist.tracks.length - 1}" width="56" height="56">
+                                <img :src="track.album_cover_small" :class="{'rounded-start-bottom': isLast(track)}" width="56" height="56">
                             </div>
                             <div class="flex-grow-1">
                                 <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
                             </div>
                             <div class="pe-2">
-                                <button type="button" class="btn btn-secondary btn-sm" @click="requeue(track)"><i class="bi bi-arrow-clockwise"></i></button>
-                                <button type="button" class="btn btn-secondary btn-sm" @click="remove(track)"><i class="bi bi-trash"></i></button>
+                                <button type="button" class="btn btn-secondary btn-sm" x-show="!isFirst(track)" @click="moveUp(track)"><i class="bi bi-arrow-up"></i></button>
+                                <button type="button" class="btn btn-secondary btn-sm" x-show="!isLast(track)" @click="moveDown(track)"><i class="bi bi-arrow-down"></i></button>
+                                <button type="button" class="btn btn-secondary btn-sm" @click="queue(track)"><i class="bi bi-arrow-clockwise"></i></button>
+                                <button type="button" class="btn btn-danger btn-sm" @click="remove(track)"><i class="bi bi-trash"></i></button>
                             </div>
                         </div>
                     </template>
@@ -80,7 +82,7 @@
                     <form @submit.prevent="search()">
                         <div class="input-group input-group-lg">
                             <input type="search" id="q" class="form-control" placeholder="Artist, title, album, ..." required x-model="q">
-                            <button type="button" class="btn btn-outline-secondary" @click="clear()"><i class="bi bi-eraser"></i></button>
+                            <button type="button" class="btn btn-secondary" @click="clear()"><i class="bi bi-eraser"></i></button>
                         </div>
                     </form>
 
@@ -89,10 +91,10 @@
                             No results.
                         </div>
 
-                        <template x-for="(track, index) in results">
-                            <div class="list-group-item p-0 d-flex flex-row align-items-center column-gap-2" :class="{'rounded-top': index === 0, 'rounded-bottom': index === results.length - 1}">
+                        <template x-for="track in results">
+                            <div class="list-group-item p-0 d-flex flex-row align-items-center column-gap-2" :class="{'rounded-top': isFirst(track), 'rounded-bottom': isLast(track)}">
                                 <div>
-                                    <img :src="track.album_cover_small" :class="{'rounded-start-top': index === 0, 'rounded-start-bottom': index === results.length - 1}" width="56" height="56">
+                                    <img :src="track.album_cover_small" :class="{'rounded-start-top': isFirst(track), 'rounded-start-bottom': isLast(track)}" width="56" height="56">
                                 </div>
                                 <div class="flex-grow-1">
                                     <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
