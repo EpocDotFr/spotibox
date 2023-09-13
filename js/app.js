@@ -29,22 +29,40 @@
                 },
                 queue(track) {
                     this.tracks.push(Object.assign({}, track));
+
+                    this.syncWithDeezerPlayer();
                 },
                 remove(track) {
                     const index = this.tracks.indexOf(track);
 
                     if (index > -1) {
                         this.tracks.splice(index, 1);
+
+                        this.syncWithDeezerPlayer();
                     }
                 },
                 clear() {
                     this.tracks = [];
+
+                    this.syncWithDeezerPlayer();
                 },
                 moveUp(track) {
                     Deezbox.move(this.tracks, track, 'up');
+
+                    this.syncWithDeezerPlayer();
                 },
                 moveDown(track) {
                     Deezbox.move(this.tracks, track, 'down');
+
+                    this.syncWithDeezerPlayer();
+                },
+                syncWithDeezerPlayer() {
+                    DZ.player.playTracks(
+                        this.tracks.map(function (track) {
+                            return track.id;
+                        }),
+                        false
+                    );
                 },
                 isFirst(track) {
                     return Deezbox.isFirst(this.tracks, track);
@@ -67,7 +85,7 @@
                     DZ.player.prev();
                 },
                 playPause() {
-                    if (DZ.player.isPlaying) {
+                    if (this.isPlaying) {
                         DZ.player.pause();
                     } else {
                         DZ.player.play();
