@@ -30,10 +30,10 @@
                     this.tracks = [];
                 },
                 moveUp(track) {
-
+                    Deezbox.move(this.tracks, track, 'up');
                 },
                 moveDown(track) {
-
+                    Deezbox.move(this.tracks, track, 'down');
                 },
                 isFirst(track) {
                     return Deezbox.isFirst(this.tracks, track);
@@ -93,6 +93,16 @@
 
         static isEmpty(array) {
             return array.length === 0;
+        }
+
+        static move(array, item, direction) {
+            const index = array.indexOf(item);
+            const newIndex = direction === 'up' ? index - 1 : index + 1;
+
+            if (index > -1 && newIndex >= 0 && newIndex <= array.length) {
+                array.splice(index, 1);
+                array.splice(newIndex , 0, item);
+            }
         }
 
         playerComponent() {
