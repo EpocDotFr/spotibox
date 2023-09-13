@@ -8,20 +8,34 @@
         deezerAppId = '632324';
 
         constructor() {
-            /*this.pusher = new Pusher(this.pusherKey, {
-              cluster: this.pusherCluster
-            });
+            this.initDeezer();
+            this.initAlpine();
+            // this.initPusher();
+        }
 
-            this.pusherChannel = this.pusher.subscribe('room');*/
-
+        initDeezer() {
             DZ.init({
                 appId: this.deezerAppId,
                 channelUrl: `${window.location.origin}/channel.html`,
                 player: {
-                    onload: this.onDeezerPlayerLoaded
+                    onload: function (player) {
+                        DZ.Event.subscribe('player_play', function () {
+                            Alpine.store('playerComponent').isPlaying = true;
+                        });
+
+                        DZ.Event.subscribe('player_paused', function () {
+                            Alpine.store('playerComponent').isPlaying = false;
+                        });
+
+                        DZ.Event.subscribe('current_track', function (track) {
+                            Alpine.store('playerComponent').nowPlaying = Alpine.store('playlistComponent').track(track.index);
+                        });
+                    }
                 }
             });
+        }
 
+        initAlpine() {
             Alpine.store('playlistComponent', {
                 tracks: [],
                 track(index) {
@@ -97,18 +111,12 @@
             });
         }
 
-        onDeezerPlayerLoaded(player) {
-            DZ.Event.subscribe('player_play', function () {
-                Alpine.store('playerComponent').isPlaying = true;
+        initPusher() {
+            this.pusher = new Pusher(this.pusherKey, {
+                cluster: this.pusherCluster
             });
 
-            DZ.Event.subscribe('player_paused', function () {
-                Alpine.store('playerComponent').isPlaying = false;
-            });
-
-            DZ.Event.subscribe('current_track', function (track) {
-                Alpine.store('playerComponent').nowPlaying = Alpine.store('playlistComponent').track(track.index);
-            });
+            this.pusherChannel = this.pusher.subscribe('room');
         }
 
         searchComponent() {
