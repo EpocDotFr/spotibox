@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Deezbox</title>
+    <title>Spotibox</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex,nofollow,noarchive">
@@ -19,7 +19,7 @@
     <div id="dz-root" class="d-none"></div>
 
     <header class="fs-1 text-center mb-3">
-        <i class="bi bi-disc"></i> <strong>Deez</strong>box
+        <i class="bi bi-disc"></i> <strong>Spoti</strong>box
     </header>
 
     <main class="d-flex flex-row w-100 column-gap-3">
@@ -72,11 +72,11 @@
                 </div>
             </div>
         </div>
-        <div class="col d-flex flex-column row-gap-3" x-data="deezbox.searchComponent()">
+        <div class="col d-flex flex-column row-gap-3" x-data="spotibox.searchComponent()">
 
             <div class="card">
                 <div class="card-header">
-                    Search on <img src="/images/deezer.png">
+                    Search on <img src="/images/spotify.png">
                 </div>
                 <div class="card-body">
                     <form @submit.prevent="search()">
@@ -112,11 +112,10 @@
 
     <footer class="text-body-secondary small text-center mt-3">
         <p>© 2023 <a href="https://epoc.fr"><img src="/images/epoc.png"></a> <a href="https://epoc.fr">Maxime "Epoc" G.</a></p>
-        <p>Powered by <a href="https://www.deezer.com"><img src="/images/deezer.png"></a><br>This site not affiliated with Deezer.</p>
+        <p>Powered by <a href="https://open.spotify.com"><img src="/images/spotify.png"></a><br>This site not affiliated with Spotify.</p>
     </footer>
 
     <script defer src="/js/app.js"></script>
-    <script defer src="https://e-cdns-files.dzcdn.net/js/min/dz.js"></script>
     <script defer src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js"></script>
 </body>

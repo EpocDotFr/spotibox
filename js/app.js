@@ -1,19 +1,17 @@
 (function() {
     'use strict';
 
-    class Deezbox {
+    class Spotibox {
         pusherKey = '54c230647abc0f6ac73d';
         pusherCluster = 'eu';
 
-        deezerAppId = '632324';
-
         constructor() {
-            this.initDeezer();
+            //this.initDeezer();
             this.initAlpine();
             // this.initPusher();
         }
 
-        initDeezer() {
+        /*initDeezer() {
             DZ.init({
                 appId: this.deezerAppId,
                 channelUrl: `${window.location.origin}/channel.html`,
@@ -33,7 +31,7 @@
                     }
                 }
             });
-        }
+        }*/
 
         initAlpine() {
             Alpine.store('playlistComponent', {
@@ -43,49 +41,39 @@
                 },
                 queue(track) {
                     this.tracks.push(Object.assign({}, track));
-
-                    this.syncWithDeezerPlayer();
                 },
                 remove(track) {
                     const index = this.tracks.indexOf(track);
 
                     if (index > -1) {
                         this.tracks.splice(index, 1);
-
-                        this.syncWithDeezerPlayer();
                     }
                 },
                 clear() {
                     this.tracks = [];
-
-                    this.syncWithDeezerPlayer();
                 },
                 moveUp(track) {
-                    Deezbox.move(this.tracks, track, 'up');
-
-                    this.syncWithDeezerPlayer();
+                    Spotibox.move(this.tracks, track, 'up');
                 },
                 moveDown(track) {
-                    Deezbox.move(this.tracks, track, 'down');
-
-                    this.syncWithDeezerPlayer();
+                    Spotibox.move(this.tracks, track, 'down');
                 },
-                syncWithDeezerPlayer() {
+                /*syncWithDeezerPlayer() {
                     DZ.player.playTracks(
                         this.tracks.map(function (track) {
                             return track.id;
                         }),
                         false
                     );
-                },
+                },*/
                 isFirst(track) {
-                    return Deezbox.isFirst(this.tracks, track);
+                    return Spotibox.isFirst(this.tracks, track);
                 },
                 isLast(track) {
-                    return Deezbox.isLast(this.tracks, track);
+                    return Spotibox.isLast(this.tracks, track);
                 },
                 isEmpty() {
-                    return Deezbox.isEmpty(this.tracks);
+                    return Spotibox.isEmpty(this.tracks);
                 }
             });
 
@@ -96,17 +84,17 @@
                     return !Alpine.store('playlistComponent').isEmpty();
                 },
                 prev() {
-                    DZ.player.prev();
+                    //DZ.player.prev();
                 },
                 playPause() {
-                    if (this.isPlaying) {
+                    /*if (this.isPlaying) {
                         DZ.player.pause();
                     } else {
                         DZ.player.play();
-                    }
+                    }*/
                 },
                 next() {
-                    DZ.player.next();
+                    //DZ.player.next();
                 }
             });
         }
@@ -127,10 +115,10 @@
                 search() {
                     const self = this;
 
-                    DZ.api(`search?q=${this.q}`, function (response) {
+                    /*DZ.api(`search?q=${this.q}`, function (response) {
                         self.submitted = true;
-                        self.results = Deezbox.transformTracks(response.data);
-                    });
+                        self.results = Spotibox.transformTracks(response.data);
+                    });*/
                 },
                 queue(track) {
                     Alpine.store('playlistComponent').queue(track);
@@ -141,13 +129,13 @@
                     this.results = [];
                 },
                 isFirst(track) {
-                    return Deezbox.isFirst(this.results, track);
+                    return Spotibox.isFirst(this.results, track);
                 },
                 isLast(track) {
-                    return Deezbox.isLast(this.results, track);
+                    return Spotibox.isLast(this.results, track);
                 },
                 isEmpty() {
-                    return Deezbox.isEmpty(this.results);
+                    return Spotibox.isEmpty(this.results);
                 }
             }
         }
@@ -200,6 +188,6 @@
     }
 
     document.addEventListener('alpine:init', function () {
-        window.deezbox = new Deezbox();
+        window.spotibox = new Spotibox();
     });
 })();
