@@ -97,18 +97,8 @@
                     //DZ.player.next();
                 }
             });
-        }
 
-        initPusher() {
-            this.pusher = new Pusher(this.pusherKey, {
-                cluster: this.pusherCluster
-            });
-
-            this.pusherChannel = this.pusher.subscribe('room');
-        }
-
-        searchComponent() {
-            return {
+            Alpine.store('searchComponent', {
                 results: [],
                 q: '',
                 submitted: false,
@@ -137,7 +127,15 @@
                 isEmpty() {
                     return Spotibox.isEmpty(this.results);
                 }
-            }
+            });
+        }
+
+        initPusher() {
+            this.pusher = new Pusher(this.pusherKey, {
+                cluster: this.pusherCluster
+            });
+
+            this.pusherChannel = this.pusher.subscribe('room');
         }
 
         static transformTracks(tracks) {
@@ -188,6 +186,6 @@
     }
 
     document.addEventListener('alpine:init', function () {
-        window.spotibox = new Spotibox();
+        new Spotibox();
     });
 })();
