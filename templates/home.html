@@ -1,5 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <p class="lead text-center">A collaborative, online jukebox based on <a href="https://open.spotify.com"><img src="{{ url_for('static', filename='images/spotify.png') }}"></a>.</p>
+    <main class="text-center">
+        <p class="lead">A collaborative, online jukebox based on <a href="https://open.spotify.com"><img src="{{ url_for('static', filename='images/spotify.png') }}"></a></p>
+        <p><strong>What to you want to do?</strong></p>
+
+        <div class="hstack gap-3 justify-content-center">
+            <div><a href="{{ url_for('host') }}" class="btn btn-primary btn-lg">Host a session</a></div>
+            <div class="vr"></div>
+            <div><a href="{{ url_for('listen') }}" class="btn btn-primary btn-lg">Join as a listener</a></div>
+        </div>
+    </main>
 {% endblock %}
