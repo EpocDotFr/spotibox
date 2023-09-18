@@ -9,9 +9,10 @@
     <meta name="description" content="A collaborative, online jukebox based on Spotify.">
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Spotibox">
+    <meta property="og:site_name" content="Spotibox">
+    <meta property="og:title" content="{{ title }}">
     <meta property="og:description" content="A collaborative, online jukebox based on Spotify.">
-    <meta property="og:image" content="{{ url_for('static', filename='images/logo.png') }}">
+    <meta property="og:image" content="{{ url_for('static', filename='images/logo.png', _external=True) }}">
 
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="32x32">
     <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
