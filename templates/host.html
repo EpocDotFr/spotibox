@@ -4,6 +4,9 @@
 
 {% block content %}
     <main class="text-center">
-
+        <p>To host a session, start by connecting using your Spotify account.</p>
+        <p class="strong"><strong>Requires a Spotify Premium subscription.</strong></p>
+        <p><a href="{{ url_for('host') }}" class="btn btn-success">Connect with <img src="{{ url_for('static', filename='images/spotify.png') }}"></a></p>
+        <p>Others does not need Spotify account at all.</p>
     </main>
 {% endblock %}
