@@ -2,9 +2,6 @@
     'use strict';
 
     class Spotibox {
-        pusherKey = '54c230647abc0f6ac73d';
-        pusherCluster = 'eu';
-
         constructor() {
             //this.initDeezer();
             this.initAlpine();
@@ -130,13 +127,13 @@
             });
         }
 
-        initPusher() {
+        /*initPusher() {
             this.pusher = new Pusher(this.pusherKey, {
                 cluster: this.pusherCluster
             });
 
             this.pusherChannel = this.pusher.subscribe('room');
-        }
+        }*/
 
         static transformTracks(tracks) {
             return tracks.map(function (track) {
