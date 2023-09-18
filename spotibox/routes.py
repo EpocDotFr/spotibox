@@ -14,13 +14,13 @@ def host() -> str:
     return render_template('host.html')
 
 
-@app.route('/listen')
+@app.route('/join')
 @auth.login_required()
-def listen() -> str:
-    return render_template('listen.html')
+def join() -> str:
+    return render_template('join.html')
 
 
-@app.route('/<any(host,listen):mode>/<room>')
+@app.route('/<any(host,join):mode>/<room>')
 @auth.login_required()
 def room(mode: str, room: str) -> str:
     return render_template('room.html')
