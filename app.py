@@ -20,6 +20,9 @@ app.config.update(
     SERVER_NAME=env.str('SERVER_NAME', default='localhost:8080'),
     PREFERRED_URL_SCHEME=env.str('PREFERRED_URL_SCHEME', default='http'),
 
+    SENTRY_DSN=env.str('SENTRY_DSN', default=None),
+    SENTRY_TRACES_SAMPLE_RATE=env.float('SENTRY_TRACES_SAMPLE_RATE', default=None),
+
     ASSETS_CACHE=env.str('ASSETS_CACHE', default='instance/webassets-cache'),
 
     DEBUG_TB_INTERCEPT_REDIRECTS=env.bool('DEBUG_TB_INTERCEPT_REDIRECTS', False),
@@ -40,6 +43,20 @@ if app.config['DEBUG']:
     import logging
 
     logging.basicConfig(level=logging.DEBUG)
+elif app.config['SENTRY_DSN']:
+    try:
+        from sentry_sdk.integrations.flask import FlaskIntegration
+        import sentry_sdk
+
+        sentry_sdk.init(
+            dsn=app.config['SENTRY_DSN'],
+            integrations=[
+                FlaskIntegration(),
+            ],
+            traces_sample_rate=app.config['SENTRY_TRACES_SAMPLE_RATE']
+        )
+    except ImportError:
+        pass
 
 # -----------------------------------------------------------
 # Flask extensions initialization and configuration
