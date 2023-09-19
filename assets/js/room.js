@@ -1,7 +1,9 @@
 (function() {
     'use strict';
 
-    class Spotibox {
+    window.Spotibox = window.Spotibox || {};
+
+    window.Spotibox.Room = class {
         constructor() {
             //this.initDeezer();
             this.initAlpine();
@@ -50,10 +52,10 @@
                     this.tracks = [];
                 },
                 moveUp(track) {
-                    Spotibox.move(this.tracks, track, 'up');
+                    Spotibox.Room.move(this.tracks, track, 'up');
                 },
                 moveDown(track) {
-                    Spotibox.move(this.tracks, track, 'down');
+                    Spotibox.Room.move(this.tracks, track, 'down');
                 },
                 /*syncWithDeezerPlayer() {
                     DZ.player.playTracks(
@@ -64,13 +66,13 @@
                     );
                 },*/
                 isFirst(track) {
-                    return Spotibox.isFirst(this.tracks, track);
+                    return Spotibox.Room.isFirst(this.tracks, track);
                 },
                 isLast(track) {
-                    return Spotibox.isLast(this.tracks, track);
+                    return Spotibox.Room.isLast(this.tracks, track);
                 },
                 isEmpty() {
-                    return Spotibox.isEmpty(this.tracks);
+                    return Spotibox.Room.isEmpty(this.tracks);
                 }
             });
 
@@ -104,7 +106,7 @@
 
                     /*DZ.api(`search?q=${this.q}`, function (response) {
                         self.submitted = true;
-                        self.results = Spotibox.transformTracks(response.data);
+                        self.results = Spotibox.Room.transformTracks(response.data);
                     });*/
                 },
                 queue(track) {
@@ -116,13 +118,13 @@
                     this.results = [];
                 },
                 isFirst(track) {
-                    return Spotibox.isFirst(this.results, track);
+                    return Spotibox.Room.isFirst(this.results, track);
                 },
                 isLast(track) {
-                    return Spotibox.isLast(this.results, track);
+                    return Spotibox.Room.isLast(this.results, track);
                 },
                 isEmpty() {
-                    return Spotibox.isEmpty(this.results);
+                    return Spotibox.Room.isEmpty(this.results);
                 }
             });
         }
@@ -181,8 +183,4 @@
             }
         }
     }
-
-    document.addEventListener('alpine:init', function () {
-        new Spotibox();
-    });
 })();

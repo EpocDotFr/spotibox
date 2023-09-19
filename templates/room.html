@@ -1,10 +1,18 @@
 {% extends 'layout.html' %}
 
-{% set title = 'Room' %}
+{% set title = '{} room: {}'.format('Hosting' if request.view_args.get('mode') == 'host' else 'Joined', request.view_args.get('room')) %}
 
 {% block jsfiles %}
-    {% assets 'js_app' %}<script defer src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% assets 'js_room' %}<script defer src="{{ ASSET_URL }}"></script>{% endassets %}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js"></script>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener('alpine:init', function () {
+            const spotibox_room = new Spotibox.Room();
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
