@@ -95,35 +95,37 @@
                 }
             });
 
-            Alpine.store('searchComponent', {
-                results: [],
-                q: '',
-                submitted: false,
-                search() {
-                    const self = this;
+            Alpine.data('searchComponent', function() {
+                return {
+                    results: [],
+                    q: '',
+                    submitted: false,
+                    search() {
+                        const self = this;
 
-                    /*DZ.api(`search?q=${this.q}`, function (response) {
-                        self.submitted = true;
-                        self.results = Spotibox.transformTracks(response.data);
-                    });*/
-                },
-                queue(track) {
-                    Alpine.store('playlistComponent').queue(track);
-                },
-                clear() {
-                    this.submitted = false;
-                    this.q = '';
-                    this.results = [];
-                },
-                isFirst(track) {
-                    return Spotibox.isFirst(this.results, track);
-                },
-                isLast(track) {
-                    return Spotibox.isLast(this.results, track);
-                },
-                isEmpty() {
-                    return Spotibox.isEmpty(this.results);
-                }
+                        /*DZ.api(`search?q=${this.q}`, function (response) {
+                            self.submitted = true;
+                            self.results = Spotibox.transformTracks(response.data);
+                        });*/
+                    },
+                    queue(track) {
+                        Alpine.store('playlistComponent').queue(track);
+                    },
+                    clear() {
+                        this.submitted = false;
+                        this.q = '';
+                        this.results = [];
+                    },
+                    isFirst(track) {
+                        return Spotibox.isFirst(this.results, track);
+                    },
+                    isLast(track) {
+                        return Spotibox.isLast(this.results, track);
+                    },
+                    isEmpty() {
+                        return Spotibox.isEmpty(this.results);
+                    }
+                };
             });
         }
 
