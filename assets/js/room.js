@@ -1,6 +1,8 @@
 (function() {
     'use strict';
 
+    window.Spotibox = window.Spotibox || {};
+
     window.Spotibox.Room = class {
         constructor() {
             //this.initDeezer();
@@ -50,10 +52,10 @@
                     this.tracks = [];
                 },
                 moveUp(track) {
-                    Spotibox.move(this.tracks, track, 'up');
+                    Spotibox.Utils.move(this.tracks, track, 'up');
                 },
                 moveDown(track) {
-                    Spotibox.move(this.tracks, track, 'down');
+                    Spotibox.Utils.move(this.tracks, track, 'down');
                 },
                 /*syncWithDeezerPlayer() {
                     DZ.player.playTracks(
@@ -64,13 +66,13 @@
                     );
                 },*/
                 isFirst(track) {
-                    return Spotibox.isFirst(this.tracks, track);
+                    return Spotibox.Utils.isFirst(this.tracks, track);
                 },
                 isLast(track) {
-                    return Spotibox.isLast(this.tracks, track);
+                    return Spotibox.Utils.isLast(this.tracks, track);
                 },
                 isEmpty() {
-                    return Spotibox.isEmpty(this.tracks);
+                    return Spotibox.Utils.isEmpty(this.tracks);
                 }
             });
 
@@ -105,7 +107,7 @@
 
                         /*DZ.api(`search?q=${this.q}`, function (response) {
                             self.submitted = true;
-                            self.results = Spotibox.transformTracks(response.data);
+                            self.results = Spotibox.Utils.transformTracks(response.data);
                         });*/
                     },
                     queue(track) {
@@ -117,13 +119,13 @@
                         this.results = [];
                     },
                     isFirst(track) {
-                        return Spotibox.isFirst(this.results, track);
+                        return Spotibox.Utils.isFirst(this.results, track);
                     },
                     isLast(track) {
-                        return Spotibox.isLast(this.results, track);
+                        return Spotibox.Utils.isLast(this.results, track);
                     },
                     isEmpty() {
-                        return Spotibox.isEmpty(this.results);
+                        return Spotibox.Utils.isEmpty(this.results);
                     }
                 };
             });

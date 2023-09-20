@@ -1,7 +1,9 @@
 (function() {
     'use strict';
 
-    window.Spotibox = {
+    window.Spotibox = window.Spotibox || {};
+
+    window.Spotibox.Utils = {
         transformTracks(tracks) {
             return tracks.map(function (track) {
                 return {

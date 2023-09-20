@@ -1,6 +1,8 @@
 (function() {
     'use strict';
 
+    window.Spotibox = window.Spotibox || {};
+
     window.Spotibox.Host = class {
         spotifyRedirectUri = null;
         spotifyClientId = null;
@@ -9,17 +11,16 @@
             this.spotifyRedirectUri = spotifyRedirectUri;
             this.spotifyClientId = spotifyClientId;
 
+            this.initAlpine();
+        }
+
+        initAlpine() {
             const host = this;
+
+            Spotibox.Alpine.Storage();
 
             Alpine.data('hostComponent', function () {
                 return {
-                    spotify: Alpine.$persist({
-                        connected: false,
-                        accessToken: null,
-                        refreshToken: null,
-                        accountName: null,
-                        codeVerifier: null
-                    }),
                     error: null,
                     init() {
                         const searchParams = new URLSearchParams(document.location.search);
@@ -33,7 +34,7 @@
                                 code: code,
                                 redirect_uri: host.spotifyRedirectUri,
                                 client_id: host.spotifyClientId,
-                                code_verifier: component.spotify.codeVerifier
+                                code_verifier: Alpine.store('storage').spotify.codeVerifier
                             });
 
                             fetch('https://accounts.spotify.com/api/token', {
@@ -49,10 +50,10 @@
                                     component.error = `Failed to get access token from Spotify (got error ${response.status}).`;
                                 }
                             }).then(function(data) {
-                                component.spotify.connected = true;
-                                component.spotify.accessToken = data.access_token;
-                                component.spotify.refreshToken = data.refresh_token;
-                                component.spotify.codeVerifier = null;
+                                Alpine.store('storage').spotify.connected = true;
+                                Alpine.store('storage').spotify.accessToken = data.access_token;
+                                Alpine.store('storage').spotify.refreshToken = data.refresh_token;
+                                Alpine.store('storage').spotify.codeVerifier = null;
 
                                 const spotifyWebApi = new SpotifyWebApi();
 
@@ -60,7 +61,7 @@
 
                                 spotifyWebApi.getMe().then(
                                     function (data) {
-                                        component.spotify.accountName = data.display_name;
+                                        Alpine.store('storage').spotify.accountName = data.display_name;
                                     },
                                     function (error) {
                                         component.error = `Error getting user profile data from Spotify: ${error}.`;
@@ -71,7 +72,7 @@
                                 component.error = `Error getting access token from Spotify: ${error}.`;
                             });
                         } else if (error) {
-                            component.spotify.codeVerifier = null;
+                            Alpine.store('storage').spotify.codeVerifier = null;
 
                             switch (error) {
                                 case 'access_denied':
@@ -83,14 +84,14 @@
                         }
                     },
                     connect() {
-                        const codeVerifier = Spotibox.generateRandomString(128);
+                        const codeVerifier = Spotibox.Utils.generateRandomString(128);
                         const component = this;
 
                         Spotibox.Host.generateCodeChallenge(codeVerifier).then(function (codeChallenge) {
-                            let state = Spotibox.generateRandomString(16);
+                            let state = Spotibox.Utils.generateRandomString(16);
                             let scope = 'user-read-private streaming user-modify-playback-state';
 
-                            component.spotify.codeVerifier = codeVerifier;
+                            Alpine.store('storage').spotify.codeVerifier = codeVerifier;
 
                             const url = new URL('https://accounts.spotify.com/authorize');
 
@@ -106,11 +107,11 @@
                         });
                     },
                     disconnect() {
-                        this.spotify.connected = false;
-                        this.spotify.accessToken = null;
-                        this.spotify.refreshToken = null;
-                        this.spotify.accountName = null;
-                        this.spotify.codeVerifier = null;
+                        Alpine.store('storage').spotify.connected = false;
+                        Alpine.store('storage').spotify.accessToken = null;
+                        Alpine.store('storage').spotify.refreshToken = null;
+                        Alpine.store('storage').spotify.accountName = null;
+                        Alpine.store('storage').spotify.codeVerifier = null;
                     }
                 };
             });
@@ -121,7 +122,7 @@
             const data = encoder.encode(codeVerifier);
             const digest = await window.crypto.subtle.digest('SHA-256', data);
 
-            return Spotibox.base64encode(digest);
+            return Spotibox.Utils.base64encode(digest);
         }
     };
 })();

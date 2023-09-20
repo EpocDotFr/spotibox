@@ -94,8 +94,8 @@ assets = Environment(app)
 assets.append_path('assets')
 
 assets.register('css_app', Bundle('css/app.css', filters='cssutils', output='css/app.min.css'))
-assets.register('js_room', Bundle('js/common.js', 'js/room.js', filters='jsmin', output='js/room.min.js'))
-assets.register('js_host', Bundle('js/common.js', 'js/host.js', filters='jsmin', output='js/host.min.js'))
+assets.register('js_room', Bundle('js/utils.js', 'js/room.js', filters='jsmin', output='js/room.min.js'))
+assets.register('js_host', Bundle('js/utils.js', 'js/alpine/storage.js', 'js/host.js', filters='jsmin', output='js/host.min.js'))
 
 # Flask-HTTPAuth
 auth = HTTPBasicAuth()
