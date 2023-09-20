@@ -34,6 +34,9 @@ app.config.update(
 
     AUTH_USERNAME=env.str('AUTH_USERNAME'),
     AUTH_PASSWORD=generate_password_hash(env.str('AUTH_PASSWORD')),
+
+    SPOTIFY_CLIENT_ID=env.str('SPOTIFY_CLIENT_ID'),
+    SPOTIFY_CLIENT_SECRET=env.str('SPOTIFY_CLIENT_SECRET')
 )
 
 # -----------------------------------------------------------
@@ -91,7 +94,8 @@ assets = Environment(app)
 assets.append_path('assets')
 
 assets.register('css_app', Bundle('css/app.css', filters='cssutils', output='css/app.min.css'))
-assets.register('js_room', Bundle('js/room.js', filters='jsmin', output='js/room.min.js'))
+assets.register('js_room', Bundle('js/common.js', 'js/room.js', filters='jsmin', output='js/room.min.js'))
+assets.register('js_host', Bundle('js/common.js', 'js/host.js', filters='jsmin', output='js/host.min.js'))
 
 # Flask-HTTPAuth
 auth = HTTPBasicAuth()

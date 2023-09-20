@@ -2,11 +2,43 @@
 
 {% set title = 'Host a session' %}
 
+{% block jsfiles %}
+    {% assets 'js_host' %}<script defer src="{{ ASSET_URL }}"></script>{% endassets %}
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.13.0/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js"></script>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener('alpine:init', function () {
+            const spotibox_host = new Spotibox.Host(
+                '{{ url_for('host', _external=True) }}',
+                '{{ config['SPOTIFY_CLIENT_ID'] }}'
+            );
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
-    <main class="text-center">
-        <p>To host a session, start by connecting using your Spotify account.</p>
-        <p><a href="{{ url_for('host') }}" class="btn btn-success">Connect with <img src="{{ url_for('static', filename='images/spotify.png') }}"></a></p>
-        <p class="strong"><strong>Requires a Spotify Premium subscription.</strong></p>
-        <p>Others does not need a Spotify account at all.</p>
+    <main class="container text-center" x-data="$store.hostComponent">
+        <template x-if="error">
+            <div class="alert alert-danger p-2" x-text="error"></div>
+        </template>
+
+        <template x-if="!spotify.connected">
+            <div>
+                <p>To host a session, start by connecting using your Spotify account.</p>
+                <p><button type="button" class="btn btn-success" @click="connect()">Connect with <img src="{{ url_for('static', filename='images/spotify.png') }}"></button></p>
+                <p class="strong"><strong>Requires a Spotify Premium subscription.</strong></p>
+                <p>Others does not need a Spotify account at all.</p>
+            </div>
+        </template>
+
+        <template x-if="spotify.connected">
+            <div>
+                <p>Connected to Spotify with the account <strong x-text="spotify.accountName"></strong>.</p>
+                <p><button type="button" class="btn btn-danger" @click="disconnect()">Disconnect from Spotify</button></p>
+            </div>
+        </template>
     </main>
 {% endblock %}

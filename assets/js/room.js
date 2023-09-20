@@ -1,8 +1,6 @@
 (function() {
     'use strict';
 
-    window.Spotibox = window.Spotibox || {};
-
     window.Spotibox.Room = class {
         constructor() {
             //this.initDeezer();
@@ -52,10 +50,10 @@
                     this.tracks = [];
                 },
                 moveUp(track) {
-                    Spotibox.Room.move(this.tracks, track, 'up');
+                    Spotibox.move(this.tracks, track, 'up');
                 },
                 moveDown(track) {
-                    Spotibox.Room.move(this.tracks, track, 'down');
+                    Spotibox.move(this.tracks, track, 'down');
                 },
                 /*syncWithDeezerPlayer() {
                     DZ.player.playTracks(
@@ -66,13 +64,13 @@
                     );
                 },*/
                 isFirst(track) {
-                    return Spotibox.Room.isFirst(this.tracks, track);
+                    return Spotibox.isFirst(this.tracks, track);
                 },
                 isLast(track) {
-                    return Spotibox.Room.isLast(this.tracks, track);
+                    return Spotibox.isLast(this.tracks, track);
                 },
                 isEmpty() {
-                    return Spotibox.Room.isEmpty(this.tracks);
+                    return Spotibox.isEmpty(this.tracks);
                 }
             });
 
@@ -106,7 +104,7 @@
 
                     /*DZ.api(`search?q=${this.q}`, function (response) {
                         self.submitted = true;
-                        self.results = Spotibox.Room.transformTracks(response.data);
+                        self.results = Spotibox.transformTracks(response.data);
                     });*/
                 },
                 queue(track) {
@@ -118,13 +116,13 @@
                     this.results = [];
                 },
                 isFirst(track) {
-                    return Spotibox.Room.isFirst(this.results, track);
+                    return Spotibox.isFirst(this.results, track);
                 },
                 isLast(track) {
-                    return Spotibox.Room.isLast(this.results, track);
+                    return Spotibox.isLast(this.results, track);
                 },
                 isEmpty() {
-                    return Spotibox.Room.isEmpty(this.results);
+                    return Spotibox.isEmpty(this.results);
                 }
             });
         }
@@ -136,51 +134,5 @@
 
             this.pusherChannel = this.pusher.subscribe('room');
         }*/
-
-        static transformTracks(tracks) {
-            return tracks.map(function (track) {
-                return {
-                    id: track.id,
-                    title: track.title,
-                    artist_name: track.artist.name,
-                    album_cover_small: track.album.cover_small,
-                    album_cover_medium: track.album.cover_medium
-                };
-            });
-        }
-
-        static isFirst(array, item) {
-            const index = array.indexOf(item);
-
-            if (index > -1) {
-                return index === 0;
-            }
-
-            return false;
-        }
-
-        static isLast(array, item) {
-            const index = array.indexOf(item);
-
-            if (index > -1) {
-                return index === array.length - 1;
-            }
-
-            return false;
-        }
-
-        static isEmpty(array) {
-            return array.length === 0;
-        }
-
-        static move(array, item, direction) {
-            const index = array.indexOf(item);
-            const newIndex = direction === 'up' ? index - 1 : index + 1;
-
-            if (index > -1 && newIndex >= 0 && newIndex <= array.length) {
-                array.splice(index, 1);
-                array.splice(newIndex , 0, item);
-            }
-        }
-    }
+    };
 })();
