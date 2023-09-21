@@ -103,6 +103,7 @@ assets.append_path('assets')
 assets.register('js_room', Bundle('js/utils.js', 'js/room.js', filters='jsmin', output='js/room.min.js'))
 assets.register('css_app', Bundle('css/app.css', filters='cssutils', output='css/app.min.css'))
 
+
 # Flask-SQLAlchemy
 class AppDeclarativeBase(DeclarativeBase):
     pass
@@ -120,10 +121,9 @@ login_manager.login_message_category = 'info'
 
 @login_manager.user_loader
 def load_user(user_id):
-    # from rwrs.models import User
+    from spotibox.models import User
 
-    # return db.get_or_404(User, user_id)
-    pass # TODO
+    return db.get_or_404(User, user_id)
 
 
 # -----------------------------------------------------------
@@ -139,7 +139,6 @@ def context_processor():
 # -----------------------------------------------------------
 # Error pages
 
-
 @app.errorhandler(HTTPException)
 def http_error_handler(e: HTTPException) -> Tuple[str, int]:
     return render_template(
@@ -147,7 +146,6 @@ def http_error_handler(e: HTTPException) -> Tuple[str, int]:
         title=e.name,
         text=e.description,
     ), e.code
-
 
 # -----------------------------------------------------------
 # After-bootstrap imports
