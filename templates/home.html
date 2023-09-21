@@ -10,11 +10,11 @@
                 <h2>Create or manage your rooms</h2>
 
                 {% if current_user.is_authenticated %}
-                    <p>Connected to Spotify with the account {% if current_user.profile_image_url %}<img src="{{ current_user.profile_image_url}}" width="32" height="32" class="rounded"> {% endif %}<strong>{{ current_user.display_name }}</strong>.</p>
-                    <p><a href="#" class="btn btn-primary">My rooms</a> <a href="#" class="btn btn-primary">Create room</a> <a href="#" class="btn btn-danger">Disconnect</a></p>
+                    <p>Signed in to Spotify with the account {% if current_user.profile_image_url %}<img src="{{ current_user.profile_image_url}}" width="32" height="32" class="rounded"> {% endif %}<strong>{{ current_user.display_name }}</strong>.</p>
+                    <p><a href="{{ url_for('my_rooms') }}" class="btn btn-primary">My rooms</a> <a href="{{ url_for('create_room') }}" class="btn btn-primary">Create room</a> <a href="{{ url_for('sign_out') }}" class="btn btn-danger">Sign out</a></p>
                 {% else %}
                     <p>Start by signing in using your Spotify account.</p>
-                    <p><a href="#" class="btn btn-success">Connect with <img src="{{ url_for('static', filename='images/spotify.png') }}"></a></p>
+                    <p><a href="{{ sign_in_spotify_url }}" class="btn btn-success">Sign in with <img src="{{ url_for('static', filename='images/spotify.png') }}"></a></p>
                     <p><strong>Requires a Spotify Premium subscription.</strong></p>
                 {% endif %}
             </section>
