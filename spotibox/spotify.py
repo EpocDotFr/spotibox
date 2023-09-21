@@ -13,7 +13,7 @@ def create_api_client() -> Spotify:
     return Spotify(auth_manager=SpotifyOAuth(
         client_id=app.config['SPOTIFY_CLIENT_ID'],
         client_secret=app.config['SPOTIFY_CLIENT_SECRET'],
-        redirect_uri=url_for('host'),
+        redirect_uri=url_for('host', _external=True),
         scope=SCOPES,
         open_browser=False
     ))
