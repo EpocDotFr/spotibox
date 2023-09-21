@@ -36,7 +36,7 @@ app.config.update(
     COMPRESS_REGISTER=env.bool('COMPRESS_REGISTER', default=False),
     COMPRESS_MIN_SIZE=env.int('COMPRESS_MIN_SIZE', 512),
 
-    SQLALCHEMY_DATABASE_URI=env.str('SQLALCHEMY_DATABASE_URI', default='sqlite:///instance/db.sqlite'),
+    SQLALCHEMY_DATABASE_URI=env.str('SQLALCHEMY_DATABASE_URI', default='sqlite:///db.sqlite'),
 
     SPOTIFY_CLIENT_ID=env.str('SPOTIFY_CLIENT_ID'),
     SPOTIFY_CLIENT_SECRET=env.str('SPOTIFY_CLIENT_SECRET'),
