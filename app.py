@@ -1,10 +1,14 @@
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask import Flask, render_template, abort
 from werkzeug.exceptions import HTTPException
 from flask_assets import Environment, Bundle
-from flask_httpauth import HTTPBasicAuth
-from typing import Tuple, Optional
+from sqlalchemy.orm import DeclarativeBase
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from flask_migrate import Migrate
+from datetime import datetime
+from typing import Tuple
 from environs import Env
+
 
 # -----------------------------------------------------------
 # App bootstrap
@@ -32,11 +36,14 @@ app.config.update(
     COMPRESS_REGISTER=env.bool('COMPRESS_REGISTER', default=False),
     COMPRESS_MIN_SIZE=env.int('COMPRESS_MIN_SIZE', 512),
 
-    AUTH_USERNAME=env.str('AUTH_USERNAME'),
-    AUTH_PASSWORD=generate_password_hash(env.str('AUTH_PASSWORD')),
+    SQLALCHEMY_DATABASE_URI=env.str('SQLALCHEMY_DATABASE_URI', default='sqlite:///instance/db.sqlite'),
 
     SPOTIFY_CLIENT_ID=env.str('SPOTIFY_CLIENT_ID'),
-    SPOTIFY_CLIENT_SECRET=env.str('SPOTIFY_CLIENT_SECRET')
+    SPOTIFY_CLIENT_SECRET=env.str('SPOTIFY_CLIENT_SECRET'),
+
+    # Config values that cannot be overwritten
+    SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    SESSION_PROTECTION='basic',
 )
 
 # -----------------------------------------------------------
@@ -93,28 +100,40 @@ except ImportError:
 assets = Environment(app)
 assets.append_path('assets')
 
-assets.register('css_app', Bundle('css/app.css', filters='cssutils', output='css/app.min.css'))
 assets.register('js_room', Bundle('js/utils.js', 'js/room.js', filters='jsmin', output='js/room.min.js'))
-assets.register('js_host', Bundle('js/utils.js', 'js/alpine/storage.js', 'js/host.js', filters='jsmin', output='js/host.min.js'))
+assets.register('css_app', Bundle('css/app.css', filters='cssutils', output='css/app.min.css'))
 
-# Flask-HTTPAuth
-auth = HTTPBasicAuth()
-
-
-@auth.verify_password
-def verify_password(username: str, password: str) -> Optional[str]:
-    if username == app.config['AUTH_USERNAME'] and check_password_hash(app.config['AUTH_PASSWORD'], password):
-        return username
-
-    return None
+# Flask-SQLAlchemy
+class AppDeclarativeBase(DeclarativeBase):
+    pass
 
 
-@auth.error_handler
-def auth_error(status: int) -> Tuple[str, int]:
-    try:
-        abort(status)
-    except HTTPException as e:
-        return http_error_handler(e)
+db = SQLAlchemy(app, model_class=AppDeclarativeBase)
+
+# Flask-Migrate
+migrate = Migrate(app, db)
+
+# Flask-Login
+login_manager = LoginManager(app)
+login_manager.login_message_category = 'info'
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    # from rwrs.models import User
+
+    # return db.get_or_404(User, user_id)
+    pass # TODO
+
+
+# -----------------------------------------------------------
+# Context processors
+
+@app.context_processor
+def context_processor():
+    return {
+        'current_year': datetime.now().year,
+    }
 
 
 # -----------------------------------------------------------
@@ -133,4 +152,5 @@ def http_error_handler(e: HTTPException) -> Tuple[str, int]:
 # -----------------------------------------------------------
 # After-bootstrap imports
 
+import spotibox.models
 import spotibox.routes

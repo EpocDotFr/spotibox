@@ -48,24 +48,5 @@
                 array.splice(index, 1);
                 array.splice(newIndex , 0, item);
             }
-        },
-
-        generateRandomString(length) {
-            let text = '';
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.-~';
-
-            for (let i = 0; i < length; i++) {
-                text += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-
-            return text;
-        },
-
-        base64encode(string) {
-            return btoa(String.fromCharCode.apply(null, new Uint8Array(string)))
-                .replace(/\+/g, '-')
-                .replace(/\//g, '_')
-                .replace(/=+$/, '');
-        }
-    };
+        },};
 })();

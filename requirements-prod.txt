@@ -1,4 +1,4 @@
 -r requirements.txt
-sentry-sdk[flask]==1.20.0
-Flask-Compress==1.13
+sentry-sdk[flask]==1.31.0
+Flask-Compress==1.14
 Flask-HTMLmin==2.2.1

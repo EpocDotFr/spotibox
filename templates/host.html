@@ -2,24 +2,6 @@
 
 {% set title = 'Host a session' %}
 
-{% block jsfiles %}
-    {% assets 'js_host' %}<script defer src="{{ ASSET_URL }}"></script>{% endassets %}
-    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.13.0/dist/cdn.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/spotify-web-api-js/1.5.2/spotify-web-api.min.js"></script>
-{% endblock %}
-
-{% block scripts %}
-    <script>
-        document.addEventListener('alpine:init', function () {
-            const spotibox_host = new Spotibox.Host(
-                '{{ url_for('host', _external=True) }}',
-                '{{ config['SPOTIFY_CLIENT_ID'] }}'
-            );
-        });
-    </script>
-{% endblock %}
-
 {% block content %}
     <main class="container text-center" x-data="hostComponent">
         <template x-if="error">

@@ -1,6 +1,11 @@
-Flask==2.3.2
+Flask==2.3.3
 Flask-Assets==2.0
-Flask-HTTPAuth==4.8.0
+Flask-SQLAlchemy==3.1.1
+Flask-Migrate==4.0.5
+Flask-Login==0.6.2
 environs==9.5.0
-cssutils==2.6.0
+cssutils==2.7.1
 jsmin==3.0.1
+spotipy==2.23.0
+SQLAlchemy-Utils==0.41.1
+arrow==1.2.3

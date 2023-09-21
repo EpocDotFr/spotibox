@@ -29,10 +29,23 @@
         <a href="{{ url_for('home') }}" class="text-reset text-decoration-none"><i class="bi bi-disc"></i> <strong>Spoti</strong>box</a>
     </header>
 
+    {% with flash_messages = get_flashed_messages(with_categories=true) %}
+        {% if flash_messages %}
+            <div class="container">
+                {% for category, message in flash_messages %}
+                    <div class="alert alert-{{ category }} p-2 alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     {% block content %}{% endblock %}
 
     <footer class="text-body-secondary small text-center mt-4">
-        © 2023 <a href="https://epoc.fr"><img src="{{ url_for('static', filename='images/epoc.png') }}"></a> <a href="https://epoc.fr">Maxime "Epoc" G.</a><br>
+        © {{ current_year }} <a href="https://epoc.fr"><img src="{{ url_for('static', filename='images/epoc.png') }}"></a> <a href="https://epoc.fr">Maxime "Epoc" G.</a><br>
         <p>Powered by <a href="https://open.spotify.com"><img src="{{ url_for('static', filename='images/spotify.png') }}"></a><br>This site not affiliated with Spotify.
     </footer>
 
