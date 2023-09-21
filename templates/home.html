@@ -9,8 +9,8 @@
             <section class="text-end">
                 <h2>Create or manage your rooms</h2>
 
-                {% if true %}
-                    <p>Connected to Spotify with the account <img src="https://placehold.co/32" width="32" height="32" class="rounded"> <strong>TODO</strong>.</p>
+                {% if current_user.is_authenticated %}
+                    <p>Connected to Spotify with the account {% if current_user.profile_image_url %}<img src="{{ current_user.profile_image_url}}" width="32" height="32" class="rounded"> {% endif %}<strong>{{ current_user.display_name }}</strong>.</p>
                     <p><a href="#" class="btn btn-primary">My rooms</a> <a href="#" class="btn btn-primary">Create room</a> <a href="#" class="btn btn-danger">Disconnect</a></p>
                 {% else %}
                     <p>Start by signing in using your Spotify account.</p>
