@@ -29,7 +29,7 @@ class Room(TimestampedMixin, db.Model):
 
     id = mapped_column(db.Integer, primary_key=True, autoincrement=True)
 
-    name = mapped_column(db.String, nullable=False)
+    name = mapped_column(db.String, nullable=False, unique=True)
     password = mapped_column(db.String, nullable=False)
 
     user_id = mapped_column(db.Integer, ForeignKey('users.id'), nullable=False)
