@@ -7,5 +7,4 @@ environs==9.5.0
 cssutils==2.7.1
 jsmin==3.0.1
 spotipy==2.23.0
-SQLAlchemy-Utils==0.41.1
 arrow==1.2.3
