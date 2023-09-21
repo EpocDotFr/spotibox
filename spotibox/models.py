@@ -1,12 +1,16 @@
 from sqlalchemy.orm import mapped_column
-from sqlalchemy_utils import ArrowType
 from flask_login import UserMixin
 from sqlalchemy import ForeignKey
+from datetime import datetime
 from app import db
-import arrow
 
 
-class User(db.Model, UserMixin):
+class TimestampedMixin:
+    created_at = mapped_column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = mapped_column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class User(TimestampedMixin, UserMixin, db.Model):
     __tablename__ = 'users'
 
     id = mapped_column(db.Integer, primary_key=True, autoincrement=True)
@@ -16,21 +20,17 @@ class User(db.Model, UserMixin):
     profile_image_url = mapped_column(db.String)
     access_token = mapped_column(db.String)
     refresh_token = mapped_column(db.String)
-    created_at = mapped_column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), nullable=False)
-    updated_at = mapped_column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), onupdate=lambda: arrow.utcnow().floor('minute'), nullable=False)
 
     rooms = db.relationship('Room', back_populates='user')
 
 
-class Room(db.Model):
+class Room(TimestampedMixin, db.Model):
     __tablename__ = 'rooms'
 
     id = mapped_column(db.Integer, primary_key=True, autoincrement=True)
 
     name = mapped_column(db.String, nullable=False)
     password = mapped_column(db.String, nullable=False)
-    created_at = mapped_column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), nullable=False)
-    updated_at = mapped_column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), onupdate=lambda: arrow.utcnow().floor('minute'), nullable=False)
 
     user_id = mapped_column(db.Integer, ForeignKey('users.id'))
 
