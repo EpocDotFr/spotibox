@@ -3,20 +3,7 @@
 {% set title = 'Host a session' %}
 
 {% block content %}
-    <main class="container text-center" x-data="hostComponent">
-        <template x-if="error">
-            <div class="alert alert-danger p-2" x-text="error"></div>
-        </template>
-
-        <template x-if="!spotify.connected">
-            <div>
-                <p>To host a session, start by connecting using your Spotify account.</p>
-                <p><button type="button" class="btn btn-success" @click="connect()">Connect with <img src="{{ url_for('static', filename='images/spotify.png') }}"></button></p>
-                <p class="strong"><strong>Requires a Spotify Premium subscription.</strong></p>
-                <p>Others does not need a Spotify account at all.</p>
-            </div>
-        </template>
-
+    <main class="container text-center">
         <template x-if="spotify.connected">
             <div>
                 <p>Connected to Spotify with the account <strong x-text="spotify.accountName"></strong>.</p>
