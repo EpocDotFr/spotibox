@@ -1,16 +1,33 @@
 from flask import render_template, redirect, url_for, request, flash, abort
 from spotibox.spotify import create_auth_manager, create_api_client
 from flask_login import current_user, login_user, logout_user
+from spotibox.forms import RoomForm
 from spotibox.models import User
 from sqlalchemy import select
 from werkzeug import Response
+from typing import Union
 from app import app, db
 
 
-@app.route('/')
-def home() -> str:
+@app.route('/', methods=['GET', 'POST'])
+def home() -> Union[str, Response]:
     if current_user.is_authenticated:
-        data = {}
+        form = RoomForm(obj=current_user)
+
+        if form.validate_on_submit():
+            current_user.room_name = form.room_name.data
+            current_user.room_password = form.room_password.data
+
+            db.session.add(current_user)
+            db.session.commit()
+
+            flash('Room settings have been saved.', 'success')
+
+            return redirect(url_for('home'))
+
+        data = {
+            'form': form
+        }
     else:
         auth_manager = create_auth_manager()
 
