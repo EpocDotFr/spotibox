@@ -24,7 +24,7 @@ class User(TimestampedMixin, UserMixin, db.Model):
     rooms = db.relationship('Room', back_populates='user')
 
     @property
-    def is_connected_to_spotify(self):
+    def is_connected_to_spotify(self) -> bool:
         return self.access_token and self.refresh_token
 
     def disconnect_from_spotify(self):
@@ -45,9 +45,9 @@ class Room(TimestampedMixin, db.Model):
     user = db.relationship('User', back_populates='rooms')
 
     @property
-    def is_private(self):
+    def is_private(self) -> bool:
         return bool(self.password)
 
     @property
-    def is_public(self):
+    def is_public(self) -> bool:
         return not self.is_private

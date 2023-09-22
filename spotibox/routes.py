@@ -50,11 +50,11 @@ def create_room() -> Union[str, Response]:
     return render_template('rooms/create.html')
 
 
-@app.route('/my-rooms/<room_id>/edit')
-def edit_room(room_id: id) -> Union[str, Response]:
+@app.route('/my-rooms/<int:room_id>/edit')
+def edit_room(room_id: int) -> Union[str, Response]:
     return render_template('rooms/edit.html')
 
 
-@app.route('/my-rooms/<room_id>/delete')
-def delete_room(room_id: id) -> Response:
+@app.route('/my-rooms/<int:room_id>/delete')
+def delete_room(room_id: int) -> Response:
     return redirect(url_for('my_rooms'))
