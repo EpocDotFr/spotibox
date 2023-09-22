@@ -20,26 +20,13 @@ class User(TimestampedMixin, UserMixin, db.Model):
     profile_image_url = mapped_column(db.String)
     access_token = mapped_column(db.String)
     refresh_token = mapped_column(db.String)
-
-    rooms = db.relationship('Room', back_populates='user')
-
-
-class Room(TimestampedMixin, db.Model):
-    __tablename__ = 'rooms'
-
-    id = mapped_column(db.Integer, primary_key=True, autoincrement=True)
-
-    name = mapped_column(db.String, nullable=False, unique=True)
-    password = mapped_column(db.String)
-
-    user_id = mapped_column(db.Integer, ForeignKey('users.id'), nullable=False)
-
-    user = db.relationship('User', back_populates='rooms')
+    room_name = mapped_column(db.String, nullable=False, unique=True)
+    room_password = mapped_column(db.String)
 
     @property
-    def is_private(self) -> bool:
-        return bool(self.password)
+    def is_room_private(self) -> bool:
+        return bool(self.room_password)
 
     @property
-    def is_public(self) -> bool:
-        return not self.is_private
+    def is_room_public(self) -> bool:
+        return not self.is_room_private

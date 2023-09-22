@@ -2,30 +2,50 @@
 
 {% block content %}
     <main class="container">
-        <p class="text-center">A collaborative, online jukebox based on Spotify.</p>
-        <p class="text-center lead"><strong>What do you want to do?</strong></p>
+        {% if current_user.is_authenticated %}
+            <p class="text-center">Signed in with the Spotify account {% if current_user.profile_image_url %}<img src="{{ current_user.profile_image_url}}" width="32" height="32" class="rounded"> {% endif %}<strong>{{ current_user.display_name }}</strong>.</p>
 
-        <div class="hstack gap-3 justify-content-center align-items-start">
-            <section class="text-end">
-                <h2>Create or manage your rooms</h2>
+            <form class="hstack gap-3 justify-content-center align-items-center mb-3">
+                <div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Room name (required)">
+                    </div>
+                </div>
+                <div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Room password (optional)">
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
 
-                {% if current_user.is_authenticated %}
-                    <p>Signed in to Spotify with the account {% if current_user.profile_image_url %}<img src="{{ current_user.profile_image_url}}" width="32" height="32" class="rounded"> {% endif %}<strong>{{ current_user.display_name }}</strong>.</p>
-                    <p><a href="{{ url_for('my_rooms') }}" class="btn btn-primary">My rooms</a> <a href="{{ url_for('create_room') }}" class="btn btn-primary">Create room</a> <a href="{{ url_for('sign_out') }}" class="btn btn-danger">Sign out</a></p>
-                {% else %}
+            <p class="text-center">TODO ROOM URL</p>
+            <p class="text-center">You must be signed in and present in your room for it to be active.</p>
+            <p class="text-center">Signing out will disable your room and remove Spotibox' access to your Spotify account.</p>
+            <p class="text-center"><a href="{{ url_for('sign_out') }}" class="btn btn-danger">Sign out</a></p>
+        {% else %}
+            <p class="text-center">A collaborative, online jukebox based on Spotify.</p>
+            <p class="text-center lead"><strong>What do you want to do?</strong></p>
+
+            <div class="hstack gap-3 justify-content-center align-items-start">
+                <section class="text-end">
+                    <h3>Host a room</h3>
+
                     <p>Start by signing in using your Spotify account.</p>
                     <p><a href="{{ sign_in_spotify_url }}" class="btn btn-success">Sign in with <img src="{{ url_for('static', filename='images/spotify.png') }}"></a></p>
                     <p><strong>Requires a Spotify Premium subscription.</strong></p>
-                {% endif %}
-            </section>
-            <div class="vr"></div>
-            <section class="text-start">
-                <h2>Join a public or private room</h2>
+                </section>
+                <div class="vr"></div>
+                <section class="text-start">
+                    <h3>Join a room</h3>
 
-                <p>Navigate to the URL the private room's creator gave to you, or...</p>
-                <p><a href="{{ url_for('public_rooms') }}" class="btn btn-primary">Browse public rooms</a></p>
-                <p>You do not need a Spotify account at all.</p>
-            </section>
-        </div>
+                    <p>Navigate to the URL the room's host gave to you, or...</p>
+                    <p><a href="{{ url_for('rooms') }}" class="btn btn-primary">Browse public rooms</a></p>
+                    <p>You do not need a Spotify account at all.</p>
+                </section>
+            </div>
+        {% endif %}
     </main>
 {% endblock %}

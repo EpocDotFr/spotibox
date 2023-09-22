@@ -31,30 +31,10 @@ def sign_out() -> Response:
 
 
 @app.route('/rooms')
-def public_rooms() -> str:
-    return render_template('rooms/list_public.html')
+def rooms() -> str:
+    return render_template('rooms/list.html')
 
 
 @app.route('/rooms/<room_name>')
 def room(room_name: str) -> str:
     return render_template('rooms/details.html')
-
-
-@app.route('/my-rooms')
-def my_rooms() -> str:
-    return render_template('rooms/list_mine.html')
-
-
-@app.route('/my-rooms/create')
-def create_room() -> Union[str, Response]:
-    return render_template('rooms/create.html')
-
-
-@app.route('/my-rooms/<int:room_id>/edit')
-def edit_room(room_id: int) -> Union[str, Response]:
-    return render_template('rooms/edit.html')
-
-
-@app.route('/my-rooms/<int:room_id>/delete')
-def delete_room(room_id: int) -> Response:
-    return redirect(url_for('my_rooms'))
