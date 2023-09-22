@@ -20,5 +20,5 @@ class User(TimestampedMixin, UserMixin, db.Model):
     profile_image_url = mapped_column(db.String)
     access_token = mapped_column(db.String)
     refresh_token = mapped_column(db.String)
-    room_name = mapped_column(db.String, nullable=False, unique=True)
+    room_name = mapped_column(db.String, unique=True)
     room_password = mapped_column(db.String)
