@@ -20,8 +20,8 @@ def home() -> str:
     return render_template('home.html', **data)
 
 
-@app.route('/authorize')
-def authorize() -> Response:
+@app.route('/authorize-callback')
+def authorize_callback() -> Response:
     return redirect(url_for('home'))
 
 
@@ -32,22 +32,27 @@ def sign_out() -> Response:
 
 @app.route('/rooms')
 def public_rooms() -> str:
-    return ''
+    return render_template('rooms/list_public.html')
 
 
 @app.route('/rooms/<room_name>')
 def room(room_name: str) -> str:
-    return render_template('room.html')
+    return render_template('rooms/details.html')
 
 
 @app.route('/my-rooms')
 def my_rooms() -> str:
-    return ''
+    return render_template('rooms/list_mine.html')
 
 
 @app.route('/my-rooms/create')
 def create_room() -> Union[str, Response]:
-    return ''
+    return render_template('rooms/create.html')
+
+
+@app.route('/my-rooms/<room_id>/edit')
+def edit_room(room_id: id) -> Union[str, Response]:
+    return render_template('rooms/edit.html')
 
 
 @app.route('/my-rooms/<room_id>/delete')
