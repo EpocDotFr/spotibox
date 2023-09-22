@@ -23,14 +23,6 @@ class User(TimestampedMixin, UserMixin, db.Model):
 
     rooms = db.relationship('Room', back_populates='user')
 
-    @property
-    def is_connected_to_spotify(self) -> bool:
-        return self.access_token and self.refresh_token
-
-    def disconnect_from_spotify(self):
-        self.access_token = None
-        self.refresh_token = None
-
 
 class Room(TimestampedMixin, db.Model):
     __tablename__ = 'rooms'
