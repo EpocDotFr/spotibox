@@ -22,11 +22,3 @@ class User(TimestampedMixin, UserMixin, db.Model):
     refresh_token = mapped_column(db.String)
     room_name = mapped_column(db.String, nullable=False, unique=True)
     room_password = mapped_column(db.String)
-
-    @property
-    def is_room_private(self) -> bool:
-        return bool(self.room_password)
-
-    @property
-    def is_room_public(self) -> bool:
-        return not self.is_room_private
