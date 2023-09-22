@@ -1,8 +1,8 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request, flash
+from flask_login import current_user, login_user, logout_user
 from spotibox.spotify import create_auth_manager
-from flask_login import current_user
+from spotibox.models import User
 from werkzeug import Response
-from typing import Union
 from app import app
 
 
@@ -22,11 +22,47 @@ def home() -> str:
 
 @app.route('/authorize-callback')
 def authorize_callback() -> Response:
+    code = request.args.get('code')
+    error = request.args.get('error')
+
+    if code:
+        auth_manager = create_auth_manager()
+
+        try:
+            auth_manager.get_access_token(code)
+        except Exception:
+            app.logger.exception('Failed to get access token from Spotify')
+
+            if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+                import sentry_sdk
+
+                sentry_sdk.capture_exception()
+
+            flash(f'Failed to get access token from Spotify.', 'danger')
+
+        # TODO récup infos user
+        # TODO Créer ou mettre à jour user
+
+        # login_user(user, remember=True)
+
+        flash('Successfully logged in.', 'success')
+    elif error:
+        if error == 'access_denied':
+            flash('You did not authorize Spotibox to access your Spotify account.', 'danger')
+        else:
+            flash(f'Got error code "{error}" from Spotify.', 'danger')
+
     return redirect(url_for('home'))
 
 
 @app.route('/sign-out')
 def sign_out() -> Response:
+    # TODO access_token et refresh_token à null
+
+    logout_user()
+
+    flash('You are now signed out.', 'success')
+
     return redirect(url_for('home'))
 
 
