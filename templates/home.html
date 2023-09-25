@@ -1,56 +1,59 @@
 {% extends 'layout.html' %}
 
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(function (el) {
+                new bootstrap.Tooltip(el);
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
     <main class="container">
         {% if current_user.is_authenticated %}
             <p class="text-center">Signed in with your Spotify account{% if current_user.profile_image_url %} <img src="{{ current_user.profile_image_url}}" width="32" height="32" class="rounded">{% endif %}{% if current_user.display_name %} <strong>{{ current_user.display_name }}</strong>{% endif %}.</p>
 
-            <form action="{{ url_for('home') }}" method="POST" class="mb-3">
+            {% if current_user.room_name %}
+                <p class="text-center lead">Your room's URL: <code>TODO ROOM URL</code> <a href="#"><i class="bi bi-box-arrow-up-right"></i></a></p>
+                <!--<p class="text-center">You must be signed in and present in your room for it to be active.</p>
+                <p class="text-center">In addition, you must run Spotify separately, and choose the "Spotibox" Spotify Connect device.</p>-->
+            {% else %}
+                <p class="text-center"><strong>You must first define a room name (below) in order to host a room.</strong></p>
+            {% endif %}
+
+            <form action="{{ url_for('home') }}" method="POST" class="hstack gap-3 justify-content-center align-items-start mb-3">
                 {{ form.csrf_token }}
 
-                {% if form.errors %}
-                    <div class="alert alert-warning">
-                        <h4>Not so fast!</h4>
+                <div>
+                    {{ form.room_name(class='form-control' + (' is-invalid' if form.room_name.errors else ''), placeholder='Room name (required, must be unique)', size='36') }}
 
-                        <ul class="mb-0">
-                            {% for field, errors in form.errors.items() %}
-                                <li>{{ form[field].label.text }}<ul>
-                                    {% for error in errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul></li>
+                    {% if form.room_name.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.room_name.errors %}
+                                <div>{{ error }}</div>
                             {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.room_password(class='form-control' + (' is-invalid' if form.room_password.errors else ''), placeholder='Room password (optional)', size='24') }}
 
-                <div class="hstack gap-3 justify-content-center align-items-center">
-                    <div>
-                        <div class="input-group">
-                            {{ form.room_name(class="form-control", placeholder='Room name (required, must be unique)', size='36') }}
+                    {% if form.room_password.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.room_password.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
                         </div>
-                    </div>
-                    <div>
-                        <div class="input-group">
-                            {{ form.room_password(class="form-control", placeholder='Room password (optional)', size='24') }}
-                        </div>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Save</button>
-                    </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Save</button>
                 </div>
             </form>
 
-            {% if current_user.room_name %}
-                <p class="text-center"><code>TODO ROOM URL</code> <a href="#"><i class="bi bi-box-arrow-up-right"></i></a></p>
-                <p class="text-center">You must be signed in and present in your room for it to be active.</p>
-                <p class="text-center">In addition, you must run Spotify separately, and choose the "Spotibox" Spotify Connect device.</p>
-            {% else %}
-                <p class="text-center"><strong>You must first define a room name (above) in order to host a room.</strong></p>
-            {% endif %}
-
-            <p class="text-center">Signing out will disable your room and remove Spotibox' access to your Spotify account.</p>
-            <p class="text-center"><a href="{{ url_for('sign_out') }}" class="btn btn-danger"><i class="bi bi-box-arrow-right"></i> Sign out</a></p>
+            <p class="text-center"><a href="{{ url_for('sign_out') }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-title="Your room will be disabled and Spotibox' access to your Spotify account will be removed"><i class="bi bi-box-arrow-right"></i> Sign out</a> <a href="#" class="btn btn-danger disabled" data-bs-toggle="tooltip" data-bs-title="All of your Spotibox data will be immediately and permanently deleted"><i class="bi bi-trash"></i> Delete account <small>(soon)</small></a></p>
         {% else %}
             <p class="text-center">A collaborative, online jukebox based on Spotify.</p>
             <p class="text-center lead">What do you want to do?</p>
@@ -68,7 +71,7 @@
                     <h3>Join a room</h3>
 
                     <p>Navigate to the URL the room's host gave to you, or...</p>
-                    <p><a href="{{ url_for('rooms') }}" class="btn btn-primary">Browse public rooms</a></p>
+                    <p><a href="{{ url_for('rooms') }}" class="btn btn-primary disabled">Browse public rooms <small>(soon)</small></a></p>
                     <p>You do not need a Spotify account at all.</p>
                 </section>
             </div>

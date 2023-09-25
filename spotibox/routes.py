@@ -21,7 +21,7 @@ def home() -> Union[str, Response]:
             db.session.add(current_user)
             db.session.commit()
 
-            flash('Room settings have been saved.', 'success')
+            flash('Your room\'s settings have been saved.', 'success')
 
             return redirect(url_for('home'))
 
@@ -56,7 +56,7 @@ def authorize_callback() -> Response:
 
                 sentry_sdk.capture_exception()
 
-            flash(f'Failed to get access token from Spotify.', 'danger')
+            flash(f'Sorry, there was an error while authenticating with Spotify.', 'danger')
 
             return redirect(url_for('home'))
 
@@ -72,20 +72,23 @@ def authorize_callback() -> Response:
 
                 sentry_sdk.capture_exception()
 
-            flash(f'Failed to get Spotify account information.', 'danger')
+            flash(f'Sorry, there was an error while getting your Spotify account information.', 'danger')
 
             return redirect(url_for('home'))
 
         if user_info['product'] != 'premium':
-            flash('Sorry, you must have a Spotify Premium subscription to use Spotibox.')
+            flash('Sorry, you must have a Spotify Premium subscription to use Spotibox.', 'warning')
 
             return redirect(url_for('home'))
 
         user = db.session.scalar(select(User).where(User.spotify_id == user_info['id']))
+        new_user = False
 
         if not user:
             user = User()
             user.spotify_id = user_info['id']
+
+            new_user = True
 
         user.display_name = user_info['display_name']
         user.profile_image_url = user_info['images'][0]['url'] if user_info['images'] else None # TODO Use the smallest one (>= 32 px)
@@ -97,7 +100,7 @@ def authorize_callback() -> Response:
 
         login_user(user, remember=True)
 
-        flash('Successfully logged in.', 'success')
+        flash('Successfully signed in.' if new_user else f'Welcome back, {user.display_name}.', 'success')
     elif error:
         if error == 'access_denied':
             flash('You did not authorize Spotibox to access your Spotify account.', 'warning')
@@ -117,9 +120,9 @@ def sign_out() -> Response:
     db.session.add(current_user)
     db.session.commit()
 
-    logout_user()
+    flash(f'See you later, {current_user.display_name}.', 'success')
 
-    flash('You are now signed out.', 'success')
+    logout_user()
 
     return redirect(url_for('home'))
 
