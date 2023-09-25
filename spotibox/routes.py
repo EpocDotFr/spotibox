@@ -15,8 +15,7 @@ def home() -> Union[str, Response]:
         form = RoomForm(obj=current_user)
 
         if form.validate_on_submit():
-            current_user.room_name = form.room_name.data
-            current_user.room_password = form.room_password.data
+            form.populate_user(current_user)
 
             db.session.add(current_user)
             db.session.commit()
@@ -29,10 +28,8 @@ def home() -> Union[str, Response]:
             'form': form
         }
     else:
-        auth_manager = create_auth_manager()
-
         data = {
-            'sign_in_spotify_url': auth_manager.get_authorize_url() # TODO state
+            'sign_in_spotify_url': create_auth_manager().get_authorize_url()
         }
 
     return render_template('home.html', **data)
@@ -92,8 +89,6 @@ def authorize_callback() -> Response:
 
         user.display_name = user_info['display_name']
         user.profile_image_url = user_info['images'][0]['url'] if user_info['images'] else None # TODO Use the smallest one (>= 32 px)
-        user.access_token = 'todo' # TODO
-        user.refresh_token = 'todo' # TODO
 
         db.session.add(user)
         db.session.commit()
@@ -115,7 +110,6 @@ def authorize_callback() -> Response:
 @app.route('/sign-out')
 def sign_out() -> Response:
     current_user.access_token = None
-    current_user.refresh_token = None
 
     db.session.add(current_user)
     db.session.commit()

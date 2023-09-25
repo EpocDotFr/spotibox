@@ -18,7 +18,6 @@ class User(TimestampedMixin, UserMixin, db.Model):
     spotify_id = mapped_column(db.String, nullable=False, unique=True)
     display_name = mapped_column(db.String)
     profile_image_url = mapped_column(db.String)
-    access_token = mapped_column(db.String)
-    refresh_token = mapped_column(db.String)
+    access_token = mapped_column(db.JSON)
     room_name = mapped_column(db.String, unique=True)
     room_password = mapped_column(db.String)
