@@ -1,9 +1,12 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <main class="container text-center">
-        <div class="alert alert-warning lead">
-            <i class="bi bi-emoji-frown-fill"></i><br>{{ text }}
+    <main class="container">
+        <div class="alert alert-warning lead hstack gap-3 justify-content-center align-items-center">
+            <i class="bi bi-emoji-frown-fill"></i>
+            <div>
+                {{ text }}
+            </div>
         </div>
     </main>
 {% endblock %}
