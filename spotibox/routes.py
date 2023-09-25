@@ -1,6 +1,6 @@
+from flask_login import current_user, login_user, logout_user, login_required
 from flask import render_template, redirect, url_for, request, flash, abort
 from spotibox.spotify import create_auth_manager, create_api_client
-from flask_login import current_user, login_user, logout_user
 from spotibox.forms import RoomForm
 from spotibox.models import User
 from sqlalchemy import select
@@ -112,6 +112,7 @@ def authorize_callback() -> Response:
 
 
 @app.route('/sign-out')
+@login_required
 def sign_out() -> Response:
     current_user.access_token = None
 
