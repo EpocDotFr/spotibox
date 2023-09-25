@@ -1,6 +1,5 @@
 from sqlalchemy.orm import mapped_column
 from flask_login import UserMixin
-from sqlalchemy import ForeignKey
 from datetime import datetime
 from app import db
 
