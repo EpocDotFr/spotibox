@@ -88,14 +88,18 @@ def authorize_callback() -> Response:
             new_user = True
 
         user.display_name = user_info['display_name']
-        user.profile_image_url = user_info['images'][0]['url'] if user_info['images'] else None # TODO Use the smallest one (>= 32 px)
+
+        if user_info['images']:
+            user_info['images'].sort(key=lambda i: i['height'])
+
+            user.profile_image_url = user_info['images'][0]['url']
 
         db.session.add(user)
         db.session.commit()
 
         login_user(user, remember=True)
 
-        flash('Successfully signed in.' if new_user else f'Welcome back, {user.display_name}.', 'success')
+        flash('Welcome{}, {}.'.format(' back' if not new_user else '', user.display_name), 'success')
     elif error:
         if error == 'access_denied':
             flash('You did not authorize Spotibox to access your Spotify account.', 'warning')
