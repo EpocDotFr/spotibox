@@ -20,11 +20,11 @@
             <p class="text-center">Signed in with your Spotify account{% if current_user.profile_image_url %} <img src="{{ current_user.profile_image_url}}" class="rounded-1 avatar">{% endif %}{% if current_user.display_name %} <strong>{{ current_user.display_name }}</strong>{% endif %}.</p>
 
             {% if current_user.room_name %}
-                <div class="input-group mb-3 justify-content-center">
+                <div class="input-group mb-3 justify-content-center" x-data="{roomUrl: null}">
                     <span class="input-group-text">Your room's URL:</span>
-                    <input type="text" class="form-control font-monospace flex-grow-0 w-auto" readonly value="{{ url_for('room', room_name=current_user.room_name, _external=True) }}" size="55">
-                    <button type="button" class="btn btn-outline-secondary"><i class="bi bi-clipboard"></i></button>
-                    <a href="{{ url_for('room', room_name=current_user.room_name) }}" class="btn btn-outline-secondary" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
+                    <input type="text" class="form-control font-monospace flex-grow-0 w-auto" readonly value="{{ url_for('room', room_name=current_user.room_name, _external=True) }}" size="55" x-model.fill="roomUrl">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Copy room's URL" @click="navigator.clipboard.writeText(roomUrl);"><i class="bi bi-clipboard"></i></button>
+                    <a href="{{ url_for('room', room_name=current_user.room_name) }}" class="btn btn-outline-secondary" target="_blank" data-bs-toggle="tooltip" data-bs-title="Open rooms's URL in new tab"><i class="bi bi-box-arrow-up-right"></i></a>
                 </div>
 
                 <!--<p class="text-center">You must be signed in and present in your room for it to be active.</p>
@@ -51,7 +51,7 @@
                     <div class="input-group {{ 'has-validation' if form.room_password.errors }}" x-data="{passwordVisible: false}">
                         <input class="form-control {{ ' is-invalid' if form.room_password.errors }}" id="{{ form.room_password.id }}" minlength="4" maxlength="30" name="{{ form.room_password.name }}" placeholder="Room password (optional)" size="22" :type="passwordVisible ? 'text' : 'password'" value="{{ form.room_password.data or '' }}">
 
-                        <button class="btn btn-outline-secondary" type="button" @click="passwordVisible = !passwordVisible"><i class="bi bi-eye" x-show="!passwordVisible"></i><i class="bi bi-eye-slash" x-show="passwordVisible"></i></button>
+                        <button class="btn btn-outline-secondary" type="button" @click="passwordVisible = !passwordVisible" data-bs-toggle="tooltip" data-bs-title="Show/hide password"><i class="bi bi-eye" x-show="!passwordVisible"></i><i class="bi bi-eye-slash" x-show="passwordVisible"></i></button>
 
                         {% if form.room_password.errors %}
                             <div class="invalid-feedback">
