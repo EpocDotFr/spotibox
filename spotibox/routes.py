@@ -53,7 +53,7 @@ def authorize_callback() -> Response:
 
                 sentry_sdk.capture_exception()
 
-            flash(f'Sorry, there was an error while authenticating with Spotify.', 'danger')
+            flash('Sorry, there was an error while authenticating with Spotify.', 'danger')
 
             session.pop('token_info', None)
 
@@ -71,7 +71,7 @@ def authorize_callback() -> Response:
 
                 sentry_sdk.capture_exception()
 
-            flash(f'Sorry, there was an error while getting your Spotify account information.', 'danger')
+            flash('Sorry, there was an error while getting your Spotify account information.', 'danger')
 
             session.pop('token_info', None)
 
@@ -94,7 +94,14 @@ def authorize_callback() -> Response:
             new_user = True
 
         user.display_name = user_info['display_name']
-        user.access_token = session.get('token_info')
+        user.access_token = session.get('token_info', None)
+
+        if not user.access_token:
+            flash('Sorry, there was a technical error (empty access token after authorization).', 'danger')
+
+            session.pop('token_info', None)
+
+            return redirect(url_for('home'))
 
         if user_info['images']:
             user_info['images'].sort(key=lambda i: i['height'])
@@ -127,6 +134,8 @@ def sign_out() -> Response:
 
     db.session.add(current_user)
     db.session.commit()
+
+    session.pop('token_info', None)
 
     flash(f'See you later, {current_user.display_name}.', 'success')
 
