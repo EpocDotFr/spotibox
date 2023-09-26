@@ -1,12 +1,12 @@
 from werkzeug.exceptions import HTTPException
 from flask_assets import Environment, Bundle
 from sqlalchemy.orm import DeclarativeBase
+from typing import Tuple, Dict, Optional
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from datetime import datetime
-from typing import Tuple
 from environs import Env
 
 
@@ -120,17 +120,17 @@ login_manager.login_message_category = 'info'
 
 
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(user_id: int):
     from spotibox.models import User
 
-    return db.get_or_404(User, user_id)
+    return db.session.get(User, user_id)
 
 
 # -----------------------------------------------------------
 # Context processors
 
 @app.context_processor
-def context_processor():
+def context_processor() -> Dict:
     return {
         'current_year': datetime.now().year,
     }

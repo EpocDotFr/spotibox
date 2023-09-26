@@ -1,5 +1,9 @@
 {% extends 'layout.html' %}
 
+{% block jsfiles %}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js"></script>
+{% endblock %}
+
 {% block scripts %}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -16,7 +20,13 @@
             <p class="text-center">Signed in with your Spotify account{% if current_user.profile_image_url %} <img src="{{ current_user.profile_image_url}}" class="rounded-1 avatar">{% endif %}{% if current_user.display_name %} <strong>{{ current_user.display_name }}</strong>{% endif %}.</p>
 
             {% if current_user.room_name %}
-                <p class="text-center lead">Your room's URL: <code>TODO ROOM URL</code> <a href="#"><i class="bi bi-box-arrow-up-right"></i></a></p>
+                <div class="input-group mb-3 justify-content-center">
+                    <span class="input-group-text">Your room's URL:</span>
+                    <input type="text" class="form-control" readonly value="{{ url_for('room', room_name=current_user.room_name, _external=True) }}">
+                    <button type="button" class="btn btn-outline-secondary"><i class="bi bi-clipboard"></i></button>
+                    <a href="{{ url_for('room', room_name=current_user.room_name) }}" class="btn btn-outline-secondary" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
+                </div>
+
                 <!--<p class="text-center">You must be signed in and present in your room for it to be active.</p>
                 <p class="text-center">In addition, you must run Spotify separately, and choose the "Spotibox" Spotify Connect device.</p>-->
             {% else %}
@@ -38,22 +48,26 @@
                     {% endif %}
                 </div>
                 <div>
-                    {{ form.room_password(class='form-control' + (' is-invalid' if form.room_password.errors else ''), placeholder='Room password (optional)', size='24') }}
+                    <div class="input-group {{ 'has-validation' if form.room_password.errors }}" x-data="{passwordVisible: false}">
+                        <input class="form-control {{ ' is-invalid' if form.room_password.errors }}" id="{{ form.room_password.id }}" minlength="4" maxlength="30" name="{{ form.room_password.name }}" placeholder="Room password (optional)" size="25" :type="passwordVisible ? 'text' : 'password'" value="{{ form.room_password.data }}">
 
-                    {% if form.room_password.errors %}
-                        <div class="invalid-feedback">
-                            {% for error in form.room_password.errors %}
-                                <div>{{ error }}</div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+                        <button class="btn btn-outline-secondary" type="button" @click="passwordVisible = !passwordVisible"><i class="bi bi-eye" x-show="!passwordVisible"></i><i class="bi bi-eye-slash" x-show="passwordVisible"></i></button>
+
+                        {% if form.room_password.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.room_password.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
                 <div>
                     <button type="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Save</button>
                 </div>
             </form>
 
-            <p class="text-center"><a href="{{ url_for('sign_out') }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-title="Your room will be disabled and Spotibox' access to your Spotify account will be removed"><i class="bi bi-box-arrow-right"></i> Sign out</a> <a href="#" class="btn btn-danger disabled" data-bs-toggle="tooltip" data-bs-title="All of your Spotibox data will be immediately and permanently deleted"><i class="bi bi-trash"></i> Delete account <small>(soon)</small></a></p>
+            <p class="text-center mb-0"><a href="{{ url_for('sign_out') }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-title="Your room will be disabled and Spotibox' access to your Spotify account will be removed"><i class="bi bi-box-arrow-right"></i> Sign out</a> <a href="#" class="btn btn-danger disabled" data-bs-toggle="tooltip" data-bs-title="All of your Spotibox data will be immediately and permanently deleted"><i class="bi bi-trash"></i> Delete account <small>(soon)</small></a></p>
         {% else %}
             <p class="text-center">A collaborative, online jukebox based on Spotify.</p>
             <p class="text-center lead">What do you want to do?</p>
@@ -64,7 +78,7 @@
 
                     <p>Start by signing in using your Spotify account.</p>
                     <p><a href="{{ sign_in_spotify_url }}" class="btn btn-success">Sign in with <img src="{{ url_for('static', filename='images/spotify.png') }}"></a></p>
-                    <p><strong>Requires a Spotify Premium subscription.</strong></p>
+                    <p class="mb-0"><strong>Requires a Spotify Premium subscription.</strong></p>
                 </section>
                 <div class="vr"></div>
                 <section class="text-start">
@@ -72,7 +86,7 @@
 
                     <p>Navigate to the URL the room's host gave to you, or...</p>
                     <p><a href="{{ url_for('rooms') }}" class="btn btn-primary disabled">Browse public rooms <small>(soon)</small></a></p>
-                    <p>You do not need a Spotify account at all.</p>
+                    <p class="mb-0">You do not need a Spotify account at all.</p>
                 </section>
             </div>
         {% endif %}
