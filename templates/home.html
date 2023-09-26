@@ -22,7 +22,7 @@
             {% if current_user.room_name %}
                 <div class="input-group mb-3 justify-content-center" x-data="{roomUrl: null}">
                     <span class="input-group-text">Your room's URL:</span>
-                    <input type="text" class="form-control font-monospace flex-grow-0 w-auto" readonly value="{{ url_for('room', room_name=current_user.room_name, _external=True) }}" size="55" x-model.fill="roomUrl">
+                    <input type="text" class="form-control font-monospace" readonly value="{{ url_for('room', room_name=current_user.room_name, _external=True) }}" size="55" x-model.fill="roomUrl">
                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Copy room's URL" @click="navigator.clipboard.writeText(roomUrl);"><i class="bi bi-clipboard"></i></button>
                     <a href="{{ url_for('room', room_name=current_user.room_name) }}" class="btn btn-outline-secondary" target="_blank" data-bs-toggle="tooltip" data-bs-title="Open rooms's URL in new tab"><i class="bi bi-box-arrow-up-right"></i></a>
                 </div>
@@ -33,41 +33,44 @@
                 <p class="text-center"><strong>You must first define a room name (below) in order to host a room.</strong></p>
             {% endif %}
 
-            <form action="{{ url_for('home') }}" method="POST" class="hstack gap-3 justify-content-center align-items-start mb-3">
+            <form action="{{ url_for('home') }}" method="POST">
                 {{ form.csrf_token }}
 
-                <div>
-                    {{ form.room_name(class='form-control' + (' is-invalid' if form.room_name.errors else ''), placeholder='Room name (required, must be unique)', size='33') }}
+                <div class="hstack gap-3 justify-content-center align-items-start mb-3">
+                    <div class="col">
+                        <label class="form-label">Room name</label>
 
-                    {% if form.room_name.errors %}
-                        <div class="invalid-feedback">
-                            {% for error in form.room_name.errors %}
-                                <div>{{ error }}</div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-                <div>
-                    <div class="input-group {{ 'has-validation' if form.room_password.errors }}" x-data="{passwordVisible: false}">
-                        <input class="form-control {{ ' is-invalid' if form.room_password.errors }}" id="{{ form.room_password.id }}" minlength="4" maxlength="30" name="{{ form.room_password.name }}" placeholder="Room password (optional)" size="22" :type="passwordVisible ? 'text' : 'password'" value="{{ form.room_password.data or '' }}">
+                        {{ form.room_name(class='form-control' + (' is-invalid' if form.room_name.errors else ''), placeholder='Required, must be unique') }}
 
-                        <button class="btn btn-outline-secondary" type="button" @click="passwordVisible = !passwordVisible" data-bs-toggle="tooltip" data-bs-title="Show/hide password"><i class="bi bi-eye" x-show="!passwordVisible"></i><i class="bi bi-eye-slash" x-show="passwordVisible"></i></button>
-
-                        {% if form.room_password.errors %}
+                        {% if form.room_name.errors %}
                             <div class="invalid-feedback">
-                                {% for error in form.room_password.errors %}
+                                {% for error in form.room_name.errors %}
                                     <div>{{ error }}</div>
                                 {% endfor %}
                             </div>
                         {% endif %}
                     </div>
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Save</button>
-                </div>
-            </form>
+                    <div class="col">
+                        <label class="form-label">Room password</label>
 
-            <p class="text-center mb-0"><a href="{{ url_for('sign_out') }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-title="Your room will be disabled and Spotibox' access to your Spotify account will be removed"><i class="bi bi-box-arrow-right"></i> Sign out</a> <a href="#" class="btn btn-danger disabled" data-bs-toggle="tooltip" data-bs-title="All of your Spotibox data will be immediately and permanently deleted"><i class="bi bi-trash"></i> Delete account <small>(soon)</small></a></p>
+                        <div class="input-group {{ 'has-validation' if form.room_password.errors }}" x-data="{passwordVisible: false}">
+                            <input class="form-control {{ ' is-invalid' if form.room_password.errors }}" id="{{ form.room_password.id }}" minlength="4" maxlength="30" name="{{ form.room_password.name }}" placeholder="Optional, if not set room will be publicly accessible" :type="passwordVisible ? 'text' : 'password'" value="{{ form.room_password.data or '' }}">
+
+                            <button class="btn btn-outline-secondary" type="button" @click="passwordVisible = !passwordVisible" data-bs-toggle="tooltip" data-bs-title="Show/hide password"><i class="bi bi-eye" x-show="!passwordVisible"></i><i class="bi bi-eye-slash" x-show="passwordVisible"></i></button>
+
+                            {% if form.room_password.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.room_password.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center"><button type="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Save room settings</button> <a href="{{ url_for('sign_out') }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-title="Your room will be disabled and Spotibox' access to your Spotify account will be removed"><i class="bi bi-box-arrow-right"></i> Sign out</a> <a href="#" class="btn btn-danger disabled" data-bs-toggle="tooltip" data-bs-title="All of your Spotibox data will be immediately and permanently deleted"><i class="bi bi-trash"></i> Delete account <small>(soon)</small></a></div>
+            </form>
         {% else %}
             <p class="text-center">A collaborative, online jukebox based on Spotify.</p>
             <p class="text-center lead">What do you want to do?</p>
