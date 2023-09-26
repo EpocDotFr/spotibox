@@ -22,7 +22,7 @@
             {% if current_user.room_name %}
                 <div class="input-group mb-3 justify-content-center" x-data="{roomUrl: null}">
                     <span class="input-group-text">Your room's URL:</span>
-                    <input type="text" class="form-control font-monospace" readonly value="{{ url_for('room', room_name=current_user.room_name, _external=True) }}" size="55" x-model.fill="roomUrl">
+                    <input type="text" class="form-control font-monospace flex-grow-0 w-auto" readonly value="{{ url_for('room', room_name=current_user.room_name, _external=True) }}" size="65" x-model.fill="roomUrl">
                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Copy room's URL" @click="navigator.clipboard.writeText(roomUrl);"><i class="bi bi-clipboard"></i></button>
                     <a href="{{ url_for('room', room_name=current_user.room_name) }}" class="btn btn-outline-secondary" target="_blank" data-bs-toggle="tooltip" data-bs-title="Open rooms's URL in new tab"><i class="bi bi-box-arrow-up-right"></i></a>
                 </div>
@@ -37,7 +37,7 @@
                 {{ form.csrf_token }}
 
                 <div class="hstack gap-3 justify-content-center align-items-start mb-3">
-                    <div class="col">
+                    <div class="col-4">
                         <label class="form-label">Room name</label>
 
                         {{ form.room_name(class='form-control' + (' is-invalid' if form.room_name.errors else ''), placeholder='Required, must be unique') }}
@@ -50,7 +50,7 @@
                             </div>
                         {% endif %}
                     </div>
-                    <div class="col">
+                    <div class="col-4">
                         <label class="form-label">Room password</label>
 
                         <div class="input-group {{ 'has-validation' if form.room_password.errors }}" x-data="{passwordVisible: false}">
@@ -76,7 +76,7 @@
             <p class="text-center lead">What do you want to do?</p>
 
             <div class="hstack gap-3 justify-content-center align-items-start">
-                <section class="text-end">
+                <section class="text-end col">
                     <h3>Host a room</h3>
 
                     <p>Start by signing in using your Spotify account.</p>
@@ -84,7 +84,7 @@
                     <p class="mb-0"><strong>Requires a Spotify Premium subscription.</strong></p>
                 </section>
                 <div class="vr"></div>
-                <section class="text-start">
+                <section class="text-start col">
                     <h3>Join a room</h3>
 
                     <p>Navigate to the URL the room's host gave to you, or...</p>
