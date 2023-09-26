@@ -55,8 +55,6 @@ def authorize_callback() -> Response:
 
             flash('Sorry, there was an error while authenticating with Spotify.', 'danger')
 
-            session.pop('token_info', None)
-
             return redirect(url_for('home'))
 
         try:
@@ -73,14 +71,10 @@ def authorize_callback() -> Response:
 
             flash('Sorry, there was an error while getting your Spotify account information.', 'danger')
 
-            session.pop('token_info', None)
-
             return redirect(url_for('home'))
 
         if user_info['product'] != 'premium':
             flash('Sorry, you must have a Spotify Premium subscription to use Spotibox.', 'warning')
-
-            session.pop('token_info', None)
 
             return redirect(url_for('home'))
 
@@ -130,8 +124,6 @@ def sign_out() -> Response:
 
     db.session.add(current_user)
     db.session.commit()
-
-    session.pop('token_info', None)
 
     flash(f'See you later, {current_user.display_name}.', 'success')
 
