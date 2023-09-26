@@ -22,7 +22,7 @@
             {% if current_user.room_name %}
                 <div class="input-group mb-3 justify-content-center">
                     <span class="input-group-text">Your room's URL:</span>
-                    <input type="text" class="form-control" readonly value="{{ url_for('room', room_name=current_user.room_name, _external=True) }}">
+                    <input type="text" class="form-control font-monospace flex-grow-0 w-auto" readonly value="{{ url_for('room', room_name=current_user.room_name, _external=True) }}" size="55">
                     <button type="button" class="btn btn-outline-secondary"><i class="bi bi-clipboard"></i></button>
                     <a href="{{ url_for('room', room_name=current_user.room_name) }}" class="btn btn-outline-secondary" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
                 </div>
@@ -37,7 +37,7 @@
                 {{ form.csrf_token }}
 
                 <div>
-                    {{ form.room_name(class='form-control' + (' is-invalid' if form.room_name.errors else ''), placeholder='Room name (required, must be unique)', size='36') }}
+                    {{ form.room_name(class='form-control' + (' is-invalid' if form.room_name.errors else ''), placeholder='Room name (required, must be unique)', size='33') }}
 
                     {% if form.room_name.errors %}
                         <div class="invalid-feedback">
@@ -49,7 +49,7 @@
                 </div>
                 <div>
                     <div class="input-group {{ 'has-validation' if form.room_password.errors }}" x-data="{passwordVisible: false}">
-                        <input class="form-control {{ ' is-invalid' if form.room_password.errors }}" id="{{ form.room_password.id }}" minlength="4" maxlength="30" name="{{ form.room_password.name }}" placeholder="Room password (optional)" size="25" :type="passwordVisible ? 'text' : 'password'" value="{{ form.room_password.data }}">
+                        <input class="form-control {{ ' is-invalid' if form.room_password.errors }}" id="{{ form.room_password.id }}" minlength="4" maxlength="30" name="{{ form.room_password.name }}" placeholder="Room password (optional)" size="22" :type="passwordVisible ? 'text' : 'password'" value="{{ form.room_password.data or '' }}">
 
                         <button class="btn btn-outline-secondary" type="button" @click="passwordVisible = !passwordVisible"><i class="bi bi-eye" x-show="!passwordVisible"></i><i class="bi bi-eye-slash" x-show="passwordVisible"></i></button>
 
