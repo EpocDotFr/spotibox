@@ -1,5 +1,5 @@
+from flask import render_template, redirect, url_for, request, flash, abort, session
 from flask_login import current_user, login_user, logout_user, login_required
-from flask import render_template, redirect, url_for, request, flash, abort
 from spotibox.spotify import create_auth_manager, create_api_client
 from spotibox.forms import RoomForm
 from spotibox.models import User
@@ -55,6 +55,8 @@ def authorize_callback() -> Response:
 
             flash(f'Sorry, there was an error while authenticating with Spotify.', 'danger')
 
+            session.pop('token_info', None)
+
             return redirect(url_for('home'))
 
         try:
@@ -71,10 +73,14 @@ def authorize_callback() -> Response:
 
             flash(f'Sorry, there was an error while getting your Spotify account information.', 'danger')
 
+            session.pop('token_info', None)
+
             return redirect(url_for('home'))
 
         if user_info['product'] != 'premium':
             flash('Sorry, you must have a Spotify Premium subscription to use Spotibox.', 'warning')
+
+            session.pop('token_info', None)
 
             return redirect(url_for('home'))
 
@@ -88,6 +94,7 @@ def authorize_callback() -> Response:
             new_user = True
 
         user.display_name = user_info['display_name']
+        user.access_token = session.get('token_info')
 
         if user_info['images']:
             user_info['images'].sort(key=lambda i: i['height'])
@@ -107,6 +114,8 @@ def authorize_callback() -> Response:
             flash(f'Got error code "{error}" from Spotify.', 'warning')
     else:
         abort(400)
+
+    session.pop('token_info', None)
 
     return redirect(url_for('home'))
 
