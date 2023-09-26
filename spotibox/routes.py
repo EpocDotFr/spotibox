@@ -94,12 +94,10 @@ def authorize_callback() -> Response:
             new_user = True
 
         user.display_name = user_info['display_name']
-        user.access_token = session.get('token_info', None)
+        user.access_token = session.pop('token_info', None)
 
         if not user.access_token:
             flash('Sorry, there was a technical error (empty access token after authorization).', 'danger')
-
-            session.pop('token_info', None)
 
             return redirect(url_for('home'))
 
@@ -121,8 +119,6 @@ def authorize_callback() -> Response:
             flash(f'Got error code "{error}" from Spotify.', 'warning')
     else:
         abort(400)
-
-    session.pop('token_info', None)
 
     return redirect(url_for('home'))
 
