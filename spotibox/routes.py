@@ -134,6 +134,8 @@ def sign_out() -> Response:
 
 @app.route('/rooms')
 def rooms() -> str:
+    abort(404) # TODO
+
     return render_template('rooms/list.html')
 
 

@@ -24,7 +24,7 @@
                     <span class="input-group-text">Your room's URL:</span>
                     <input type="text" class="form-control font-monospace flex-grow-0 w-auto" readonly value="{{ url_for('room', room_name=current_user.room_name, _external=True) }}" size="65" x-model.fill="roomUrl">
                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Copy room's URL" @click="navigator.clipboard.writeText(roomUrl);"><i class="bi bi-clipboard"></i></button>
-                    <a href="{{ url_for('room', room_name=current_user.room_name) }}" class="btn btn-outline-secondary" target="_blank" data-bs-toggle="tooltip" data-bs-title="Open rooms's URL in new tab"><i class="bi bi-box-arrow-up-right"></i></a>
+                    <a href="{{ url_for('room', room_name=current_user.room_name) }}" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Open room"><i class="bi bi-box-arrow-up-right"></i></a>
                 </div>
 
                 <!--<p class="text-center">You must be signed in and present in your room for it to be active.</p>
@@ -33,14 +33,14 @@
                 <p class="text-center"><strong>You must first define a room name (below) in order to host a room.</strong></p>
             {% endif %}
 
-            <form action="{{ url_for('home') }}" method="POST">
+            <form action="{{ url_for('home') }}" method="POST" autocomplete="off">
                 {{ form.csrf_token }}
 
                 <div class="hstack gap-3 justify-content-center align-items-start mb-3">
                     <div class="col-4">
                         <label class="form-label">Room name</label>
 
-                        {{ form.room_name(class='form-control' + (' is-invalid' if form.room_name.errors else ''), placeholder='Required, must be unique') }}
+                        {{ form.room_name(class='form-control' + (' is-invalid' if form.room_name.errors else ''), placeholder='Required, must be unique', autocomplete='off') }}
 
                         {% if form.room_name.errors %}
                             <div class="invalid-feedback">
@@ -54,7 +54,7 @@
                         <label class="form-label">Room password</label>
 
                         <div class="input-group {{ 'has-validation' if form.room_password.errors }}" x-data="{passwordVisible: false}">
-                            <input class="form-control {{ ' is-invalid' if form.room_password.errors }}" id="{{ form.room_password.id }}" minlength="4" maxlength="30" name="{{ form.room_password.name }}" placeholder="Optional, if not set room will be publicly accessible" :type="passwordVisible ? 'text' : 'password'" value="{{ form.room_password.data or '' }}">
+                            <input class="form-control {{ ' is-invalid' if form.room_password.errors }}" id="{{ form.room_password.id }}" minlength="4" maxlength="30" name="{{ form.room_password.name }}" placeholder="Optional, if not set room will be publicly accessible" :type="passwordVisible ? 'text' : 'password'" value="{{ form.room_password.data or '' }}" autocomplete="off">
 
                             <button class="btn btn-outline-secondary" type="button" @click="passwordVisible = !passwordVisible" data-bs-toggle="tooltip" data-bs-title="Show/hide password"><i class="bi bi-eye" x-show="!passwordVisible"></i><i class="bi bi-eye-slash" x-show="passwordVisible"></i></button>
 
