@@ -56,10 +56,7 @@
                                 <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
                             </div>
                             <div class="pe-2">
-                                <button type="button" class="btn btn-secondary btn-sm" x-show="!isFirst(track)" @click="moveUp(track)"><i class="bi bi-arrow-up"></i></button>
-                                <button type="button" class="btn btn-secondary btn-sm" x-show="!isLast(track)" @click="moveDown(track)"><i class="bi bi-arrow-down"></i></button>
                                 <button type="button" class="btn btn-secondary btn-sm" @click="queue(track)"><i class="bi bi-arrow-clockwise"></i></button>
-                                <button type="button" class="btn btn-danger btn-sm" @click="remove(track)"><i class="bi bi-trash"></i></button>
                             </div>
                         </div>
                     </template>

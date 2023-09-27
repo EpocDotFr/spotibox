@@ -6,6 +6,7 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_restful import Api
 from datetime import datetime
 from environs import Env
 
@@ -125,6 +126,8 @@ def load_user(user_id: int):
 
     return db.session.get(User, user_id)
 
+# Flask-RESTful
+api = Api(app, prefix='/api', catch_all_404s=True)
 
 # -----------------------------------------------------------
 # Context processors

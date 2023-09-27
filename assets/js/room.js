@@ -41,30 +41,9 @@
                 queue(track) {
                     this.tracks.push(Object.assign({}, track));
                 },
-                remove(track) {
-                    const index = this.tracks.indexOf(track);
-
-                    if (index > -1) {
-                        this.tracks.splice(index, 1);
-                    }
-                },
                 clear() {
                     this.tracks = [];
                 },
-                moveUp(track) {
-                    Spotibox.Utils.move(this.tracks, track, 'up');
-                },
-                moveDown(track) {
-                    Spotibox.Utils.move(this.tracks, track, 'down');
-                },
-                /*syncWithDeezerPlayer() {
-                    DZ.player.playTracks(
-                        this.tracks.map(function (track) {
-                            return track.id;
-                        }),
-                        false
-                    );
-                },*/
                 isFirst(track) {
                     return Spotibox.Utils.isFirst(this.tracks, track);
                 },
@@ -105,18 +84,15 @@
                     search() {
                         const self = this;
 
-                        /*DZ.api(`search?q=${this.q}`, function (response) {
-                            self.submitted = true;
-                            self.results = Spotibox.Utils.transformTracks(response.data);
-                        });*/
+                        // TODO Search
                     },
                     queue(track) {
                         Alpine.store('playlistComponent').queue(track);
                     },
                     clear() {
-                        this.submitted = false;
-                        this.q = '';
                         this.results = [];
+                        this.q = '';
+                        this.submitted = false;
                     },
                     isFirst(track) {
                         return Spotibox.Utils.isFirst(this.results, track);
