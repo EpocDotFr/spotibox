@@ -1,14 +1,15 @@
 from werkzeug.exceptions import HTTPException
 from flask_assets import Environment, Bundle
 from sqlalchemy.orm import DeclarativeBase
-from typing import Tuple, Dict, Optional
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from typing import Tuple, Dict
 from flask_restful import Api
 from datetime import datetime
 from environs import Env
+import spotibox.api.resources as api_resources
 
 
 # -----------------------------------------------------------
@@ -44,7 +45,8 @@ app.config.update(
 
     # Config values that cannot be overwritten
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
-    SESSION_PROTECTION='basic',
+    SESSION_PROTECTION='strong',
+    BUNDLE_ERRORS=True,
 )
 
 # -----------------------------------------------------------
@@ -128,6 +130,11 @@ def load_user(user_id: int):
 
 # Flask-RESTful
 api = Api(app, prefix='/api', catch_all_404s=True)
+
+api.add_resource(api_resources.RoomCatalogResource, '/room/<room_name>/catalog')
+api.add_resource(api_resources.RoomPlaybackResource, '/room/<room_name>/playback')
+api.add_resource(api_resources.RoomPlaybackVolumeResource, '/room/<room_name>/playback/volume')
+api.add_resource(api_resources.RoomQueueResource, '/room/<room_name>/queue')
 
 # -----------------------------------------------------------
 # Context processors
