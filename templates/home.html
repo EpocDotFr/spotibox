@@ -22,9 +22,9 @@
             {% if current_user.room_name %}
                 <div class="input-group mb-3 justify-content-center" x-data="{roomUrl: null}">
                     <span class="input-group-text">Your room's URL:</span>
-                    <input type="text" class="form-control font-monospace flex-grow-0 w-auto" readonly value="{{ url_for('room', room_name=current_user.room_name, _external=True) }}" size="65" x-model.fill="roomUrl">
+                    <input type="text" class="form-control font-monospace flex-grow-0 w-auto" readonly value="{{ current_user.room_url_absolute }}" size="65" x-model.fill="roomUrl">
                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Copy room's URL" @click="navigator.clipboard.writeText(roomUrl);"><i class="bi bi-clipboard"></i></button>
-                    <a href="{{ url_for('room', room_name=current_user.room_name) }}" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Open room"><i class="bi bi-box-arrow-up-right"></i></a>
+                    <a href="{{ current_user.room_url }}" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Open room"><i class="bi bi-box-arrow-up-right"></i></a>
                 </div>
 
                 <!--<p class="text-center">You must be signed in and present in your room for it to be active.</p>

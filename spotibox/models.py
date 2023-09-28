@@ -1,6 +1,7 @@
 from sqlalchemy.orm import mapped_column
 from flask_login import UserMixin
 from datetime import datetime
+from flask import url_for
 from app import db
 
 
@@ -20,3 +21,30 @@ class User(TimestampedMixin, UserMixin, db.Model):
     access_token = mapped_column(db.JSON)
     room_name = mapped_column(db.String(80), unique=True)
     room_password = mapped_column(db.String(30))
+
+    def build_room_url(self, absolute: bool = False) -> str:
+        return url_for('room', room_name=self.room_name, _external=absolute) if self.is_room_name_defined else ''
+
+    @property
+    def room_url(self) -> str:
+        return self.build_room_url()
+
+    @property
+    def room_url_absolute(self) -> str:
+        return self.build_room_url(True)
+
+    @property
+    def is_authenticated_with_spotify(self) -> bool:
+        return bool(self.access_token)
+
+    @property
+    def is_room_private(self) -> bool:
+        return bool(self.room_password)
+
+    @property
+    def is_room_name_defined(self) -> bool:
+        return bool(self.room_name)
+
+    @property
+    def is_room_active(self) -> bool:
+        return self.is_room_name_defined and self.is_authenticated_with_spotify
