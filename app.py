@@ -10,7 +10,6 @@ from flask_restful import Api
 from datetime import datetime
 from environs import Env
 
-
 # -----------------------------------------------------------
 # App bootstrap
 
@@ -129,6 +128,7 @@ def load_user(user_id: int):
 
     return db.session.get(User, user_id)
 
+
 # Flask-RESTful
 api = Api(app, prefix='/api', catch_all_404s=True)
 
@@ -138,6 +138,7 @@ api.add_resource(api_resources.RoomCatalogResource, '/room/<spotify_id>/catalog'
 api.add_resource(api_resources.RoomPlaybackResource, '/room/<spotify_id>/playback')
 api.add_resource(api_resources.RoomPlaybackVolumeResource, '/room/<spotify_id>/playback/volume')
 api.add_resource(api_resources.RoomQueueResource, '/room/<spotify_id>/queue')
+
 
 # -----------------------------------------------------------
 # Context processors
@@ -159,6 +160,7 @@ def http_error_handler(e: HTTPException) -> Tuple[str, int]:
         title=e.name,
         text=e.description,
     ), e.code
+
 
 # -----------------------------------------------------------
 # After-bootstrap imports
