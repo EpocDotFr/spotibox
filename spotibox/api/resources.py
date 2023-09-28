@@ -18,8 +18,8 @@ class RoomCatalogResource(Resource):
     @marshal_with(marshalls.track)
     def get(self, spotify_id: str):
         """Search Spotify catalog"""
-        args = validators.get_room_catalog.parse_args()
         user = fetch_user(spotify_id)
+        args = validators.get_room_catalog.parse_args()
 
         return user.create_spotify_api_client().search(args.q, limit=20, offset=0, type='track')['tracks']['items']
 
@@ -45,8 +45,8 @@ class RoomPlaybackResource(Resource):
 class RoomPlaybackVolumeResource(Resource):
     def put(self, spotify_id: str):
         """Set playback volume"""
-        args = validators.put_room_playback_volume.parse_args()
         user = fetch_user(spotify_id)
+        args = validators.put_room_playback_volume.parse_args()
 
         user.create_spotify_api_client().volume(args.volume)
 
@@ -56,12 +56,25 @@ class RoomPlaybackVolumeResource(Resource):
 class RoomQueueResource(Resource):
     def delete(self, spotify_id: str):
         """Skip to previous track"""
-        pass
+        user = fetch_user(spotify_id)
+
+        user.create_spotify_api_client().previous_track()
+
+        return '', 204
 
     def patch(self, spotify_id: str):
         """Skip to next track"""
-        pass
+        user = fetch_user(spotify_id)
+
+        user.create_spotify_api_client().next_track()
+
+        return '', 204
 
     def post(self, spotify_id: str):
         """Add track to queue"""
-        pass
+        user = fetch_user(spotify_id)
+        args = validators.put_room_queue.parse_args()
+
+        user.create_spotify_api_client().add_to_queue(args.track_id)
+
+        return '', 204

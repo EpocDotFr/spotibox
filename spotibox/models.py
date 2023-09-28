@@ -26,7 +26,7 @@ class User(TimestampedMixin, UserMixin, db.Model):
     access_token = mapped_column(db.JSON)
     room_password = mapped_column(db.String(30))
 
-    def build_room_url(self, absolute: bool = False) -> str:
+    def get_room_url(self, absolute: bool = False) -> str:
         return url_for('room', spotify_id=self.spotify_id, _external=absolute)
 
     def create_spotify_api_client(self) -> Spotify:
@@ -38,11 +38,11 @@ class User(TimestampedMixin, UserMixin, db.Model):
 
     @property
     def room_url(self) -> str:
-        return self.build_room_url()
+        return self.get_room_url()
 
     @property
     def room_url_absolute(self) -> str:
-        return self.build_room_url(True)
+        return self.get_room_url(True)
 
     @property
     def is_authenticated_with_spotify(self) -> bool:
