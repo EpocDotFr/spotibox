@@ -13,3 +13,11 @@
 .avatar {
     max-height: 32px;
 }
+
+.album-cover-large {
+    max-height: 200px;
+}
+
+.album-cover-small {
+    max-height: 32px;
+}

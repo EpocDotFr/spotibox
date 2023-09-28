@@ -24,7 +24,7 @@
                 </div>
                 <div class="hstack w-100" x-data="$store.playerComponent">
                     <div>
-                        <img :src="nowPlaying.album_cover_large ?? '/images/no_cover.png'" class="rounded-start-bottom" width="200" height="200">
+                        <img :src="nowPlaying.album_cover_large ?? '/images/no_cover.png'" class="rounded-start-bottom album-cover-large">
                     </div>
                     <div class="card-body vstack gap-2">
                         <h5 class="card-title fs-4" x-text="nowPlaying.title"></h5>
@@ -50,7 +50,7 @@
                     <template x-for="track in tracks">
                         <div class="list-group-item p-0 hstack align-items-center gap-2" :class="{'rounded-top': isFirst(track), 'rounded-bottom': isLast(track)}">
                             <div>
-                                <img :src="track.album_cover_small" :class="{'rounded-start-bottom': isLast(track)}" width="56" height="56">
+                                <img :src="track.album_cover_small" class="album-cover-small" :class="{'rounded-start-bottom': isLast(track)}">
                             </div>
                             <div class="me-auto">
                                 <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
@@ -85,7 +85,7 @@
                         <template x-for="track in results">
                             <div class="list-group-item p-0 hstack align-items-center gap-2" :class="{'rounded-top': isFirst(track), 'rounded-bottom': isLast(track)}">
                                 <div>
-                                    <img :src="track.album_cover_small" :class="{'rounded-start-top': isFirst(track), 'rounded-start-bottom': isLast(track)}" width="56" height="56">
+                                    <img :src="track.album_cover_small" class="album-cover-small" :class="{'rounded-start-top': isFirst(track), 'rounded-start-bottom': isLast(track)}" width="56" height="56">
                                 </div>
                                 <div class="me-auto">
                                     <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
