@@ -139,6 +139,6 @@ def rooms() -> str:
     return render_template('rooms.html')
 
 
-@app.route('/room/<room_name>')
-def room(room_name: str) -> str:
+@app.route('/room/<spotify_id>')
+def room(spotify_id: str) -> str:
     return render_template('room.html')

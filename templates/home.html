@@ -19,37 +19,20 @@
         {% if current_user.is_authenticated %}
             <p class="text-center">Signed in with your Spotify account{% if current_user.profile_image_url %} <img src="{{ current_user.profile_image_url}}" class="rounded-1 avatar">{% endif %}{% if current_user.display_name %} <strong>{{ current_user.display_name }}</strong>{% endif %}.</p>
 
-            {% if current_user.room_name %}
-                <div class="input-group mb-3 justify-content-center" x-data="{roomUrl: null}">
-                    <span class="input-group-text">Your room's URL:</span>
-                    <input type="text" class="form-control font-monospace flex-grow-0 w-auto" readonly value="{{ current_user.room_url_absolute }}" size="65" x-model.fill="roomUrl">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Copy room's URL" @click="navigator.clipboard.writeText(roomUrl);"><i class="bi bi-clipboard"></i></button>
-                    <a href="{{ current_user.room_url }}" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Open room"><i class="bi bi-box-arrow-up-right"></i></a>
-                </div>
+            <div class="input-group mb-3 justify-content-center" x-data="{roomUrl: null}">
+                <span class="input-group-text">Your room's URL:</span>
+                <input type="text" class="form-control font-monospace flex-grow-0 w-auto" readonly value="{{ current_user.room_url_absolute }}" size="55" x-model.fill="roomUrl">
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Copy room's URL" @click="navigator.clipboard.writeText(roomUrl);"><i class="bi bi-clipboard"></i></button>
+                <a href="{{ current_user.room_url }}" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Open room"><i class="bi bi-box-arrow-up-right"></i></a>
+            </div>
 
-                <!--<p class="text-center">You must be signed in and present in your room for it to be active.</p>
-                <p class="text-center">In addition, you must run Spotify separately, and choose the "Spotibox" Spotify Connect device.</p>-->
-            {% else %}
-                <p class="text-center"><strong>You must first define a room name (below) in order to host a room.</strong></p>
-            {% endif %}
+            <!--<p class="text-center">You must be signed in and present in your room for it to be active.</p>
+            <p class="text-center">In addition, you must run Spotify separately, and choose the "Spotibox" Spotify Connect device.</p>-->
 
             <form action="{{ url_for('home') }}" method="POST" autocomplete="off">
                 {{ form.csrf_token }}
 
                 <div class="hstack gap-3 justify-content-center align-items-start mb-3">
-                    <div class="col-4">
-                        <label class="form-label">Room name</label>
-
-                        {{ form.room_name(class='form-control' + (' is-invalid' if form.room_name.errors else ''), placeholder='Required, must be unique', autocomplete='off') }}
-
-                        {% if form.room_name.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.room_name.errors %}
-                                    <div>{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
                     <div class="col-4">
                         <label class="form-label">Room password</label>
 

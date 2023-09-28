@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 
-{% set title = request.view_args.get('room_name') %}
+{% set title = '{}\'s room'.format(current_user.display_name) %}
 
 {% block jsfiles %}
     {% assets 'js_room' %}<script defer src="{{ ASSET_URL }}"></script>{% endassets %}

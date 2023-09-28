@@ -24,12 +24,10 @@ def upgrade():
     sa.Column('display_name', sa.String(), nullable=True),
     sa.Column('profile_image_url', sa.String(), nullable=True),
     sa.Column('access_token', sa.JSON(), nullable=True),
-    sa.Column('room_name', sa.String(length=80), nullable=True),
     sa.Column('room_password', sa.String(length=30), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('room_name'),
     sa.UniqueConstraint('spotify_id')
     )
     # ### end Alembic commands ###

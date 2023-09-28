@@ -131,10 +131,10 @@ def load_user(user_id: int):
 # Flask-RESTful
 api = Api(app, prefix='/api', catch_all_404s=True)
 
-api.add_resource(api_resources.RoomCatalogResource, '/room/<room_name>/catalog')
-api.add_resource(api_resources.RoomPlaybackResource, '/room/<room_name>/playback')
-api.add_resource(api_resources.RoomPlaybackVolumeResource, '/room/<room_name>/playback/volume')
-api.add_resource(api_resources.RoomQueueResource, '/room/<room_name>/queue')
+api.add_resource(api_resources.RoomCatalogResource, '/room/<spotify_id>/catalog')
+api.add_resource(api_resources.RoomPlaybackResource, '/room/<spotify_id>/playback')
+api.add_resource(api_resources.RoomPlaybackVolumeResource, '/room/<spotify_id>/playback/volume')
+api.add_resource(api_resources.RoomQueueResource, '/room/<spotify_id>/queue')
 
 # -----------------------------------------------------------
 # Context processors

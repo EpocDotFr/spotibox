@@ -19,11 +19,10 @@ class User(TimestampedMixin, UserMixin, db.Model):
     display_name = mapped_column(db.String)
     profile_image_url = mapped_column(db.String)
     access_token = mapped_column(db.JSON)
-    room_name = mapped_column(db.String(80), unique=True)
     room_password = mapped_column(db.String(30))
 
     def build_room_url(self, absolute: bool = False) -> str:
-        return url_for('room', room_name=self.room_name, _external=absolute) if self.is_room_name_defined else ''
+        return url_for('room', spotify_id=self.spotify_id, _external=absolute)
 
     @property
     def room_url(self) -> str:
@@ -42,9 +41,5 @@ class User(TimestampedMixin, UserMixin, db.Model):
         return bool(self.room_password)
 
     @property
-    def is_room_name_defined(self) -> bool:
-        return bool(self.room_name)
-
-    @property
     def is_room_active(self) -> bool:
-        return self.is_room_name_defined and self.is_authenticated_with_spotify
+        return self.is_authenticated_with_spotify
