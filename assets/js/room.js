@@ -4,7 +4,11 @@
     window.Spotibox = window.Spotibox || {};
 
     window.Spotibox.Room = class {
-        constructor() {
+        api = null
+
+        constructor(spotifyId) {
+            this.api = new Spotibox.Api(spotifyId);
+
             //this.initDeezer();
             this.initAlpine();
             // this.initPusher();
@@ -33,6 +37,8 @@
         }*/
 
         initAlpine() {
+            const room = this;
+
             Alpine.store('playlistComponent', {
                 tracks: [],
                 track(index) {
@@ -82,9 +88,11 @@
                     q: '',
                     submitted: false,
                     search() {
-                        const self = this;
+                        const component = this;
 
-                        // TODO Search
+                        room.api.search(this.q).then(function(data) {
+                            component.results = data; // FIXME Do not work
+                        })
                     },
                     queue(track) {
                         Alpine.store('playlistComponent').queue(track);

@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 
-{% set title = '{}\'s room'.format(current_user.display_name) %}
+{% set title = '{}\'s room'.format(user.display_name) %}
 
 {% block jsfiles %}
     {% assets 'js_room' %}<script defer src="{{ ASSET_URL }}"></script>{% endassets %}
@@ -10,7 +10,7 @@
 {% block scripts %}
     <script>
         document.addEventListener('alpine:init', function () {
-            const spotibox_room = new Spotibox.Room();
+            const spotibox_room = new Spotibox.Room('{{ user.spotify_id }}');
         });
     </script>
 {% endblock %}
