@@ -27,7 +27,7 @@ class DatabaseUserCacheHandler(CacheHandler):
         db.session.flush()
 
 
-def create_auth_manager(user: Optional[User] = None) -> SpotifyOAuth:
+def create_spotipy_auth_manager(user: Optional[User] = None) -> SpotifyOAuth:
     cache_handler = DatabaseUserCacheHandler(user) if isinstance(user, User) else FlaskSessionCacheHandler(session)
 
     return SpotifyOAuth(
@@ -40,5 +40,5 @@ def create_auth_manager(user: Optional[User] = None) -> SpotifyOAuth:
     )
 
 
-def create_api_client(auth_manager: SpotifyOAuth) -> Spotify:
+def create_spotify_api_client(auth_manager: SpotifyOAuth) -> Spotify:
     return Spotify(auth_manager=auth_manager)

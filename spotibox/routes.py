@@ -1,9 +1,10 @@
 from flask import render_template, redirect, url_for, request, flash, abort, session
+from spotibox.spotify import create_spotipy_auth_manager, create_spotify_api_client
 from flask_login import current_user, login_user, logout_user, login_required
-from spotibox.spotify import create_auth_manager, create_api_client
+from spotibox.exceptions import UserNotFoundException, InactiveRoomException
+from spotipy import SpotifyOauthError, SpotifyException
 from spotibox.forms import RoomForm
 from spotibox.models import User
-from sqlalchemy import select
 from werkzeug import Response
 from typing import Union
 from app import app, db
@@ -29,7 +30,7 @@ def home() -> Union[str, Response]:
         }
     else:
         data = {
-            'sign_in_spotify_url': create_auth_manager().get_authorize_url()
+            'sign_in_spotify_url': create_spotipy_auth_manager().get_authorize_url()
         }
 
     return render_template('home.html', **data)
@@ -41,11 +42,11 @@ def authorize_callback() -> Response:
     error = request.args.get('error')
 
     if code:
-        auth_manager = create_auth_manager()
+        auth_manager = create_spotipy_auth_manager()
 
         try:
             auth_manager.get_access_token(code)
-        except Exception:
+        except SpotifyOauthError:
             app.logger.exception('Failed to get access token from Spotify')
 
             if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
@@ -58,10 +59,8 @@ def authorize_callback() -> Response:
             return redirect(url_for('home'))
 
         try:
-            client = create_api_client(auth_manager)
-
-            user_info = client.me()
-        except Exception:
+            user_info = create_spotify_api_client(auth_manager).me()
+        except SpotifyException:
             app.logger.exception('Failed to get Spotify account information')
 
             if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
@@ -78,7 +77,7 @@ def authorize_callback() -> Response:
 
             return redirect(url_for('home'))
 
-        user = db.session.scalar(select(User).where(User.spotify_id == user_info['id']))
+        user = User.get_by_spotify_id(user_info['id'], checks=False)
         new_user = False
 
         if not user:
@@ -96,9 +95,10 @@ def authorize_callback() -> Response:
             return redirect(url_for('home'))
 
         if user_info['images']:
-            user_info['images'].sort(key=lambda i: i['height'])
+            # FIXME Max height 32 pixels, but if there's none take the smallest
+            profile_images = sorted(user_info['images'], key=lambda i: i['height'])
 
-            user.profile_image_url = user_info['images'][0]['url']
+            user.profile_image_url = profile_images[0]['url']
 
         db.session.add(user)
         db.session.commit()
@@ -134,11 +134,16 @@ def sign_out() -> Response:
 
 @app.route('/rooms')
 def rooms() -> str:
-    abort(404) # TODO
-
     return render_template('rooms.html')
 
 
 @app.route('/room/<spotify_id>')
 def room(spotify_id: str) -> str:
-    return render_template('room.html')
+    try:
+        user = User.get_by_spotify_id(spotify_id)
+    except UserNotFoundException:
+        abort(404, 'This room does not exist.')
+    except InactiveRoomException:
+        abort(412, 'This room is inactive.')
+
+    return render_template('room.html', user=user)

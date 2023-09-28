@@ -9,7 +9,6 @@ from typing import Tuple, Dict
 from flask_restful import Api
 from datetime import datetime
 from environs import Env
-import spotibox.api.resources as api_resources
 
 
 # -----------------------------------------------------------
@@ -114,6 +113,8 @@ class AppDeclarativeBase(DeclarativeBase):
 
 db = SQLAlchemy(app, model_class=AppDeclarativeBase)
 
+import spotibox.models
+
 # Flask-Migrate
 migrate = Migrate(app, db)
 
@@ -130,6 +131,8 @@ def load_user(user_id: int):
 
 # Flask-RESTful
 api = Api(app, prefix='/api', catch_all_404s=True)
+
+import spotibox.api.resources as api_resources
 
 api.add_resource(api_resources.RoomCatalogResource, '/room/<spotify_id>/catalog')
 api.add_resource(api_resources.RoomPlaybackResource, '/room/<spotify_id>/playback')
@@ -160,5 +163,4 @@ def http_error_handler(e: HTTPException) -> Tuple[str, int]:
 # -----------------------------------------------------------
 # After-bootstrap imports
 
-import spotibox.models
 import spotibox.routes

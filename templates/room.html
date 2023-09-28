@@ -24,7 +24,7 @@
                 </div>
                 <div class="hstack w-100" x-data="$store.playerComponent">
                     <div>
-                        <img :src="nowPlaying.album_cover_medium ?? '/images/no_cover.png'" class="rounded-start-bottom" width="250" height="250">
+                        <img :src="nowPlaying.album_cover_large ?? '/images/no_cover.png'" class="rounded-start-bottom" width="200" height="200">
                     </div>
                     <div class="card-body vstack gap-2">
                         <h5 class="card-title fs-4" x-text="nowPlaying.title"></h5>
