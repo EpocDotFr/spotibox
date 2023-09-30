@@ -5,12 +5,19 @@
 {% block jsfiles %}
     {% assets 'js_room' %}<script defer src="{{ ASSET_URL }}"></script>{% endassets %}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js"></script>
+
+    {% if user.is_current_user_room_owner %}
+        <script defer src="https://sdk.scdn.co/spotify-player.js"></script>
+    {% endif %}
 {% endblock %}
 
 {% block scripts %}
     <script>
         document.addEventListener('alpine:init', function () {
-            const spotibox_room = new Spotibox.Room('{{ user.spotify_id }}');
+            const spotibox_room = new Spotibox.Room(
+                '{{ user.spotify_id }}',
+                {% if user.is_current_user_room_owner %}'{{ user.access_token['access_token'] }}'{% else %}null{% endif %}
+            );
         });
     </script>
 {% endblock %}
@@ -23,7 +30,7 @@
             <div class="alert alert-info alert-dismissible fade show">
                 <h4>This is your room.</h4>
                 <ul class="mb-0">
-                    <li>Your Spotify playback queue will be remote-controlled by Spotibox.</li>
+                    <li>Your Spotify playback will be remote-controlled by Spotibox.</li>
                     <li>Remember to <strong>leave this tab open</strong>, otherwise others will not get playback updates.</li>
                     <li>You can choose any of your Spotify Connect-compatible devices to output the audio, including Spotibox itself (this tab).</li>
                 </ul>

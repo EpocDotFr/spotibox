@@ -5,13 +5,24 @@
 
     window.Spotibox.Room = class {
         api = null
+        spotifyPlayer = null
 
-        constructor(spotifyId) {
+        constructor(spotifyId, accessToken) {
             this.api = new Spotibox.Api(spotifyId);
 
-            //this.initDeezer();
+            if (accessToken) {
+                this.initSpotify(accessToken);
+            }
+
             this.initAlpine();
             // this.initPusher();
+        }
+
+        initSpotify(accessToken) {
+            this.spotifyPlayer = new Spotify.Player({
+                name: 'Spotibox',
+                getOAuthToken: cb => { cb(accessToken); }
+            });
         }
 
         /*initDeezer() {
