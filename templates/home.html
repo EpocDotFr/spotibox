@@ -20,7 +20,7 @@
             <p class="text-center">Signed in with your Spotify account{% if current_user.profile_image_url %} <img src="{{ current_user.profile_image_url}}" class="rounded-1 avatar">{% endif %}{% if current_user.display_name %} <strong>{{ current_user.display_name }}</strong>{% endif %}.</p>
 
             <div class="input-group mb-3 justify-content-center" x-data="{roomUrl: null}">
-                <span class="input-group-text">Your room's URL:</span>
+                <label class="input-group-text">Your room's URL:</label>
                 <input type="text" class="form-control font-monospace flex-grow-0 w-auto" readonly value="{{ current_user.room_url_absolute }}" size="55" x-model.fill="roomUrl">
                 <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Copy room's URL" @click="navigator.clipboard.writeText(roomUrl)"><i class="bi bi-clipboard"></i></button>
                 <a href="{{ current_user.room_url }}" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Open room"><i class="bi bi-box-arrow-up-right"></i></a>
@@ -30,8 +30,8 @@
                 {{ form.csrf_token }}
 
                 <div class="input-group mb-3 justify-content-center {{ 'has-validation' if form.room_password.errors }}" x-data="{passwordVisible: false}">
-                    <span class="input-group-text">Room password</span>
-                    <input class="form-control flex-grow-0 w-auto {{ ' is-invalid' if form.room_password.errors }}" size="60" id="{{ form.room_password.id }}" minlength="4" maxlength="30" name="{{ form.room_password.name }}" placeholder="Optional, if not set room will be publicly accessible" :type="passwordVisible ? 'text' : 'password'" value="{{ form.room_password.data or '' }}" autocomplete="off">
+                    <label class="input-group-text">Room password</label>
+                    <input class="form-control flex-grow-0 w-auto {{ ' is-invalid' if form.room_password.errors }}" size="40" id="{{ form.room_password.id }}" minlength="4" maxlength="30" name="{{ form.room_password.name }}" placeholder="Optional, if not set room will be publicly accessible" :type="passwordVisible ? 'text' : 'password'" value="{{ form.room_password.data or '' }}" autocomplete="off">
                     <button class="btn btn-outline-secondary" type="button" @click="passwordVisible = !passwordVisible" data-bs-toggle="tooltip" data-bs-title="Show/hide password"><i class="bi bi-eye" x-show="!passwordVisible"></i><i class="bi bi-eye-slash" x-show="passwordVisible"></i></button>
 
                     {% if form.room_password.errors %}

@@ -42,7 +42,6 @@ app.config.update(
     SPOTIFY_CLIENT_SECRET=env.str('SPOTIFY_CLIENT_SECRET'),
 
     # Config values that cannot be overwritten
-    SQLALCHEMY_TRACK_MODIFICATIONS=False,
     SESSION_PROTECTION='strong',
     BUNDLE_ERRORS=True,
 )
