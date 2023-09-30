@@ -11,7 +11,7 @@
         }
 
         search(q) {
-            return this.call(
+            return this.fetch(
                 'get',
                 `room/${this.spotifyId}/catalog`,
                 {
@@ -20,7 +20,18 @@
             );
         }
 
-        call(method, resource, params = null, json = null) {
+        queue(track_id) {
+            return this.fetch(
+                'post',
+                `room/${this.spotifyId}/queue`,
+                null,
+                {
+                    track_id: track_id
+                }
+            );
+        }
+
+        fetch(method, resource, params = null, json = null) {
             const url = new URL(`/api/${resource}`, window.location.origin);
 
             if (params) {
@@ -40,9 +51,9 @@
             }).then(function(response) {
                 if (response.ok) {
                     return response.json();
-                } else {
-                    return Promise.reject(response);
                 }
+
+                return Promise.reject(response);
             }).catch(function(error) {
                 alert(error);
             });

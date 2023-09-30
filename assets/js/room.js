@@ -86,20 +86,42 @@
                 return {
                     results: [],
                     q: '',
+                    submitting: false,
                     submitted: false,
                     search() {
+                        if (this.submitting) {
+                            return;
+                        }
+
+                        this.submitting = true;
+
                         const component = this;
 
-                        room.api.search(this.q).then(function(data) {
-                            component.results = data; // FIXME Do not work
-                        })
+                        room.api.search(this.q)
+                            .catch(function(error) {
+                                component.submitting = false;
+                            })
+                            .then(function(data) {
+                                component.results = data;
+                                component.submitted = true;
+                                component.submitting = false;
+                            });
                     },
-                    queue(track) {
-                        Alpine.store('playlistComponent').queue(track);
+                    queue(button, track) {
+                        button.disabled = true;
+
+                        room.api.queue(track.id)
+                            .catch(function(error) {
+                                button.disabled = false;
+                            })
+                            .then(function(data) {
+                                button.disabled = false;
+                            });
                     },
                     clear() {
                         this.results = [];
                         this.q = '';
+                        this.submitting = false;
                         this.submitted = false;
                     },
                     isFirst(track) {

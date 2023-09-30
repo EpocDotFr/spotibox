@@ -31,7 +31,7 @@ class RoomPlaybackResource(Resource):
 
         user.create_spotify_api_client().start_playback()
 
-        return '', 204
+        return {}, 202
 
     def delete(self, spotify_id: str):
         """Pause playback"""
@@ -39,7 +39,7 @@ class RoomPlaybackResource(Resource):
 
         user.create_spotify_api_client().pause_playback()
 
-        return '', 204
+        return {}, 202
 
 
 class RoomPlaybackVolumeResource(Resource):
@@ -50,7 +50,7 @@ class RoomPlaybackVolumeResource(Resource):
 
         user.create_spotify_api_client().volume(args.volume)
 
-        return '', 204
+        return {}, 202
 
 
 class RoomQueueResource(Resource):
@@ -60,7 +60,7 @@ class RoomQueueResource(Resource):
 
         user.create_spotify_api_client().previous_track()
 
-        return '', 204
+        return {}, 202
 
     def patch(self, spotify_id: str):
         """Skip to next track"""
@@ -68,7 +68,7 @@ class RoomQueueResource(Resource):
 
         user.create_spotify_api_client().next_track()
 
-        return '', 204
+        return {}, 202
 
     def post(self, spotify_id: str):
         """Add track to queue"""
@@ -77,4 +77,4 @@ class RoomQueueResource(Resource):
 
         user.create_spotify_api_client().add_to_queue(args.track_id)
 
-        return '', 204
+        return {}, 202

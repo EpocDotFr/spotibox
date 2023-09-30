@@ -17,7 +17,7 @@
 {% block content %}
     <main class="container">
         {% if current_user.is_authenticated %}
-            <p class="text-center">Signed in with your Spotify account{% if current_user.profile_image_url %} <img src="{{ current_user.profile_image_url}}" class="rounded-1 avatar">{% endif %}{% if current_user.display_name %} <strong>{{ current_user.display_name }}</strong>{% endif %}.</p>
+            <p class="text-center lead">Signed in with your Spotify account{% if current_user.profile_image_url %} <img src="{{ current_user.profile_image_url}}" class="rounded-1 avatar">{% endif %}{% if current_user.display_name %} <strong>{{ current_user.display_name }}</strong>{% endif %}.</p>
 
             <div class="input-group mb-3 justify-content-center" x-data="{roomUrl: null}">
                 <label class="input-group-text">Your room's URL:</label>

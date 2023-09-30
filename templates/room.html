@@ -16,6 +16,8 @@
 {% endblock %}
 
 {% block content %}
+    <p class="text-center lead">This is{% if user.profile_image_url %} <img src="{{ user.profile_image_url}}" class="rounded-1 avatar">{% endif %}{% if user.display_name %} <strong>{{ current_user.display_name }}</strong>'s room{% endif %}.</p>
+
     <main class="hstack gap-3 w-100">
         <div class="col vstack gap-3">
             <div class="card">
@@ -71,10 +73,12 @@
                 </div>
                 <div class="card-body">
                     <form @submit.prevent="search()">
-                        <div class="input-group input-group-lg">
-                            <input type="search" class="form-control" placeholder="Title, artist, album, ..." required x-model="q">
-                            <button type="button" class="btn btn-secondary" @click="clear()"><i class="bi bi-eraser"></i></button>
-                        </div>
+                        <fieldset :disabled="submitting">
+                            <div class="input-group input-group-lg">
+                                <input type="search" class="form-control" placeholder="Title, artist, album, ..." required x-model="q">
+                                <button type="button" class="btn btn-secondary" @click="clear()"><i class="bi bi-eraser"></i></button>
+                            </div>
+                        </fieldset>
                     </form>
 
                     <div class="list-group mt-3" x-show="submitted">
@@ -91,7 +95,7 @@
                                     <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
                                 </div>
                                 <div class="pe-2">
-                                    <button type="button" class="btn btn-secondary btn-sm" @click="queue(track)"><i class="bi bi-plus"></i></button>
+                                    <button type="button" class="btn btn-secondary btn-sm" @click="queue($el, track)"><i class="bi bi-plus"></i></button>
                                 </div>
                             </div>
                         </template>
