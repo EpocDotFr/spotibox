@@ -1,7 +1,7 @@
 from spotibox.exceptions import UserNotFoundException, InactiveRoomException
+from flask_login import UserMixin, current_user
 from sqlalchemy.orm import mapped_column
 from typing_extensions import Self
-from flask_login import UserMixin
 from typing import Optional
 from datetime import datetime
 from sqlalchemy import select
@@ -55,6 +55,10 @@ class User(TimestampedMixin, UserMixin, db.Model):
     @property
     def is_room_active(self) -> bool:
         return self.is_authenticated_with_spotify
+
+    @property
+    def is_current_user_room_owner(self) -> bool:
+        return current_user.is_authenticated and self.id == current_user.id
 
     @classmethod
     def get_by_spotify_id(cls: Self, spotify_id: str, checks: bool = True) -> Optional[Self]:

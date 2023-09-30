@@ -16,10 +16,24 @@
 {% endblock %}
 
 {% block content %}
-    <p class="text-center lead">This is{% if user.profile_image_url %} <img src="{{ user.profile_image_url}}" class="rounded-1 avatar">{% endif %}{% if user.display_name %} <strong>{{ current_user.display_name }}</strong>'s room{% endif %}.</p>
+    <p class="text-center lead">Welcome to{% if user.profile_image_url %} <img src="{{ user.profile_image_url}}" class="rounded-1 avatar">{% endif %}{% if user.display_name %} <strong>{{ user.display_name }}</strong>'s room{% endif %}.</p>
+
+    {% if user.is_current_user_room_owner %}
+        <div class="container">
+            <div class="alert alert-info alert-dismissible fade show">
+                <h4>This is your room.</h4>
+                <ul class="mb-0">
+                    <li>Your Spotify playback queue will be remote-controlled by Spotibox.</li>
+                    <li>Remember to <strong>leave this tab open</strong>, otherwise others will not get playback updates.</li>
+                    <li>You can choose any of your Spotify Connect-compatible devices to output the audio, including Spotibox itself (this tab).</li>
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    {% endif %}
 
     <main class="hstack gap-3 w-100">
-        <div class="col vstack gap-3">
+        <div class="col-6 vstack gap-3">
             <div class="card">
                 <div class="card-header">
                     Now playing
@@ -66,7 +80,7 @@
             </div>
         </div>
 
-        <div class="col vstack gap-3" x-data="searchComponent">
+        <div class="col-6 vstack gap-3" x-data="searchComponent">
             <div class="card">
                 <div class="card-header">
                     Search on <img src="{{ url_for('static', filename='images/spotify.png') }}">
