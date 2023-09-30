@@ -13,11 +13,24 @@
 
 {% block scripts %}
     <script>
+        {% if user.is_current_user_room_owner %}
+            window.onSpotifyWebPlaybackSDKReady = function () {
+                const accessToken = '{{ user.access_token['access_token'] }}';
+                const spotifyPlayer = new Spotify.Player({
+                    name: 'Spotibox',
+                    getOAuthToken: cb => { cb(accessToken); }
+                });
+
+                spotifyPlayer.addListener('player_state_changed', function (one, two, three, four) {
+                    console.log(one, two, three, four);
+                });
+
+                spotifyPlayer.connect();
+            };
+        {% endif %}
+
         document.addEventListener('alpine:init', function () {
-            const spotibox_room = new Spotibox.Room(
-                '{{ user.spotify_id }}',
-                {% if user.is_current_user_room_owner %}'{{ user.access_token['access_token'] }}'{% else %}null{% endif %}
-            );
+            const spotiboxRoom = new Spotibox.Room('{{ user.spotify_id }}');
         });
     </script>
 {% endblock %}
