@@ -34,13 +34,12 @@ class RoomCatalogResource(Resource):
 
 
 class RoomPlaybackResource(Resource):
+    @marshal_with(marshalls.playback_state)
     def get(self, spotify_id: str):
         """Get playback state"""
         user = fetch_user(spotify_id)
 
-        # user.create_spotify_api_client().volume(args.volume) # TODO
-
-        return {}
+        return user.create_spotify_api_client().current_playback()
 
     def put(self, spotify_id: str):
         """Start or resume playback"""
@@ -87,13 +86,14 @@ class RoomPlaybackVolumeResource(Resource):
 
 
 class RoomQueueResource(Resource):
+    @marshal_with(marshalls.track)
     def get(self, spotify_id: str):
         """Get tracks in queue"""
         user = fetch_user(spotify_id)
 
-        # user.create_spotify_api_client().volume(args.volume) # TODO
-
-        return {}
+        return [
+            item for item in user.create_spotify_api_client().queue()['queue'] if item['type'] == 'track'
+        ]
 
     def post(self, spotify_id: str):
         """Add track to queue"""

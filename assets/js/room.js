@@ -10,74 +10,46 @@
             this.api = new Spotibox.Api(spotifyId);
 
             this.initAlpine();
-            // this.initPusher();
         }
-
-        /*initDeezer() {
-            DZ.init({
-                appId: this.deezerAppId,
-                channelUrl: `${window.location.origin}/channel.html`,
-                player: {
-                    onload: function (player) {
-                        DZ.Event.subscribe('player_play', function () {
-                            Alpine.store('playerComponent').isPlaying = true;
-                        });
-
-                        DZ.Event.subscribe('player_paused', function () {
-                            Alpine.store('playerComponent').isPlaying = false;
-                        });
-
-                        DZ.Event.subscribe('current_track', function (track) {
-                            Alpine.store('playerComponent').nowPlaying = Alpine.store('playlistComponent').track(track.index);
-                        });
-                    }
-                }
-            });
-        }*/
 
         initAlpine() {
             const room = this;
 
-            Alpine.store('playlistComponent', {
-                tracks: [],
-                track(index) {
-                    return this.tracks[index];
-                },
-                queue(track) {
-                    this.tracks.push(Object.assign({}, track));
-                },
-                clear() {
-                    this.tracks = [];
-                },
-                isFirst(track) {
-                    return Spotibox.Utils.isFirst(this.tracks, track);
-                },
-                isLast(track) {
-                    return Spotibox.Utils.isLast(this.tracks, track);
-                },
-                isEmpty() {
-                    return Spotibox.Utils.isEmpty(this.tracks);
-                }
+            Alpine.data('playlistComponent', function() {
+                return {
+                    tracks: [],
+                    requeue($button, track) {
+                        // TODO
+                    },
+                    isFirst(track) {
+                        return Spotibox.Utils.isFirst(this.tracks, track);
+                    },
+                    isLast(track) {
+                        return Spotibox.Utils.isLast(this.tracks, track);
+                    },
+                    isEmpty() {
+                        return Spotibox.Utils.isEmpty(this.tracks);
+                    }
+                };
             });
 
-            Alpine.store('playerComponent', {
-                nowPlaying: {},
-                isPlaying: false,
-                get canUseControls() {
-                    return !Alpine.store('playlistComponent').isEmpty();
-                },
-                prev() {
-                    //DZ.player.prev();
-                },
-                playPause() {
-                    /*if (this.isPlaying) {
-                        DZ.player.pause();
-                    } else {
-                        DZ.player.play();
-                    }*/
-                },
-                next() {
-                    //DZ.player.next();
+            Alpine.data('playerComponent', function() {
+                return {
+                    nowPlaying: {},
+                    isPlaying: false,
+                    prev() {
+                        //DZ.player.prev();
+                    },
+                    playPause() {
+                        /*if (this.isPlaying) {
+                            DZ.player.pause();
+                        } else {
+                            DZ.player.play();
+                        }*/
+                    },
+                    next() {
+                        //DZ.player.next();
+                    }
                 }
             });
 
@@ -96,7 +68,7 @@
 
                         const component = this;
 
-                        room.api.search(this.q)
+                        room.api.searchCatalog(this.q)
                             .catch(function(error) {
                                 component.submitting = false;
                             })
@@ -106,15 +78,15 @@
                                 component.submitting = false;
                             });
                     },
-                    queue(button, track) {
-                        button.disabled = true;
+                    queue($button, track) {
+                        $button.disabled = true;
 
-                        room.api.queue(track.id)
+                        room.api.addToQueue(track.id)
                             .catch(function(error) {
-                                button.disabled = false;
+                                $button.disabled = false;
                             })
                             .then(function(data) {
-                                button.disabled = false;
+                                $button.disabled = false;
                             });
                     },
                     clear() {
@@ -135,13 +107,5 @@
                 };
             });
         }
-
-        /*initPusher() {
-            this.pusher = new Pusher(this.pusherKey, {
-                cluster: this.pusherCluster
-            });
-
-            this.pusherChannel = this.pusher.subscribe('room');
-        }*/
     };
 })();

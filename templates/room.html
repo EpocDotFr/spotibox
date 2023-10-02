@@ -38,7 +38,7 @@
                 <div class="card-header">
                     Now playing
                 </div>
-                <div class="hstack w-100" x-data="$store.playerComponent">
+                <div class="hstack w-100" x-data="playerComponent">
                     <div>
                         <img :src="nowPlaying.album_cover_large ?? '/images/no_cover.png'" class="rounded-start-bottom album-cover-large">
                     </div>
@@ -46,17 +46,17 @@
                         <h5 class="card-title fs-4" x-text="nowPlaying.title"></h5>
                         <h6 class="card-subtitle text-body-secondary fs-5" x-text="nowPlaying.artist_name"></h6>
                         <div class="mt-auto">
-                            <button type="button" class="btn btn-secondary btn" @click="prev()" :disabled="!canUseControls"><i class="bi bi-chevron-double-left"></i></button>
-                            <button type="button" class="btn btn-primary btn-lg" @click="playPause()" :disabled="!canUseControls"><i class="bi bi-play" x-show="!isPlaying"></i><i class="bi bi-pause" x-show="isPlaying"></i></button>
-                            <button type="button" class="btn btn-secondary btn" @click="next()" :disabled="!canUseControls"><i class="bi bi-chevron-double-right"></i></button>
+                            <button type="button" class="btn btn-secondary btn" @click="prev()"><i class="bi bi-chevron-double-left"></i></button>
+                            <button type="button" class="btn btn-primary btn-lg" @click="playPause()"><i class="bi bi-play" x-show="!isPlaying"></i><i class="bi bi-pause" x-show="isPlaying"></i></button>
+                            <button type="button" class="btn btn-secondary btn" @click="next()"><i class="bi bi-chevron-double-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="card" x-data="$store.playlistComponent">
+            <div class="card" x-data="playlistComponent">
                 <div class="card-header">
-                    Playlist <button type="button" class="btn btn-danger btn-sm" @click="clear()"><i class="bi bi-eraser"></i></button>
+                    Playlist
                 </div>
                 <div class="list-group list-group-flush">
                     <div class="list-group-item list-group-item-info text-center" x-show="isEmpty()">
@@ -72,7 +72,7 @@
                                 <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
                             </div>
                             <div class="pe-2">
-                                <button type="button" class="btn btn-secondary btn-sm" @click="queue(track)"><i class="bi bi-arrow-clockwise"></i></button>
+                                <button type="button" class="btn btn-secondary btn-sm" @click="requeue($el, track)"><i class="bi bi-arrow-clockwise"></i></button>
                             </div>
                         </div>
                     </template>

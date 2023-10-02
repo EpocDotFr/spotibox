@@ -30,3 +30,14 @@ track = OrderedDict([
     ('album_cover_small', fields.String(attribute=album_cover_small)),
     ('album_cover_large', fields.String(attribute=album_cover_large)),
 ])
+
+
+# TODO Check if currently_playing_type == 'track'
+playback_state = OrderedDict([
+    ('is_playing', fields.Boolean(attribute='is_playing')),
+    ('can_pause', fields.Boolean(attribute='actions.pausing', default=False)),
+    ('can_resume', fields.Boolean(attribute='actions.resuming', default=False)),
+    ('can_skip_to_next', fields.Boolean(attribute='actions.skipping_next', default=False)),
+    ('can_skip_to_previous', fields.Boolean(attribute='actions.skipping_prev', default=False)),
+    ('can_skip_to_previous', fields.Boolean(attribute='actions.skipping_prev', default=False)),
+])

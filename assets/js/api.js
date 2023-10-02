@@ -10,7 +10,7 @@
             this.spotifyId = spotifyId;
         }
 
-        search(q) {
+        searchCatalog(q) {
             return this.fetch(
                 'get',
                 `room/${this.spotifyId}/catalog`,
@@ -20,7 +20,49 @@
             );
         }
 
-        queue(track_id) {
+        getPlayback() {
+            return this.fetch(
+                'get',
+                `room/${this.spotifyId}/playback`
+            );
+        }
+
+        startPlayback() {
+            return this.fetch(
+                'put',
+                `room/${this.spotifyId}/playback`
+            );
+        }
+
+        pausePlayback() {
+            return this.fetch(
+                'delete',
+                `room/${this.spotifyId}/playback`
+            );
+        }
+
+        previousTrack() {
+            return this.fetch(
+                'patch',
+                `room/${this.spotifyId}/playback`
+            );
+        }
+
+        nextTrack() {
+            return this.fetch(
+                'post',
+                `room/${this.spotifyId}/playback`
+            );
+        }
+
+        getQueue() {
+            return this.fetch(
+                'get',
+                `room/${this.spotifyId}/queue`
+            );
+        }
+
+        addToQueue(track_id) {
             return this.fetch(
                 'post',
                 `room/${this.spotifyId}/queue`,
