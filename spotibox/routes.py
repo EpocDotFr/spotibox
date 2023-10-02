@@ -1,7 +1,7 @@
+from spotibox.exceptions import UserNotFoundException, UnauthenticatedWithSpotifyException, NoSpotifyDeviceException
 from flask import render_template, redirect, url_for, request, flash, abort, session
 from spotibox.spotify import create_spotipy_auth_manager, create_spotify_api_client
 from flask_login import current_user, login_user, logout_user, login_required
-from spotibox.exceptions import UserNotFoundException, InactiveRoomException
 from spotipy import SpotifyOauthError, SpotifyException
 from spotibox.forms import RoomForm
 from spotibox.models import User
@@ -72,10 +72,10 @@ def authorize_callback() -> Response:
 
             return redirect(url_for('home'))
 
-        if user_info['product'] != 'premium':
-            flash('Sorry, you must have a Spotify Premium subscription to use Spotibox.', 'warning')
+        # if user_info['product'] != 'premium':
+        #     flash('Sorry, you must have a Spotify Premium subscription to use Spotibox.', 'warning')
 
-            return redirect(url_for('home'))
+        #     return redirect(url_for('home'))
 
         user = User.get_by_spotify_id(user_info['id'], checks=False)
         new_user = False
@@ -139,11 +139,20 @@ def rooms() -> str:
 
 @app.route('/room/<spotify_id>')
 def room(spotify_id: str) -> str:
+    inactive_message = 'This room is inactive.'
+
     try:
         user = User.get_by_spotify_id(spotify_id)
     except UserNotFoundException:
         abort(404, 'This room does not exist.')
-    except InactiveRoomException:
-        abort(412, 'This room is inactive.')
+    except UnauthenticatedWithSpotifyException:
+        abort(412, inactive_message)
+    except NoSpotifyDeviceException as e:
+        if e.user.is_current_user_room_owner:
+            message = 'Your are the host of this room: please open Spotify on any device of your like, then reload this page.'
+        else:
+            message = inactive_message
+
+        abort(412, message)
 
     return render_template('room.html', user=user)

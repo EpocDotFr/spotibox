@@ -5,30 +5,10 @@
 {% block jsfiles %}
     {% assets 'js_room' %}<script defer src="{{ ASSET_URL }}"></script>{% endassets %}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js"></script>
-
-    {% if user.is_current_user_room_owner %}
-        <script defer src="https://sdk.scdn.co/spotify-player.js"></script>
-    {% endif %}
 {% endblock %}
 
 {% block scripts %}
     <script>
-        {% if user.is_current_user_room_owner %}
-            window.onSpotifyWebPlaybackSDKReady = function () {
-                const accessToken = '{{ user.access_token['access_token'] }}';
-                const spotifyPlayer = new Spotify.Player({
-                    name: 'Spotibox',
-                    getOAuthToken: cb => { cb(accessToken); }
-                });
-
-                spotifyPlayer.addListener('player_state_changed', function (one, two, three, four) {
-                    console.log(one, two, three, four);
-                });
-
-                spotifyPlayer.connect();
-            };
-        {% endif %}
-
         document.addEventListener('alpine:init', function () {
             const spotiboxRoom = new Spotibox.Room('{{ user.spotify_id }}');
         });
@@ -43,9 +23,9 @@
             <div class="alert alert-info alert-dismissible fade show">
                 <h4>This is your room.</h4>
                 <ul class="mb-0">
+                    <li>Keep Spotify open on at least one device as long as Spotibox is in use, otherwise this room will be made inactive.</li>
                     <li>Your Spotify playback will be remote-controlled by Spotibox.</li>
-                    <li>Remember to <strong>leave this tab open</strong>, otherwise others will not get playback updates.</li>
-                    <li>You can choose any of your Spotify Connect-compatible devices to output the audio, including Spotibox itself (this tab).</li>
+                    <li>Signing out of Spotibox will permanently disable this room, unless you sign in back (your account will not be deleted).</li>
                 </ul>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>

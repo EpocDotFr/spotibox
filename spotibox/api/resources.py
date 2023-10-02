@@ -1,4 +1,4 @@
-from spotibox.exceptions import UserNotFoundException, InactiveRoomException
+from spotibox.exceptions import UserNotFoundException, UnauthenticatedWithSpotifyException, NoSpotifyDeviceException
 from flask_restful import Resource, marshal_with, abort
 from spotibox.models import User
 import spotibox.api.marshalls as marshalls
@@ -6,12 +6,21 @@ import spotibox.api.validators as validators
 
 
 def fetch_user(spotify_id: str) -> User:
+    inactive_message = 'This room is inactive.'
+
     try:
         return User.get_by_spotify_id(spotify_id)
     except UserNotFoundException:
         abort(404, message='This room does not exist.')
-    except InactiveRoomException:
-        abort(412, message='This room is inactive.')
+    except UnauthenticatedWithSpotifyException:
+        abort(412, message=inactive_message)
+    except NoSpotifyDeviceException as e:
+        if e.user.is_current_user_room_owner:
+            message = 'Your are the host of this room: please open Spotify on any device of your like.'
+        else:
+            message = inactive_message
+
+        abort(412, message=message)
 
 
 class RoomCatalogResource(Resource):
@@ -25,6 +34,14 @@ class RoomCatalogResource(Resource):
 
 
 class RoomPlaybackResource(Resource):
+    def get(self, spotify_id: str):
+        """Get playback state"""
+        user = fetch_user(spotify_id)
+
+        # user.create_spotify_api_client().volume(args.volume) # TODO
+
+        return {}
+
     def put(self, spotify_id: str):
         """Start or resume playback"""
         user = fetch_user(spotify_id)
@@ -41,6 +58,22 @@ class RoomPlaybackResource(Resource):
 
         return {}, 202
 
+    def patch(self, spotify_id: str):
+        """Skip to previous track"""
+        user = fetch_user(spotify_id)
+
+        user.create_spotify_api_client().previous_track()
+
+        return {}, 202
+
+    def post(self, spotify_id: str):
+        """Skip to next track"""
+        user = fetch_user(spotify_id)
+
+        user.create_spotify_api_client().next_track()
+
+        return {}, 202
+
 
 class RoomPlaybackVolumeResource(Resource):
     def put(self, spotify_id: str):
@@ -54,21 +87,13 @@ class RoomPlaybackVolumeResource(Resource):
 
 
 class RoomQueueResource(Resource):
-    def delete(self, spotify_id: str):
-        """Skip to previous track"""
+    def get(self, spotify_id: str):
+        """Get tracks in queue"""
         user = fetch_user(spotify_id)
 
-        user.create_spotify_api_client().previous_track()
+        # user.create_spotify_api_client().volume(args.volume) # TODO
 
-        return {}, 202
-
-    def patch(self, spotify_id: str):
-        """Skip to next track"""
-        user = fetch_user(spotify_id)
-
-        user.create_spotify_api_client().next_track()
-
-        return {}, 202
+        return {}
 
     def post(self, spotify_id: str):
         """Add track to queue"""

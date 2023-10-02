@@ -6,8 +6,10 @@ from app import app, db
 
 SCOPES = (
     'user-read-private',
-    'streaming',
-    'user-modify-playback-state'
+    'user-read-playback-state',
+    'user-modify-playback-state',
+    'user-read-currently-playing',
+    # 'streaming',
 )
 
 
