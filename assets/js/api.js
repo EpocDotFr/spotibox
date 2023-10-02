@@ -20,14 +20,14 @@
             );
         }
 
-        getPlayback() {
+        getPlaybackStatus() {
             return this.fetch(
                 'get',
                 `room/${this.spotifyId}/playback`
             );
         }
 
-        startPlayback() {
+        startOrResumePlayback() {
             return this.fetch(
                 'put',
                 `room/${this.spotifyId}/playback`

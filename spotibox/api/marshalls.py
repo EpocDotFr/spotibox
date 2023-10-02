@@ -2,6 +2,14 @@ from collections import OrderedDict
 from flask_restful import fields
 
 
+class Action(fields.Raw):
+    def format(self, value):
+        if isinstance(value, bool):
+            return not value
+
+        return True
+
+
 def artists_name(track) -> str:
     return ', '.join(
         [artist['name'] for artist in track['artists']]
@@ -34,10 +42,9 @@ track = OrderedDict([
 
 # TODO Check if currently_playing_type == 'track'
 playback_state = OrderedDict([
-    ('is_playing', fields.Boolean(attribute='is_playing')),
-    ('can_pause', fields.Boolean(attribute='actions.pausing', default=False)),
-    ('can_resume', fields.Boolean(attribute='actions.resuming', default=False)),
-    ('can_skip_to_next', fields.Boolean(attribute='actions.skipping_next', default=False)),
-    ('can_skip_to_previous', fields.Boolean(attribute='actions.skipping_prev', default=False)),
-    ('can_skip_to_previous', fields.Boolean(attribute='actions.skipping_prev', default=False)),
+    ('can_pause', Action(attribute='actions.disallows.pausing', default=True)),
+    ('can_start_or_resume', Action(attribute='actions.disallows.resuming', default=True)),
+    ('can_skip_to_next', Action(attribute='actions.disallows.skipping_next', default=True)),
+    ('can_skip_to_previous', Action(attribute='actions.disallows.skipping_prev', default=True)),
+    ('now_playing', fields.Nested(track, attribute='item', allow_null=True, default=None)),
 ])

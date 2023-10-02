@@ -1,6 +1,7 @@
 from spotibox.exceptions import UserNotFoundException, UnauthenticatedWithSpotifyException, NoSpotifyDeviceException
 from flask_restful import Resource, marshal_with, abort
 from spotibox.models import User
+from app import cache
 import spotibox.api.marshalls as marshalls
 import spotibox.api.validators as validators
 
@@ -35,6 +36,7 @@ class RoomCatalogResource(Resource):
 
 class RoomPlaybackResource(Resource):
     @marshal_with(marshalls.playback_state)
+    @cache.cached(timeout=3)
     def get(self, spotify_id: str):
         """Get playback state"""
         user = fetch_user(spotify_id)
@@ -87,6 +89,7 @@ class RoomPlaybackVolumeResource(Resource):
 
 class RoomQueueResource(Resource):
     @marshal_with(marshalls.track)
+    @cache.cached(timeout=3)
     def get(self, spotify_id: str):
         """Get tracks in queue"""
         user = fetch_user(spotify_id)

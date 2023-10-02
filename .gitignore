@@ -1,5 +1,6 @@
 instance/webassets-cache/*
 !instance/webassets-cache/.gitkeep
+instance/cache/*
 instance/*.sqlite
 static/css/*.min.css
 static/js/*.min.js

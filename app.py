@@ -5,6 +5,7 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_caching import Cache
 from typing import Tuple, Dict
 from flask_restful import Api
 from datetime import datetime
@@ -27,6 +28,9 @@ app.config.update(
     SENTRY_DSN=env.str('SENTRY_DSN', default=None),
     SENTRY_TRACES_SAMPLE_RATE=env.float('SENTRY_TRACES_SAMPLE_RATE', default=None),
 
+    CACHE_TYPE=env.str('CACHE_TYPE', default='FileSystemCache'),
+    CACHE_DIR=env.str('CACHE_DIR', default='instance/cache'),
+
     ASSETS_CACHE=env.str('ASSETS_CACHE', default='instance/webassets-cache'),
 
     DEBUG_TB_INTERCEPT_REDIRECTS=env.bool('DEBUG_TB_INTERCEPT_REDIRECTS', False),
@@ -42,6 +46,7 @@ app.config.update(
     SPOTIFY_CLIENT_SECRET=env.str('SPOTIFY_CLIENT_SECRET'),
 
     # Config values that cannot be overwritten
+    CACHE_THRESHOLD=10000,
     SESSION_PROTECTION='strong',
     BUNDLE_ERRORS=True,
 )
@@ -102,6 +107,9 @@ assets.append_path('assets')
 
 assets.register('js_room', Bundle('js/utils.js', 'js/api.js', 'js/room.js', filters='jsmin', output='js/room.min.js'))
 assets.register('css_app', Bundle('css/app.css', filters='cssutils', output='css/app.min.css'))
+
+# Flask-Caching
+cache = Cache(app)
 
 
 # Flask-SQLAlchemy
@@ -165,3 +173,4 @@ def http_error_handler(e: HTTPException) -> Tuple[str, int]:
 # After-bootstrap imports
 
 import spotibox.routes
+import spotibox.commands
