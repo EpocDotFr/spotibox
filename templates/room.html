@@ -33,12 +33,12 @@
     {% endif %}
 
     <main class="hstack gap-3 w-100">
-        <div class="col-6 vstack gap-3">
+        <div class="col-6 vstack gap-3" x-data="playerComponent">
             <div class="card">
                 <div class="card-header">
                     Now playing
                 </div>
-                <div class="hstack w-100" x-data="playerComponent">
+                <div class="hstack w-100">
                     <div>
                         <img :src="nowPlaying ? nowPlaying.album_cover_large : '/images/no_cover.png'" class="rounded-start-bottom album-cover-large">
                     </div>
@@ -54,7 +54,7 @@
                 </div>
             </div>
 
-            <div class="card" x-data="playlistComponent">
+            <div class="card">
                 <div class="card-header">
                     Playlist
                 </div>

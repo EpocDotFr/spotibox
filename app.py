@@ -143,6 +143,7 @@ import spotibox.api.resources as api_resources
 
 api.add_resource(api_resources.RoomCatalogResource, '/room/<spotify_id>/catalog')
 api.add_resource(api_resources.RoomPlaybackResource, '/room/<spotify_id>/playback')
+api.add_resource(api_resources.RoomPlaybackStateResource, '/room/<spotify_id>/playback/state')
 api.add_resource(api_resources.RoomPlaybackVolumeResource, '/room/<spotify_id>/playback/volume')
 api.add_resource(api_resources.RoomQueueResource, '/room/<spotify_id>/queue')
 

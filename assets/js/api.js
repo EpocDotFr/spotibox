@@ -20,10 +20,10 @@
             );
         }
 
-        getPlaybackStatus() {
+        getPlaybackState() {
             return this.fetch(
                 'get',
-                `room/${this.spotifyId}/playback`
+                `room/${this.spotifyId}/playback/state`
             );
         }
 
@@ -52,13 +52,6 @@
             return this.fetch(
                 'post',
                 `room/${this.spotifyId}/playback`
-            );
-        }
-
-        getQueue() {
-            return this.fetch(
-                'get',
-                `room/${this.spotifyId}/queue`
             );
         }
 

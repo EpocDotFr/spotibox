@@ -35,14 +35,6 @@ class RoomCatalogResource(Resource):
 
 
 class RoomPlaybackResource(Resource):
-    @marshal_with(marshalls.playback_state)
-    @cache.cached(timeout=3)
-    def get(self, spotify_id: str):
-        """Get playback state"""
-        user = fetch_user(spotify_id)
-
-        return user.create_spotify_api_client().current_playback()
-
     def put(self, spotify_id: str):
         """Start or resume playback"""
         user = fetch_user(spotify_id)
@@ -76,6 +68,21 @@ class RoomPlaybackResource(Resource):
         return {}, 202
 
 
+class RoomPlaybackStateResource(Resource):
+    @marshal_with(marshalls.playback_state)
+    @cache.cached(timeout=3)
+    def get(self, spotify_id: str):
+        """Get playback state"""
+        user = fetch_user(spotify_id)
+
+        return {
+            'player': user.create_spotify_api_client().current_playback(), # TODO Check if currently_playing_type == 'track'
+            'queue': [
+                item for item in user.create_spotify_api_client().queue()['queue'] if item['type'] == 'track'
+            ]
+        }
+
+
 class RoomPlaybackVolumeResource(Resource):
     def put(self, spotify_id: str):
         """Set playback volume"""
@@ -88,16 +95,6 @@ class RoomPlaybackVolumeResource(Resource):
 
 
 class RoomQueueResource(Resource):
-    @marshal_with(marshalls.track)
-    @cache.cached(timeout=3)
-    def get(self, spotify_id: str):
-        """Get tracks in queue"""
-        user = fetch_user(spotify_id)
-
-        return [
-            item for item in user.create_spotify_api_client().queue()['queue'] if item['type'] == 'track'
-        ]
-
     def post(self, spotify_id: str):
         """Add track to queue"""
         user = fetch_user(spotify_id)

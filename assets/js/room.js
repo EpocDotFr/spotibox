@@ -15,52 +15,6 @@
         initAlpine() {
             const room = this;
 
-            Alpine.data('playlistComponent', function() {
-                return {
-                    tracks: [],
-                    init() {
-                        this.refresh();
-                    },
-                    refresh() {
-                        const component = this;
-
-                        room.api.getQueue()
-                            .catch(function(error) {
-                                alert(error);
-                            })
-                            .then(function(data) {
-                                component.tracks = data;
-
-                                setTimeout(function () {
-                                    component.refresh();
-                                }, 3000);
-                            });
-                    },
-                    requeue($button, track) {
-                        $button.disabled = true;
-
-                        room.api.addToQueue(track.id)
-                            .catch(function(error) {
-                                $button.disabled = false;
-
-                                alert(error);
-                            })
-                            .then(function(data) {
-                                $button.disabled = false;
-                            });
-                    },
-                    isFirst(track) {
-                        return Spotibox.Utils.isFirst(this.tracks, track);
-                    },
-                    isLast(track) {
-                        return Spotibox.Utils.isLast(this.tracks, track);
-                    },
-                    isEmpty() {
-                        return Spotibox.Utils.isEmpty(this.tracks);
-                    }
-                };
-            });
-
             Alpine.data('playerComponent', function() {
                 return {
                     nowPlaying: null,
@@ -68,13 +22,14 @@
                     canStartOrResume: false,
                     canSkipToNext: false,
                     canSkipToPrevious: false,
+                    queue: [],
                     init() {
                         this.refresh();
                     },
                     refresh() {
                         const component = this;
 
-                        room.api.getPlaybackStatus()
+                        room.api.getPlaybackState()
                             .catch(function(error) {
                                 alert(error);
                             })
@@ -84,6 +39,7 @@
                                 component.canStartOrResume = data.can_start_or_resume;
                                 component.canSkipToNext = data.can_skip_to_next;
                                 component.canSkipToPrevious = data.can_skip_to_previous;
+                                component.queue = data.queue;
 
                                 setTimeout(function () {
                                     component.refresh();
@@ -140,6 +96,28 @@
                             .then(function(data) {
                                 $button.disabled = false;
                             });
+                    },
+                    requeue($button, track) {
+                        $button.disabled = true;
+
+                        room.api.addToQueue(track.id)
+                            .catch(function(error) {
+                                $button.disabled = false;
+
+                                alert(error);
+                            })
+                            .then(function(data) {
+                                $button.disabled = false;
+                            });
+                    },
+                    isFirst(track) {
+                        return Spotibox.Utils.isFirst(this.queue, track);
+                    },
+                    isLast(track) {
+                        return Spotibox.Utils.isLast(this.queue, track);
+                    },
+                    isEmpty() {
+                        return Spotibox.Utils.isEmpty(this.queue);
                     }
                 }
             });
