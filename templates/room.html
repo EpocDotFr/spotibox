@@ -38,7 +38,7 @@
 
     <main class="hstack gap-3 w-100">
         <div class="col-6 vstack gap-3" x-data="playbackComponent">
-            <div class="card">
+            <div class="card" x-show="!!nowPlaying">
                 <div class="card-header">
                     Now playing
                 </div>
@@ -67,7 +67,7 @@
                         Add tracks by first searching on Spotify on the right.
                     </div>
 
-                    <template x-for="track in tracks">
+                    <template x-for="track in queue">
                         <div class="list-group-item p-0 hstack align-items-center gap-2" :class="{'rounded-top': isFirst(track), 'rounded-bottom': isLast(track)}">
                             <div>
                                 <img :src="track.album_cover_small" class="album-cover-small" :class="{'rounded-start-bottom': isLast(track)}">
