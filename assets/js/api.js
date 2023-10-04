@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     window.Spotibox = window.Spotibox || {};
@@ -83,13 +83,13 @@
                     'Content-Type': 'application/json',
                 },
                 body: json ? JSON.stringify(json) : null
-            }).then(function(response) {
+            }).then(function (response) {
                 if (response.ok) {
                     return response.json();
                 }
 
                 return Promise.reject(response);
-            }).catch(function(error) {
+            }).catch(function (error) {
                 alert(error);
             });
         }

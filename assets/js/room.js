@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     window.Spotibox = window.Spotibox || {};
@@ -15,7 +15,7 @@
         initAlpine() {
             const room = this;
 
-            Alpine.data('playbackComponent', function() {
+            Alpine.data('playbackComponent', function () {
                 return {
                     nowPlaying: null,
                     canPause: false,
@@ -30,10 +30,10 @@
                         const component = this;
 
                         room.api.getPlaybackState()
-                            .catch(function(error) {
+                            .catch(function (error) {
                                 alert(error);
                             })
-                            .then(function(data) {
+                            .then(function (data) {
                                 component.nowPlaying = data.now_playing;
                                 component.canPause = data.can_pause;
                                 component.canStartOrResume = data.can_start_or_resume;
@@ -50,12 +50,12 @@
                         $button.disabled = true;
 
                         room.api.previousTrack()
-                            .catch(function(error) {
+                            .catch(function (error) {
                                 $button.disabled = false;
 
                                 alert(error);
                             })
-                            .then(function(data) {
+                            .then(function (data) {
                                 $button.disabled = false;
                             });
                     },
@@ -64,22 +64,22 @@
 
                         if (this.canPause) {
                             room.api.pausePlayback()
-                                .catch(function(error) {
+                                .catch(function (error) {
                                     $button.disabled = false;
 
                                     alert(error);
                                 })
-                                .then(function(data) {
+                                .then(function (data) {
                                     $button.disabled = false;
                                 });
                         } else if (this.canStartOrResume) {
                             room.api.startOrResumePlayback()
-                                .catch(function(error) {
+                                .catch(function (error) {
                                     $button.disabled = false;
 
                                     alert(error);
                                 })
-                                .then(function(data) {
+                                .then(function (data) {
                                     $button.disabled = false;
                                 });
                         }
@@ -88,12 +88,12 @@
                         $button.disabled = true;
 
                         room.api.nextTrack()
-                            .catch(function(error) {
+                            .catch(function (error) {
                                 $button.disabled = false;
 
                                 alert(error);
                             })
-                            .then(function(data) {
+                            .then(function (data) {
                                 $button.disabled = false;
                             });
                     },
@@ -101,12 +101,12 @@
                         $button.disabled = true;
 
                         room.api.addToQueue(track.id)
-                            .catch(function(error) {
+                            .catch(function (error) {
                                 $button.disabled = false;
 
                                 alert(error);
                             })
-                            .then(function(data) {
+                            .then(function (data) {
                                 $button.disabled = false;
                             });
                     },
@@ -122,7 +122,7 @@
                 }
             });
 
-            Alpine.data('searchComponent', function() {
+            Alpine.data('searchComponent', function () {
                 return {
                     results: [],
                     q: '',
@@ -138,12 +138,12 @@
                         const component = this;
 
                         room.api.searchCatalog(this.q)
-                            .catch(function(error) {
+                            .catch(function (error) {
                                 component.submitting = false;
 
                                 alert(error);
                             })
-                            .then(function(data) {
+                            .then(function (data) {
                                 component.results = data;
                                 component.submitted = true;
                                 component.submitting = false;
@@ -153,12 +153,12 @@
                         $button.disabled = true;
 
                         room.api.addToQueue(track.id)
-                            .catch(function(error) {
+                            .catch(function (error) {
                                 $button.disabled = false;
 
                                 alert(error);
                             })
-                            .then(function(data) {
+                            .then(function (data) {
                                 $button.disabled = false;
                             });
                     },
