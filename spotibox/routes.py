@@ -86,7 +86,7 @@ def authorize_callback() -> Response:
 
             new_user = True
 
-        user.display_name = user_info['display_name']
+        user.display_name = user_info['display_name'] or user_info['id']
         user.access_token = session.pop('token_info', None)
 
         if not user.access_token:
