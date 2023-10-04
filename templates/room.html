@@ -16,7 +16,11 @@
 {% endblock %}
 
 {% block content %}
-    <p class="text-center lead">Welcome to{% if user.profile_image_url %} <img src="{{ user.profile_image_url}}" class="rounded-1 avatar">{% endif %}{% if user.display_name %} <strong>{{ user.display_name }}</strong>'s room{% endif %}.</p>
+    {% if current_user.is_authenticated %}
+        <p class="text-center lead">Signed in with your Spotify account{% if current_user.profile_image_url %} <img src="{{ current_user.profile_image_url}}" class="rounded-1 avatar">{% endif %} <strong>{{ current_user.display_name }}</strong>.</p>
+    {% endif %}
+
+    <p class="text-center lead">Welcome to{% if user.profile_image_url %} <img src="{{ user.profile_image_url}}" class="rounded-1 avatar">{% endif %} <strong>{{ user.display_name }}</strong>'s room.</p>
 
     {% if user.is_current_user_room_owner %}
         <div class="container">
