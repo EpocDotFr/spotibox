@@ -24,6 +24,9 @@ class User(TimestampedMixin, UserMixin, db.Model):
     access_token = mapped_column(db.JSON)
     room_password = mapped_column(db.String(30))
 
+    def get_id(self):
+        return self.spotify_id
+
     def get_room_url(self, absolute: bool = False) -> str:
         return url_for('room', spotify_id=self.spotify_id, _external=absolute)
 
@@ -56,7 +59,7 @@ class User(TimestampedMixin, UserMixin, db.Model):
 
     @property
     def is_current_user_room_owner(self) -> bool:
-        return current_user.is_authenticated and current_user.id == self.id
+        return current_user.is_authenticated and current_user.spotify_id == self.spotify_id
 
     @classmethod
     def get_by_spotify_id(cls: Self, spotify_id: str, checks: bool = True) -> Optional[Self]:

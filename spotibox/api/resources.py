@@ -70,7 +70,7 @@ class RoomPlaybackResource(Resource):
 
 class RoomPlaybackStateResource(Resource):
     @marshal_with(marshalls.playback_state)
-    @cache.cached(timeout=3)
+    @cache.cached(timeout=3) # FIXME Do not cache the whole response, only the Spotify API responses
     def get(self, spotify_id: str):
         """Get playback state"""
         user = fetch_user(spotify_id)
