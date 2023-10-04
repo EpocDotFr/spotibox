@@ -4,7 +4,6 @@ from sqlalchemy.orm import mapped_column
 from typing_extensions import Self
 from typing import Optional
 from datetime import datetime
-from sqlalchemy import select
 from spotipy import Spotify
 from flask import url_for
 from app import db
@@ -18,9 +17,8 @@ class TimestampedMixin:
 class User(TimestampedMixin, UserMixin, db.Model):
     __tablename__ = 'users'
 
-    id = mapped_column(db.Integer, primary_key=True, autoincrement=True)
+    spotify_id = mapped_column(db.String, primary_key=True)
 
-    spotify_id = mapped_column(db.String, nullable=False, unique=True)
     display_name = mapped_column(db.String)
     profile_image_url = mapped_column(db.String)
     access_token = mapped_column(db.JSON)
@@ -62,7 +60,7 @@ class User(TimestampedMixin, UserMixin, db.Model):
 
     @classmethod
     def get_by_spotify_id(cls: Self, spotify_id: str, checks: bool = True) -> Optional[Self]:
-        user = db.session.scalar(select(User).where(User.spotify_id == spotify_id))
+        user = db.session.get(User, spotify_id)
 
         if not checks:
             return user
