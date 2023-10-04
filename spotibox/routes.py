@@ -154,5 +154,7 @@ def room(spotify_id: str) -> str:
             message = inactive_message
 
         abort(412, message)
+    except SpotifyException as e:
+        abort(502, f'Spotify error: {e.reason} ({e.http_status})')
 
     return render_template('room.html', user=user)
