@@ -40,10 +40,10 @@ track = OrderedDict([
 ])
 
 playback_state = OrderedDict([
-    ('can_pause', Action(attribute='player.actions.disallows.pausing', default=True)),
-    ('can_start_or_resume', Action(attribute='player.actions.disallows.resuming', default=True)),
-    ('can_skip_to_next', Action(attribute='player.actions.disallows.skipping_next', default=True)),
-    ('can_skip_to_previous', Action(attribute='player.actions.disallows.skipping_prev', default=True)),
-    ('now_playing', fields.Nested(track, attribute='player.item', allow_null=True, default=None)),
+    ('can_pause', Action(attribute='playback.actions.disallows.pausing', default=True)),
+    ('can_start_or_resume', Action(attribute='playback.actions.disallows.resuming', default=True)),
+    ('can_skip_to_next', Action(attribute='playback.actions.disallows.skipping_next', default=True)),
+    ('can_skip_to_previous', Action(attribute='playback.actions.disallows.skipping_prev', default=True)),
+    ('now_playing', fields.Nested(track, attribute='playback.item', allow_null=True, default=None)),
     ('queue', fields.List(fields.Nested(track), attribute='queue', default=[])),
 ])

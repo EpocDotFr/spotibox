@@ -33,7 +33,7 @@
     {% endif %}
 
     <main class="hstack gap-3 w-100">
-        <div class="col-6 vstack gap-3" x-data="playerComponent">
+        <div class="col-6 vstack gap-3" x-data="playbackComponent">
             <div class="card">
                 <div class="card-header">
                     Now playing
@@ -56,11 +56,11 @@
 
             <div class="card">
                 <div class="card-header">
-                    Playlist
+                    Coming next
                 </div>
                 <div class="list-group list-group-flush">
                     <div class="list-group-item list-group-item-info text-center" x-show="isEmpty()">
-                        Add tracks to the playlist by first searching using the input on the right.
+                        Add tracks by first searching on Spotify on the right.
                     </div>
 
                     <template x-for="track in tracks">

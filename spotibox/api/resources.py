@@ -76,7 +76,7 @@ class RoomPlaybackStateResource(Resource):
         user = fetch_user(spotify_id)
 
         return {
-            'player': user.create_spotify_api_client().current_playback(), # TODO Check if currently_playing_type == 'track'
+            'playback': user.create_spotify_api_client().current_playback(), # TODO Check if currently_playing_type == 'track'
             'queue': [
                 item for item in user.create_spotify_api_client().queue()['queue'] if item['type'] == 'track'
             ]

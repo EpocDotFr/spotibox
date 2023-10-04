@@ -15,7 +15,7 @@
         initAlpine() {
             const room = this;
 
-            Alpine.data('playerComponent', function() {
+            Alpine.data('playbackComponent', function() {
                 return {
                     nowPlaying: null,
                     canPause: false,
