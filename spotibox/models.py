@@ -59,7 +59,7 @@ class User(TimestampedMixin, UserMixin, db.Model):
 
     @property
     def is_current_user_room_owner(self) -> bool:
-        return current_user.is_authenticated and current_user.spotify_id == self.spotify_id
+        return current_user.is_authenticated and current_user == self
 
     @classmethod
     def get_by_spotify_id(cls: Self, spotify_id: str, checks: bool = True) -> Optional[Self]:
