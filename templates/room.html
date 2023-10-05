@@ -47,7 +47,7 @@
                         <img :src="nowPlaying ? nowPlaying.album_cover_large : '/images/no_cover.png'" class="rounded-start-bottom album-cover-large">
                     </div>
                     <div class="card-body vstack gap-2">
-                        <h5 class="card-title fs-4" x-text="nowPlaying ? nowPlaying.title : ''"></h5>
+                        <h5 class="card-title mb-0 fs-4" x-text="nowPlaying ? nowPlaying.title : ''"></h5>
                         <h6 class="card-subtitle text-body-secondary fs-5" x-text="nowPlaying ? nowPlaying.artist_name : ''"></h6>
                         <div class="mt-auto">
                             <button type="button" class="btn btn-secondary btn" @click="prev($el)" :disabled="!canSkipToPrevious"><i class="bi bi-chevron-double-left"></i></button>
@@ -73,7 +73,8 @@
                                 <img :src="track.album_cover_small" class="album-cover-small" :class="{'rounded-start-bottom': isLast(track)}">
                             </div>
                             <div class="me-auto">
-                                <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
+                                <div x-text="track.title"></div>
+                                <div class="text-body-secondary small"><span x-text="track.artist_name"></span></div>
                             </div>
                             <div class="actions pe-2">
                                 <button type="button" class="btn btn-secondary btn-sm" @click="requeue($el, track)"><i class="bi bi-arrow-clockwise"></i></button>
@@ -110,7 +111,8 @@
                                     <img :src="track.album_cover_small" class="album-cover-small" :class="{'rounded-start-top': isFirst(track), 'rounded-start-bottom': isLast(track)}">
                                 </div>
                                 <div class="me-auto">
-                                    <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
+                                    <div x-text="track.title"></div>
+                                    <div class="text-body-secondary small"><span x-text="track.artist_name"></span></div>
                                 </div>
                                 <div class="actions pe-2">
                                     <button type="button" class="btn btn-secondary btn-sm" @click="queue($el, track)"><i class="bi bi-plus"></i></button>
