@@ -112,13 +112,17 @@
                                 $button.disabled = false;
                             });
                     },
-                    setVolume() {
+                    setVolume($input) {
+                        $input.disabled = true;
+
                         room.api.setVolume(this.volume)
                             .catch(function (error) {
+                                $input.disabled = false;
+
                                 alert(error);
                             })
                             .then(function (data) {
-                                // Do nothing
+                                $input.disabled = false;
                             });
                     },
                     isFirst(track) {
