@@ -75,7 +75,7 @@
                             <div class="me-auto">
                                 <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
                             </div>
-                            <div class="pe-2">
+                            <div class="actions pe-2">
                                 <button type="button" class="btn btn-secondary btn-sm" @click="requeue($el, track)"><i class="bi bi-arrow-clockwise"></i></button>
                             </div>
                         </div>
@@ -107,12 +107,12 @@
                         <template x-for="track in results">
                             <div class="list-group-item p-0 hstack align-items-center gap-2" :class="{'rounded-top': isFirst(track), 'rounded-bottom': isLast(track)}">
                                 <div>
-                                    <img :src="track.album_cover_small" class="album-cover-small" :class="{'rounded-start-top': isFirst(track), 'rounded-start-bottom': isLast(track)}" width="56" height="56">
+                                    <img :src="track.album_cover_small" class="album-cover-small" :class="{'rounded-start-top': isFirst(track), 'rounded-start-bottom': isLast(track)}">
                                 </div>
                                 <div class="me-auto">
                                     <span x-text="track.title"></span> • <span x-text="track.artist_name"></span>
                                 </div>
-                                <div class="pe-2">
+                                <div class="actions pe-2">
                                     <button type="button" class="btn btn-secondary btn-sm" @click="queue($el, track)"><i class="bi bi-plus"></i></button>
                                 </div>
                             </div>

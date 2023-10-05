@@ -24,3 +24,11 @@
     max-width: 64px;
     max-height: 64px;
 }
+
+.list-group-item .actions {
+    display: none;
+}
+
+.list-group-item:hover .actions {
+    display: initial;
+}

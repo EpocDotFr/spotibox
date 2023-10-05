@@ -89,8 +89,6 @@
                 }
 
                 return Promise.reject(response);
-            }).catch(function (error) {
-                alert(error);
             });
         }
     };
