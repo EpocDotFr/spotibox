@@ -95,7 +95,6 @@ def authorize_callback() -> Response:
             return redirect(url_for('home'))
 
         if user_info['images']:
-            # FIXME Max height 32 pixels, but if there's none take the smallest
             profile_images = sorted(user_info['images'], key=lambda i: i['height'])
 
             user.profile_image_url = profile_images[0]['url']

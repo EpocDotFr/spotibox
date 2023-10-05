@@ -17,11 +17,12 @@
 
             Alpine.data('playbackComponent', function () {
                 return {
-                    nowPlaying: null,
                     canPause: false,
                     canStartOrResume: false,
                     canSkipToNext: false,
                     canSkipToPrevious: false,
+                    volume: 0,
+                    nowPlaying: null,
                     queue: [],
                     init() {
                         this.refresh();
@@ -34,11 +35,12 @@
                                 alert(error);
                             })
                             .then(function (data) {
-                                component.nowPlaying = data.now_playing;
                                 component.canPause = data.can_pause;
                                 component.canStartOrResume = data.can_start_or_resume;
                                 component.canSkipToNext = data.can_skip_to_next;
                                 component.canSkipToPrevious = data.can_skip_to_previous;
+                                component.volume = data.volume;
+                                component.nowPlaying = data.now_playing;
                                 component.queue = data.queue;
 
                                 setTimeout(function () {
@@ -108,6 +110,15 @@
                             })
                             .then(function (data) {
                                 $button.disabled = false;
+                            });
+                    },
+                    setVolume() {
+                        room.api.setVolume(this.volume)
+                            .catch(function (error) {
+                                alert(error);
+                            })
+                            .then(function (data) {
+                                // Do nothing
                             });
                     },
                     isFirst(track) {

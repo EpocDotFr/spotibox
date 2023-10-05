@@ -51,6 +51,7 @@ playback_state = OrderedDict([
     ('can_start_or_resume', ActionField(attribute='playback.actions.disallows.resuming', default=True)),
     ('can_skip_to_next', ActionField(attribute='playback.actions.disallows.skipping_next', default=True)),
     ('can_skip_to_previous', ActionField(attribute='playback.actions.disallows.skipping_prev', default=True)),
+    ('volume', fields.Integer(attribute='playback.device.volume_percent')),
     ('now_playing', fields.Nested(track, attribute='playback.item', allow_null=True, default=None)),
     ('queue', fields.List(fields.Nested(track), attribute='queue', default=[])),
 ])

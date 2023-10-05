@@ -55,6 +55,17 @@
             );
         }
 
+        setVolume(volume) {
+            return this.fetch(
+                'put',
+                `room/${this.spotifyId}/playback/volume`,
+                null,
+                {
+                    volume: volume
+                }
+            );
+        }
+
         addToQueue(track_id) {
             return this.fetch(
                 'post',
