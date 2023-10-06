@@ -22,6 +22,7 @@
                     canSkipToNext: false,
                     canSkipToPrevious: false,
                     volume: 0,
+                    volumeBeingChanged: false,
                     nowPlaying: null,
                     queue: [],
                     init() {
@@ -39,9 +40,12 @@
                                 component.canStartOrResume = data.can_start_or_resume;
                                 component.canSkipToNext = data.can_skip_to_next;
                                 component.canSkipToPrevious = data.can_skip_to_previous;
-                                component.volume = data.volume;
                                 component.nowPlaying = data.now_playing;
                                 component.queue = data.queue;
+
+                                if (!component.volumeBeingChanged) {
+                                    component.volume = data.volume;
+                                }
 
                                 setTimeout(function () {
                                     component.refresh();
@@ -113,16 +117,22 @@
                             });
                     },
                     setVolume($input) {
+                        const component = this;
+
                         $input.disabled = true;
 
                         room.api.setVolume(this.volume)
                             .catch(function (error) {
                                 $input.disabled = false;
 
+                                component.volumeBeingChanged = false;
+
                                 alert(error);
                             })
                             .then(function (data) {
                                 $input.disabled = false;
+
+                                component.volumeBeingChanged = false;
                             });
                     },
                     isFirst(track) {
