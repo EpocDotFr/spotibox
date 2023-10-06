@@ -1,8 +1,8 @@
 from flask import render_template, redirect, url_for, request, flash, abort, session
 from spotibox.spotify import create_spotipy_auth_manager, create_spotify_api_client
 from flask_login import current_user, login_user, logout_user, login_required
+from spotibox.forms import RoomSettingsForm, RoomPasswordForm
 from spotipy import SpotifyOauthError, SpotifyException
-from spotibox.forms import RoomSettingsForm
 from spotibox.models import User
 from werkzeug import Response
 from typing import Union
@@ -136,10 +136,8 @@ def rooms() -> str:
     return render_template('rooms.html')
 
 
-@app.route('/room/<spotify_id>')
+@app.route('/room/<spotify_id>', methods=['GET', 'POST'])
 def room(spotify_id: str) -> str:
-    inactive_message = 'This room is inactive.'
-
     try:
         user = User.get_by_spotify_id(spotify_id)
 
@@ -147,17 +145,20 @@ def room(spotify_id: str) -> str:
     except exceptions.UserNotFoundException:
         abort(404, 'This room does not or no longer exist.')
     except exceptions.UnauthenticatedWithSpotifyException:
-        abort(412, inactive_message)
+        abort(412, 'This room is inactive.')
     except exceptions.NoSpotifyDeviceException as e:
         if e.user.is_current_user_room_owner:
             message = 'Your are the host of this room: please open Spotify on any device of your like, then reload this page.'
         else:
-            message = inactive_message
+            message = 'The host must be active for this room to be joinable.'
 
         abort(412, message)
     except SpotifyException as e:
         abort(502, f'Spotify error: {e.reason} ({e.http_status})')
     except exceptions.PasswordRequiredException:
-        pass
-        # TODO Render template room_password.html
-        # TODO Handle password submit with Flask-WTF
+        form = RoomPasswordForm()
+
+        if form.validate_on_submit():
+            pass # TODO Save in session access has been granted for this room
+
+        return render_template('room_password.html', form=form)

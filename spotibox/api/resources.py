@@ -8,19 +8,17 @@ import spotibox.exceptions as exceptions
 
 
 def fetch_user(spotify_id: str) -> User:
-    inactive_message = 'This room is inactive.'
-
     try:
         return User.get_by_spotify_id(spotify_id)
     except exceptions.UserNotFoundException:
         abort(404, message='This room does not or no longer exist.')
     except exceptions.UnauthenticatedWithSpotifyException:
-        abort(412, message=inactive_message)
+        abort(412, message='This room is inactive.')
     except exceptions.NoSpotifyDeviceException as e:
         if e.user.is_current_user_room_owner:
             message = 'Your are the host of this room: please open Spotify on any device of your like.'
         else:
-            message = inactive_message
+            message = 'The host must be active for this room to be joinable.'
 
         abort(412, message=message)
     except exceptions.PasswordRequiredException:

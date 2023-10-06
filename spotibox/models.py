@@ -1,4 +1,3 @@
-from spotibox.exceptions import UserNotFoundException, UnauthenticatedWithSpotifyException, NoSpotifyDeviceException
 from flask_login import UserMixin, current_user
 from sqlalchemy.orm import mapped_column
 from typing_extensions import Self
@@ -7,6 +6,7 @@ from datetime import datetime
 from spotipy import Spotify
 from flask import url_for
 from app import db
+import spotibox.exceptions as exceptions
 
 
 class TimestampedMixin:
@@ -61,6 +61,16 @@ class User(TimestampedMixin, UserMixin, db.Model):
     def is_current_user_room_owner(self) -> bool:
         return current_user.is_authenticated and current_user == self
 
+    @property
+    def has_current_user_access_to_room(self) -> bool:
+        if self.is_current_user_room_owner:
+            return True
+
+        if self.is_room_private: # TODO Check in session if access has been granted for this room and still valid
+            pass
+
+        return False
+
     @classmethod
     def get_by_spotify_id(cls: Self, spotify_id: str, checks: bool = True) -> Optional[Self]:
         user = db.session.get(User, spotify_id)
@@ -69,16 +79,15 @@ class User(TimestampedMixin, UserMixin, db.Model):
             return user
 
         if not user:
-            raise UserNotFoundException()
+            raise exceptions.UserNotFoundException()
 
         if not user.is_authenticated_with_spotify:
-            raise UnauthenticatedWithSpotifyException()
+            raise exceptions.UnauthenticatedWithSpotifyException()
 
-        # TODO Check si current user est différent du user de la room, si oui check si a soumis le bon mdp
-        if not user.is_current_user_room_owner and user.is_room_private:
-            pass
+        if not user.has_current_user_access_to_room:
+            raise exceptions.PasswordRequiredException()
 
         if not user.has_spotify_device:
-            raise NoSpotifyDeviceException(user)
+            raise exceptions.NoSpotifyDeviceException(user)
 
         return user
