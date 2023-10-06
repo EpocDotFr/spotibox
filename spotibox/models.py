@@ -17,10 +17,10 @@ class TimestampedMixin:
 class User(TimestampedMixin, UserMixin, db.Model):
     __tablename__ = 'users'
 
-    spotify_id = mapped_column(db.String, primary_key=True)
+    spotify_id = mapped_column(db.String(255), primary_key=True)
 
-    display_name = mapped_column(db.String)
-    profile_image_url = mapped_column(db.String)
+    display_name = mapped_column(db.String(255))
+    profile_image_url = mapped_column(db.String(255))
     access_token = mapped_column(db.JSON)
     room_password = mapped_column(db.String(30))
 
