@@ -66,6 +66,17 @@
             );
         }
 
+        seek(position) {
+            return this.fetch(
+                'put',
+                `room/${this.spotifyId}/playback/position`,
+                null,
+                {
+                    position: position
+                }
+            );
+        }
+
         addToQueue(track_id) {
             return this.fetch(
                 'post',

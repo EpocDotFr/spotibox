@@ -129,6 +129,19 @@
                                 $input.disabled = false;
                             });
                     },
+                    seek($input) {
+                        $input.disabled = true;
+
+                        room.api.seek(this.progressMs)
+                            .catch(function (error) {
+                                $input.disabled = false;
+
+                                alert(error);
+                            })
+                            .then(function (data) {
+                                $input.disabled = false;
+                            });
+                    },
                     isFirst(track) {
                         return Spotibox.Utils.isFirst(this.queue, track);
                     },

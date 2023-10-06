@@ -57,7 +57,7 @@
                         </div>
                         <div class="mt-auto hstack align-items-center gap-2">
                             <span class="text-body-secondary" x-text="progressText"></span>
-                            <input type="range" class="ms-auto form-range" min="0" x-model="progressMs" :max="nowPlaying ? nowPlaying.duration_ms : 0">
+                            <input type="range" class="ms-auto form-range" min="0" x-model="progressMs" :max="nowPlaying ? nowPlaying.duration_ms : 0" @change="seek($el)">
                             <span class="text-body-secondary" x-text="nowPlaying ? nowPlaying.duration_text : ''"></span>
                         </div>
                     </div>

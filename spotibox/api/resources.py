@@ -117,6 +117,20 @@ class RoomPlaybackVolumeResource(Resource):
             abort(502, message=f'Spotify error: {e.reason} ({e.http_status})')
 
 
+class RoomPlaybackPositionResource(Resource):
+    def put(self, spotify_id: str):
+        """Seek to position"""
+        try:
+            user = fetch_user(spotify_id)
+            args = validators.put_room_playback_position.parse_args()
+
+            user.create_spotify_api_client().seek_track(args.position)
+
+            return {}, 202
+        except SpotifyException as e:
+            abort(502, message=f'Spotify error: {e.reason} ({e.http_status})')
+
+
 class RoomQueueResource(Resource):
     def post(self, spotify_id: str):
         """Add track to queue"""
