@@ -5,13 +5,15 @@
 {% endblock %}
 
 {% block scripts %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(function (el) {
-                new bootstrap.Tooltip(el);
+    {% if current_user.is_authenticated %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(function (el) {
+                    new bootstrap.Tooltip(el);
+                });
             });
-        });
-    </script>
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
