@@ -48,12 +48,17 @@
                     </div>
                     <div class="card-body vstack gap-2">
                         <h5 class="card-title mb-0 fs-4" x-text="nowPlaying ? nowPlaying.title : ''"></h5>
-                        <h6 class="card-subtitle text-body-secondary fs-5"><span x-text="nowPlaying ? nowPlaying.artist_name : ''"></span> • <span x-text="nowPlaying ? nowPlaying.duration : ''"></span></h6>
-                        <div class="mt-auto hstack align-items-center gap-2">
+                        <h6 class="card-subtitle text-body-secondary fs-5"><span x-text="nowPlaying ? nowPlaying.artist_name : ''"></span></h6>
+                        <div class="mt-auto hstack justify-content-center gap-2">
                             <button type="button" class="btn btn-secondary btn" @click="prev($el)" :disabled="!canSkipToPrevious"><i class="bi bi-chevron-double-left"></i></button>
                             <button type="button" class="btn btn-primary btn-lg" @click="playPause($el)" :disabled="!canStartOrResume && !canPause"><i class="bi bi-play" x-show="canStartOrResume"></i><i class="bi bi-pause" x-show="canPause"></i></button>
                             <button type="button" class="btn btn-secondary btn" @click="next($el)" :disabled="!canSkipToNext"><i class="bi bi-chevron-double-right"></i></button>
-                            <input type="range" class="ms-auto form-range volume" min="0" max="100" x-model.number="volume" @change="setVolume($el)">
+                            <input type="range" class="form-range volume" min="0" max="100" x-model.number="volume" @change="setVolume($el)">
+                        </div>
+                        <div class="mt-auto hstack align-items-center gap-2">
+                            <span class="text-body-secondary" x-text="progressText"></span>
+                            <input type="range" class="ms-auto form-range" min="0" x-model="progressMs" :max="nowPlaying ? nowPlaying.duration_ms : 0">
+                            <span class="text-body-secondary" x-text="nowPlaying ? nowPlaying.duration_text : ''"></span>
                         </div>
                     </div>
                 </div>
@@ -75,7 +80,7 @@
                             </div>
                             <div class="me-auto">
                                 <div x-text="track.title"></div>
-                                <div class="text-body-secondary small"><span x-text="track.artist_name"></span> • <span x-text="track.duration"></span></div>
+                                <div class="text-body-secondary small"><span x-text="track.artist_name"></span> • <span x-text="track.duration_text"></span></div>
                             </div>
                             <div class="actions pe-2">
                                 <button type="button" class="btn btn-secondary btn-sm" @click="requeue($el, track)"><i class="bi bi-arrow-clockwise"></i></button>
@@ -113,7 +118,7 @@
                                 </div>
                                 <div class="me-auto">
                                     <div x-text="track.title"></div>
-                                    <div class="text-body-secondary small"><span x-text="track.artist_name"></span> • <span x-text="track.duration"></span></div>
+                                    <div class="text-body-secondary small"><span x-text="track.artist_name"></span> • <span x-text="track.duration_text"></span></div>
                                 </div>
                                 <div class="actions pe-2">
                                     <button type="button" class="btn btn-secondary btn-sm" @click="queue($el, track)"><i class="bi bi-plus"></i></button>

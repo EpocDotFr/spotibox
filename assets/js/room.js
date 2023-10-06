@@ -23,6 +23,8 @@
                     canSkipToPrevious: false,
                     volume: 0,
                     nowPlaying: null,
+                    progressText: '',
+                    progressMs: 0,
                     queue: [],
                     init() {
                         this.refresh();
@@ -41,6 +43,8 @@
                                 component.canSkipToPrevious = data.can_skip_to_previous;
                                 component.volume = data.volume;
                                 component.nowPlaying = data.now_playing;
+                                component.progressText = data.progress_text;
+                                component.progressMs = data.progress_ms;
                                 component.queue = data.queue;
 
                                 setTimeout(function () {
