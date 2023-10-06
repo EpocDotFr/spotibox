@@ -53,7 +53,7 @@
                             <button type="button" class="btn btn-secondary btn" @click="prev($el)" :disabled="!canSkipToPrevious"><i class="bi bi-chevron-double-left"></i></button>
                             <button type="button" class="btn btn-primary btn-lg" @click="playPause($el)" :disabled="!canStartOrResume && !canPause"><i class="bi bi-play" x-show="canStartOrResume"></i><i class="bi bi-pause" x-show="canPause"></i></button>
                             <button type="button" class="btn btn-secondary btn" @click="next($el)" :disabled="!canSkipToNext"><i class="bi bi-chevron-double-right"></i></button>
-                            <input type="range" class="ms-auto form-range volume" min="0" max="100" x-model.number="volume" @change="volumeBeingChanged = true" @change.debounce="setVolume($el)">
+                            <input type="range" class="ms-auto form-range volume" min="0" max="100" x-model.number="volume" @change="setVolume($el)">
                         </div>
                     </div>
                 </div>
