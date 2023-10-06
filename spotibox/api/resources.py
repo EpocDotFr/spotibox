@@ -1,10 +1,10 @@
-from spotibox.exceptions import UserNotFoundException, UnauthenticatedWithSpotifyException, NoSpotifyDeviceException
 from flask_restful import Resource, marshal_with, abort
 from spotipy import SpotifyException
 from spotibox.models import User
 from app import cache
-import spotibox.api.marshalls as marshalls
 import spotibox.api.validators as validators
+import spotibox.api.marshalls as marshalls
+import spotibox.exceptions as exceptions
 
 
 def fetch_user(spotify_id: str) -> User:
@@ -12,17 +12,19 @@ def fetch_user(spotify_id: str) -> User:
 
     try:
         return User.get_by_spotify_id(spotify_id)
-    except UserNotFoundException:
-        abort(404, message='This room does not exist.')
-    except UnauthenticatedWithSpotifyException:
+    except exceptions.UserNotFoundException:
+        abort(404, message='This room does not or no longer exist.')
+    except exceptions.UnauthenticatedWithSpotifyException:
         abort(412, message=inactive_message)
-    except NoSpotifyDeviceException as e:
+    except exceptions.NoSpotifyDeviceException as e:
         if e.user.is_current_user_room_owner:
             message = 'Your are the host of this room: please open Spotify on any device of your like.'
         else:
             message = inactive_message
 
         abort(412, message=message)
+    except exceptions.PasswordRequiredException:
+        abort(401, message='This room is private, please reload the page to submit a password.')
 
 
 class RoomCatalogResource(Resource):

@@ -6,8 +6,16 @@ class UnauthenticatedWithSpotifyException(Exception):
     pass
 
 
-class NoSpotifyDeviceException(Exception):
+class BaseExceptionWithUser(Exception):
     def __init__(self, user):
         self.user = user
 
         super().__init__()
+
+
+class NoSpotifyDeviceException(BaseExceptionWithUser):
+    pass
+
+
+class PasswordRequiredException(BaseExceptionWithUser):
+    pass

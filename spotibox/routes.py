@@ -1,19 +1,19 @@
-from spotibox.exceptions import UserNotFoundException, UnauthenticatedWithSpotifyException, NoSpotifyDeviceException
 from flask import render_template, redirect, url_for, request, flash, abort, session
 from spotibox.spotify import create_spotipy_auth_manager, create_spotify_api_client
 from flask_login import current_user, login_user, logout_user, login_required
 from spotipy import SpotifyOauthError, SpotifyException
-from spotibox.forms import RoomForm
+from spotibox.forms import RoomSettingsForm
 from spotibox.models import User
 from werkzeug import Response
 from typing import Union
 from app import app, db
+import spotibox.exceptions as exceptions
 
 
 @app.route('/', methods=['GET', 'POST'])
 def home() -> Union[str, Response]:
     if current_user.is_authenticated:
-        form = RoomForm(obj=current_user)
+        form = RoomSettingsForm(obj=current_user)
 
         if form.validate_on_submit():
             form.populate_user(current_user)
@@ -142,11 +142,13 @@ def room(spotify_id: str) -> str:
 
     try:
         user = User.get_by_spotify_id(spotify_id)
-    except UserNotFoundException:
-        abort(404, 'This room does not exist.')
-    except UnauthenticatedWithSpotifyException:
+
+        return render_template('room.html', user=user)
+    except exceptions.UserNotFoundException:
+        abort(404, 'This room does not or no longer exist.')
+    except exceptions.UnauthenticatedWithSpotifyException:
         abort(412, inactive_message)
-    except NoSpotifyDeviceException as e:
+    except exceptions.NoSpotifyDeviceException as e:
         if e.user.is_current_user_room_owner:
             message = 'Your are the host of this room: please open Spotify on any device of your like, then reload this page.'
         else:
@@ -155,5 +157,7 @@ def room(spotify_id: str) -> str:
         abort(412, message)
     except SpotifyException as e:
         abort(502, f'Spotify error: {e.reason} ({e.http_status})')
-
-    return render_template('room.html', user=user)
+    except exceptions.PasswordRequiredException:
+        pass
+        # TODO Render template room_password.html
+        # TODO Handle password submit with Flask-WTF

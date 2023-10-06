@@ -74,6 +74,8 @@ class User(TimestampedMixin, UserMixin, db.Model):
         if not user.is_authenticated_with_spotify:
             raise UnauthenticatedWithSpotifyException()
 
+        # TODO Check si current user est différent du user de la room, si oui check si a soumis le bon mdp
+
         if not user.has_spotify_device:
             raise NoSpotifyDeviceException(user)
 
