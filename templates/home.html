@@ -58,14 +58,14 @@
                     <h3>Host a room</h3>
 
                     <p>Start by signing in using your Spotify account.</p>
-                    <p><a href="{{ sign_in_spotify_url }}" class="btn btn-success">Sign in with <img src="{{ url_for('static', filename='images/spotify.png') }}"></a></p>
+                    <p class="mb-0"><a href="{{ sign_in_spotify_url }}" class="btn btn-success">Sign in with <img src="{{ url_for('static', filename='images/spotify.png') }}"></a></p>
                 </section>
                 <div class="vr"></div>
                 <section class="text-start col">
                     <h3>Join a room</h3>
 
                     <p>You do not need a Spotify account at all.</p>
-                    <p><a href="{{ url_for('rooms') }}" class="btn btn-primary disabled">Browse public rooms <small>(soon)</small></a></p>
+                    <p class="mb-0"><a href="{{ url_for('rooms') }}" class="btn btn-primary disabled">Browse public rooms <small>(soon)</small></a></p>
                 </section>
             </div>
         {% endif %}
