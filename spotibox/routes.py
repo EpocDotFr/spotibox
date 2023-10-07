@@ -155,10 +155,10 @@ def room(spotify_id: str) -> str:
         abort(412, message)
     except SpotifyException as e:
         abort(502, f'Spotify error: {e.reason} ({e.http_status})')
-    except exceptions.PasswordRequiredException:
+    except exceptions.PasswordRequiredException as e:
         form = RoomPasswordForm()
 
         if form.validate_on_submit():
             pass # TODO Save in session access has been granted for this room
 
-        return render_template('room_password.html', form=form)
+        return render_template('room_password.html', user=e.user, form=form)

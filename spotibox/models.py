@@ -85,7 +85,7 @@ class User(TimestampedMixin, UserMixin, db.Model):
             raise exceptions.UnauthenticatedWithSpotifyException()
 
         if not user.has_current_user_access_to_room:
-            raise exceptions.PasswordRequiredException()
+            raise exceptions.PasswordRequiredException(user)
 
         if not user.has_spotify_device:
             raise exceptions.NoSpotifyDeviceException(user)
