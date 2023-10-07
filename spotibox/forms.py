@@ -14,4 +14,15 @@ class RoomSettingsForm(FlaskForm):
 
 
 class RoomPasswordForm(FlaskForm):
+    expected_password: str
+
     room_password = PasswordField('Room password', [validators.DataRequired(), ROOM_PASSWORD_LENGTH_VALIDATOR])
+
+    def __init__(self, expected_password: str):
+        super().__init__()
+
+        self.expected_password = expected_password
+
+    def validate_room_password(form, field):
+        if field.data != form.expected_password:
+            raise validators.ValidationError('Incorrect password.')
