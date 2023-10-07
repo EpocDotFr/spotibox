@@ -47,7 +47,11 @@
                     {% endif %}
                 </div>
 
-                <div class="text-center"><button type="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Save room settings</button> <a href="{{ url_for('sign_out') }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-title="Your room will be disabled and Spotibox' access to your Spotify account will be removed"><i class="bi bi-box-arrow-right"></i> Sign out</a> <a href="#" class="btn btn-danger disabled" data-bs-toggle="tooltip" data-bs-title="All of your Spotibox data will be immediately and permanently deleted"><i class="bi bi-trash"></i> Delete account <small>(soon)</small></a></div>
+                <div class="hstack gap-2 justify-content-center align-items-center">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Save room settings</button>
+                    <a href="{{ url_for('sign_out') }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-title="Your room will be disabled and Spotibox' access to your Spotify account will be removed"><i class="bi bi-box-arrow-right"></i> Sign out</a>
+                    <a href="#" class="btn btn-danger disabled" data-bs-toggle="tooltip" data-bs-title="All of your Spotibox data will be immediately and permanently deleted"><i class="bi bi-trash"></i> Delete account <small>(soon)</small></a>
+                </div>
             </form>
         {% else %}
             <p class="text-center">A collaborative, online jukebox based on Spotify.</p>
