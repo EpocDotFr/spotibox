@@ -10,7 +10,7 @@ class RoomSettingsForm(FlaskForm):
     room_password = StringField('Room password', [validators.Optional(), ROOM_PASSWORD_LENGTH_VALIDATOR])
 
     def populate_user(self, user: User):
-        user.room_password = self.room_password.data
+        user.room_password = self.room_password.data if self.room_password.data != '' else None
 
 
 class RoomPasswordForm(FlaskForm):
@@ -23,6 +23,6 @@ class RoomPasswordForm(FlaskForm):
 
         self.expected_password = expected_password
 
-    def validate_room_password(form, field):
-        if field.data != form.expected_password:
+    def validate_room_password(self, field):
+        if field.data != self.expected_password:
             raise validators.ValidationError('Incorrect password.')

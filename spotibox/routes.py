@@ -137,7 +137,7 @@ def rooms() -> str:
 
 
 @app.route('/room/<spotify_id>', methods=['GET', 'POST'])
-def room(spotify_id: str) -> str:
+def room(spotify_id: str) -> Union[str, Response]:
     try:
         user = User.get_by_spotify_id(spotify_id)
 
@@ -159,6 +159,10 @@ def room(spotify_id: str) -> str:
         form = RoomPasswordForm(e.user.room_password)
 
         if form.validate_on_submit():
-            pass # TODO Save in session access has been granted for this room
+            e.user.grant_access()
+
+            flash('Welcome!', 'success')
+
+            return redirect(url_for('room', spotify_id=spotify_id))
 
         return render_template('room_password.html', user=e.user, form=form)

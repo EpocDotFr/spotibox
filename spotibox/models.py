@@ -1,10 +1,11 @@
 from flask_login import UserMixin, current_user
 from sqlalchemy.orm import mapped_column
 from typing_extensions import Self
-from typing import Optional
+from flask import url_for, session
 from datetime import datetime
 from spotipy import Spotify
-from flask import url_for
+from typing import Optional
+from hashlib import sha256
 from app import db
 import spotibox.exceptions as exceptions
 
@@ -37,6 +38,9 @@ class User(TimestampedMixin, UserMixin, db.Model):
             create_spotipy_auth_manager(self)
         )
 
+    def grant_access(self):
+        session[self.access_granted_key] = self.access_granted_token
+
     @property
     def room_url(self) -> str:
         return self.get_room_url()
@@ -63,17 +67,31 @@ class User(TimestampedMixin, UserMixin, db.Model):
 
     @property
     def has_current_user_access_to_room(self) -> bool:
-        if self.is_current_user_room_owner:
-            return True
+        if self.is_room_private and not self.is_current_user_room_owner and not self.has_access_granted:
+            return False
 
-        if self.is_room_private: # TODO Check in session if access has been granted for this room and still valid
-            pass
+        return True
 
-        return False
+    @property
+    def has_access_granted(self) -> bool:
+        return session.get(self.access_granted_key) == self.access_granted_token
+
+    @property
+    def access_granted_key(self) -> str:
+        return f'agk-{self.spotify_id}'
+
+    @property
+    def access_granted_token(self) -> str:
+        return sha256(
+            '-'.join((
+                self.spotify_id,
+                self.room_password,
+            )).encode()
+        ).hexdigest()
 
     @classmethod
     def get_by_spotify_id(cls: Self, spotify_id: str, checks: bool = True) -> Optional[Self]:
-        user = db.session.get(User, spotify_id)
+        user = db.session.get(cls, spotify_id)
 
         if not checks:
             return user
