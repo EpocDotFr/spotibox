@@ -1,6 +1,7 @@
 from flask_restful import Resource, marshal_with, abort
 from spotipy import SpotifyException
 from spotibox.models import User
+from typing import Dict
 from app import cache
 import spotibox.api.validators as validators
 import spotibox.api.marshalls as marshalls
@@ -86,21 +87,24 @@ class RoomPlaybackResource(Resource):
 
 class RoomPlaybackStateResource(Resource):
     @marshal_with(marshalls.playback_state)
-    @cache.cached(timeout=3)
     def get(self, spotify_id: str):
         """Get playback state"""
         try:
             user = fetch_user(spotify_id)
 
-            return {
-                # TODO Check if currently_playing_type == 'track'
-                'playback': user.create_spotify_api_client().current_playback(),
-                'queue': [
-                    item for item in user.create_spotify_api_client().queue()['queue'] if item['type'] == 'track'
-                ]
-            }
+            return self._fetch_and_cache_playback_state(user)
         except SpotifyException as e:
             abort(502, message=f'Spotify error: {e.reason} ({e.http_status})')
+
+    @cache.memoize(timeout=3)
+    def _fetch_and_cache_playback_state(self, user: User) -> Dict:
+        return {
+            # TODO Check if currently_playing_type == 'track'
+            'playback': user.create_spotify_api_client().current_playback(),
+            'queue': [
+                item for item in user.create_spotify_api_client().queue()['queue'] if item['type'] == 'track'
+            ]
+        }
 
 
 class RoomPlaybackVolumeResource(Resource):

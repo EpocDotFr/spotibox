@@ -109,3 +109,6 @@ class User(TimestampedMixin, UserMixin, db.Model):
             raise exceptions.NoSpotifyDeviceException(user)
 
         return user
+
+    def __repr__(self):
+        return f'User:{self.spotify_id}'
