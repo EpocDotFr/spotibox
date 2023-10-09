@@ -50,7 +50,7 @@
                 <div class="hstack gap-2 justify-content-center align-items-center">
                     <button type="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Save room settings</button>
                     <a href="{{ url_for('sign_out') }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-title="Your room will be disabled and Spotibox' access to your Spotify account will be removed"><i class="bi bi-box-arrow-right"></i> Sign out</a>
-                    <a href="#" class="btn btn-danger disabled" data-bs-toggle="tooltip" data-bs-title="All of your Spotibox data will be immediately and permanently deleted"><i class="bi bi-trash"></i> Delete account <small>(soon)</small></a>
+                    <a href="{{ url_for('delete_account') }}" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-title="All of your Spotibox data will be immediately and permanently deleted" x-data="{ confirm(e) { if (!confirm('Confirm account deletion?')) { e.preventDefault() } } }" @click="confirm($event)"><i class="bi bi-trash"></i> Delete account</a>
                 </div>
             </form>
         {% else %}

@@ -131,6 +131,19 @@ def sign_out() -> Response:
     return redirect(url_for('home'))
 
 
+@app.route('/delete-account')
+@login_required
+def delete_account() -> Response:
+    db.session.delete(current_user)
+    db.session.commit()
+
+    logout_user()
+
+    flash('Account successfully deleted.', 'success')
+
+    return redirect(url_for('home'))
+
+
 @app.route('/rooms')
 def rooms() -> str:
     return render_template('rooms.html')
