@@ -10,16 +10,14 @@ class ActionField(fields.Boolean):
         return True
 
 
-def duration_text(track) -> str:
-    minutes, seconds = divmod(track['duration_ms'] / 1000, 60)
+class DurationField(fields.String):
+    def format(self, value):
+        if not isinstance(value, int):
+            return ''
 
-    return f'{minutes:02.0f}:{seconds:02.0f}'
+        minutes, seconds = divmod(value / 1000, 60)
 
-
-def progress_text(playback_state) -> str:
-    minutes, seconds = divmod(playback_state['playback']['progress_ms'] / 1000, 60)
-
-    return f'{minutes:02.0f}:{seconds:02.0f}'
+        return f'{minutes:02.0f}:{seconds:02.0f}'
 
 
 def artists_name(track) -> str:
@@ -46,7 +44,7 @@ def album_cover_large(track) -> str:
 track = OrderedDict([
     ('id', fields.String),
     ('title', fields.String(attribute='name')),
-    ('duration_text', fields.String(attribute=duration_text)),
+    ('duration_text', DurationField(attribute='duration_ms')),
     ('duration_ms', fields.Integer(attribute='duration_ms')),
     ('artist_name', fields.String(attribute=artists_name)),
     ('album_cover_small', fields.String(attribute=album_cover_small)),
@@ -58,9 +56,9 @@ playback_state = OrderedDict([
     ('can_start_or_resume', ActionField(attribute='playback.actions.disallows.resuming', default=True)),
     ('can_skip_to_next', ActionField(attribute='playback.actions.disallows.skipping_next', default=True)),
     ('can_skip_to_previous', ActionField(attribute='playback.actions.disallows.skipping_prev', default=True)),
-    ('volume', fields.Integer(attribute='playback.device.volume_percent')),
+    ('volume', fields.Integer(attribute='playback.device.volume_percent', default=0)),
     ('now_playing', fields.Nested(track, attribute='playback.item', allow_null=True, default=None)),
-    ('progress_text', fields.String(attribute=progress_text)),
-    ('progress_ms', fields.Integer(attribute='playback.progress_ms')),
+    ('progress_text', DurationField(attribute='playback.progress_ms', default='')),
+    ('progress_ms', fields.Integer(attribute='playback.progress_ms', default=0)),
     ('queue', fields.List(fields.Nested(track), attribute='queue', default=[])),
 ])

@@ -116,36 +116,30 @@
                 headers: headers,
                 body: body
             }).then(function (response) {
-                const contentType = response.headers.get('Content-Type');
-
-                if (contentType && contentType.includes('application/json')) {
-                    return response.json()
-                        .then(function (data) {
-                            if (!response.ok) {
-                                if ('message' in data) {
-                                    if (typeof data.message === 'string') {
-                                        throw new Error(data.message);
-                                    } else {
-                                        let message = '\n';
-
-                                        Object.entries(data.message).forEach(function (param) {
-                                            const [parameter, msg] = param;
-
-                                            message += `\n${parameter}: ${msg}`;
-                                        });
-
-                                        throw new Error(message);
-                                    }
+                return response.json()
+                    .then(function (data) {
+                        if (!response.ok) {
+                            if ('message' in data) {
+                                if (typeof data.message === 'string') {
+                                    throw new Error(data.message);
                                 } else {
-                                    throw new Error('Unspecified error');
-                                }
-                            }
+                                    let message = '\n';
 
-                            return data;
-                        });
-                } else {
-                    throw new Error('JSON expected');
-                }
+                                    Object.entries(data.message).forEach(function (param) {
+                                        const [parameter, msg] = param;
+
+                                        message += `\n${parameter}: ${msg}`;
+                                    });
+
+                                    throw new Error(message);
+                                }
+                            } else {
+                                throw new Error('Unspecified error');
+                            }
+                        }
+
+                        return data;
+                    });
             }).catch(function (error) {
                 alert(`Error communicating with the backend: ${error.message}`);
             });
