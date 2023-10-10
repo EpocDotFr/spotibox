@@ -47,7 +47,7 @@ app.config.update(
 
     # Config values that cannot be overwritten
     CACHE_THRESHOLD=10000,
-    SESSION_PROTECTION='strong',
+    SESSION_PROTECTION='basic',
     BUNDLE_ERRORS=True,
 )
 
