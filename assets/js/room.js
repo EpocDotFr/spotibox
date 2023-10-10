@@ -49,7 +49,7 @@
 
                                 setTimeout(function () {
                                     component.refresh();
-                                }, 3000);
+                                }, 2500);
                             });
                     },
                     prev($button) {

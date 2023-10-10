@@ -106,6 +106,9 @@ class RoomPlaybackStateResource(Resource):
             ]
         }
 
+    def __repr__(self):
+        return f'RoomPlaybackStateResource'
+
 
 class RoomPlaybackVolumeResource(Resource):
     def put(self, spotify_id: str):
