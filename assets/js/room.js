@@ -33,9 +33,6 @@
                         const component = this;
 
                         room.api.getPlaybackState()
-                            .catch(function (error) {
-                                alert(error);
-                            })
                             .then(function (data) {
                                 component.canPause = data.can_pause;
                                 component.canStartOrResume = data.can_start_or_resume;
@@ -58,8 +55,6 @@
                         room.api.previousTrack()
                             .catch(function (error) {
                                 $button.disabled = false;
-
-                                alert(error);
                             })
                             .then(function (data) {
                                 $button.disabled = false;
@@ -72,8 +67,6 @@
                             room.api.pausePlayback()
                                 .catch(function (error) {
                                     $button.disabled = false;
-
-                                    alert(error);
                                 })
                                 .then(function (data) {
                                     $button.disabled = false;
@@ -82,8 +75,6 @@
                             room.api.startOrResumePlayback()
                                 .catch(function (error) {
                                     $button.disabled = false;
-
-                                    alert(error);
                                 })
                                 .then(function (data) {
                                     $button.disabled = false;
@@ -96,8 +87,6 @@
                         room.api.nextTrack()
                             .catch(function (error) {
                                 $button.disabled = false;
-
-                                alert(error);
                             })
                             .then(function (data) {
                                 $button.disabled = false;
@@ -109,8 +98,6 @@
                         room.api.addToQueue(track.id)
                             .catch(function (error) {
                                 $button.disabled = false;
-
-                                alert(error);
                             })
                             .then(function (data) {
                                 $button.disabled = false;
@@ -122,8 +109,6 @@
                         room.api.setVolume(this.volume)
                             .catch(function (error) {
                                 $input.disabled = false;
-
-                                alert(error);
                             })
                             .then(function (data) {
                                 $input.disabled = false;
@@ -135,8 +120,6 @@
                         room.api.seek(this.progressMs)
                             .catch(function (error) {
                                 $input.disabled = false;
-
-                                alert(error);
                             })
                             .then(function (data) {
                                 $input.disabled = false;
@@ -172,8 +155,6 @@
                         room.api.searchCatalog(this.q)
                             .catch(function (error) {
                                 component.submitting = false;
-
-                                alert(error);
                             })
                             .then(function (data) {
                                 component.results = data;
@@ -187,8 +168,6 @@
                         room.api.addToQueue(track.id)
                             .catch(function (error) {
                                 $button.disabled = false;
-
-                                alert(error);
                             })
                             .then(function (data) {
                                 $button.disabled = false;
