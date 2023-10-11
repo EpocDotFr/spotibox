@@ -138,7 +138,7 @@ def load_user(user_id: int):
 
 
 # Flask-RESTful
-api = Api(app, prefix='/api', catch_all_404s=True)
+api = Api(app, prefix='/api')
 
 import spotibox.api.resources as api_resources
 
