@@ -26,7 +26,7 @@ class DatabaseUserCacheHandler(CacheHandler):
         self.user.access_token = token_info
 
         db.session.add(self.user)
-        db.session.flush()
+        db.session.commit()
 
 
 def create_spotipy_auth_manager(user: Optional[User] = None) -> SpotifyOAuth:
