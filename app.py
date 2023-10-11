@@ -1,14 +1,14 @@
+from flask import Flask, render_template, request, session
 from werkzeug.exceptions import HTTPException
 from flask_assets import Environment, Bundle
 from sqlalchemy.orm import DeclarativeBase
-from flask import Flask, render_template
+from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_caching import Cache
 from typing import Tuple, Dict
 from flask_restful import Api
-from datetime import datetime
 from environs import Env
 
 # -----------------------------------------------------------
@@ -46,6 +46,7 @@ app.config.update(
     SPOTIFY_CLIENT_SECRET=env.str('SPOTIFY_CLIENT_SECRET'),
 
     # Config values that cannot be overwritten
+    PERMANENT_SESSION_LIFETIME=timedelta(days=365),
     CACHE_THRESHOLD=10000,
     SESSION_PROTECTION='basic',
     BUNDLE_ERRORS=True,
@@ -147,6 +148,16 @@ api.add_resource(api_resources.RoomPlaybackStateResource, '/room/<spotify_id>/pl
 api.add_resource(api_resources.RoomPlaybackVolumeResource, '/room/<spotify_id>/playback/volume')
 api.add_resource(api_resources.RoomPlaybackPositionResource, '/room/<spotify_id>/playback/position')
 api.add_resource(api_resources.RoomQueueResource, '/room/<spotify_id>/queue')
+
+# -----------------------------------------------------------
+# Pre-request hooks
+
+@app.before_request
+def before_request():
+    if request.endpoint and request.endpoint.startswith(('static', 'debugtoolbar', '_debug_toolbar')):
+        return
+
+    session.permanent = True
 
 
 # -----------------------------------------------------------
