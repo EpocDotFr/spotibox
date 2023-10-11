@@ -20,35 +20,26 @@ class DurationField(fields.String):
         return f'{minutes:02.0f}:{seconds:02.0f}'
 
 
-def artists_name(track) -> str:
-    return ', '.join(
-        [artist['name'] for artist in track['artists']]
-    )
+class SmallestAlbumCoverField(fields.String):
+    def format(self, value):
+        album_covers = sorted(value, key=lambda i: i['height'])
 
-
-def album_cover_small(track) -> str:
-    album_covers = sorted(track['album']['images'], key=lambda i: i['height'])
-
-    return album_covers[0]['url']
-
-
-def album_cover_large(track) -> str:
-    album_covers = sorted(track['album']['images'], key=lambda i: i['height'])
-
-    try:
-        return album_covers[1]['url']
-    except IndexError:
         return album_covers[0]['url']
 
+
+class ArtistsField(fields.String):
+    def format(self, value):
+        return ', '.join(
+            [artist['name'] for artist in value]
+        )
 
 track = OrderedDict([
     ('id', fields.String),
     ('title', fields.String(attribute='name')),
     ('duration_text', DurationField(attribute='duration_ms')),
     ('duration_ms', fields.Integer(attribute='duration_ms')),
-    ('artist_name', fields.String(attribute=artists_name)),
-    ('album_cover_small', fields.String(attribute=album_cover_small)),
-    ('album_cover_large', fields.String(attribute=album_cover_large)),
+    ('artist_name', ArtistsField(attribute='artists')),
+    ('album_cover', SmallestAlbumCoverField(attribute='album.images')),
 ])
 
 playback_state = OrderedDict([

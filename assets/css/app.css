@@ -15,12 +15,7 @@
     max-height: 32px;
 }
 
-.album-cover-large {
-    max-width: 200px;
-    max-height: 200px;
-}
-
-.album-cover-small {
+.album-cover {
     max-width: 64px;
     max-height: 64px;
 }
@@ -33,6 +28,10 @@
     display: initial;
 }
 
-input[type="range"].volume {
+input[type="range"].playback-volume {
     width: 100px;
+}
+
+input[type="range"].playback-progress {
+    width: 600px;
 }
