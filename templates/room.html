@@ -17,7 +17,7 @@
 
 {% block content %}
     {% if current_user.is_authenticated %}
-        <p class="text-center lead">Signed in with your Spotify account{% if current_user.profile_image_url %} <img src="{{ current_user.profile_image_url}}" class="rounded-1 avatar">{% endif %} <strong>{{ current_user.display_name }}</strong>.</p>
+        <p class="text-center lead">Signed in with your Spotify account{% if current_user.profile_image_url %} <img src="{{ current_user.profile_image_url}}" class="rounded-1 avatar">{% endif %} <strong>{{ current_user.display_name }}</strong>. <a href="{{ url_for('home') }}">Settings</a></p>
     {% endif %}
 
     <p class="text-center lead">Welcome to{% if user.profile_image_url %} <img src="{{ user.profile_image_url}}" class="rounded-1 avatar">{% endif %} <strong>{{ user.display_name }}</strong>'s room.</p>
@@ -49,7 +49,7 @@
                         </div>
                         <div class="card-body vstack gap-2">
                             <h5 class="card-title mb-0 fs-4" x-text="nowPlaying.title"></h5>
-                            <h6 class="card-subtitle text-body-secondary fs-5"><span x-text="nowPlaying.artist_name"></span></h6>
+                            <h6 class="card-subtitle text-body-secondary fs-5" x-text="nowPlaying.artist_name"></h6>
                             <div class="mt-auto hstack justify-content-center gap-2">
                                 <button type="button" class="btn btn-secondary btn" @click="prev($el)" :disabled="!canSkipToPrevious"><i class="bi bi-chevron-double-left"></i></button>
                                 <button type="button" class="btn btn-primary btn-lg" @click="playPause($el)" :disabled="!canStartOrResume && !canPause"><i class="bi bi-play" x-show="canStartOrResume"></i><i class="bi bi-pause" x-show="canPause"></i></button>
@@ -132,4 +132,12 @@
             </div>
         </div>
     </main>
+
+    <!--<aside class="fixed-bottom p-2 bg-body-secondary border-top hstack align-items-center gap-2">
+        <img class="rounded album-cover-large" src="https://i.scdn.co/image/ab67616d00001e029a76e1c788a6c56cf3f4781a"> TODO MàJ la classe album-cover-large avec tailles plus petites
+        <div>
+            <h5 class="mb-0 fs-5">Titre</h5>
+            <h6 class="text-body-secondary fs-6">Artiste</h6>
+        </div>
+    </aside>-->
 {% endblock %}
