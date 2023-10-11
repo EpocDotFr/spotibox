@@ -15,13 +15,6 @@ def fetch_user(spotify_id: str) -> User:
         abort(404, message='This room does not or no longer exist.')
     except exceptions.UnauthenticatedWithSpotifyException:
         abort(412, message='This room is inactive.')
-    except exceptions.NoSpotifyDeviceException as e:
-        if e.user.is_current_user_room_owner:
-            message = 'Your are the host of this room: please open Spotify on any device of your like.'
-        else:
-            message = 'The host must be active for this room to be joinable.'
-
-        abort(412, message=message)
     except exceptions.PasswordRequiredException:
         abort(401, message='This room is private, please reload the page to submit a password.')
 

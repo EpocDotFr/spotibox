@@ -159,13 +159,6 @@ def room(spotify_id: str) -> Union[str, Response]:
         abort(404, 'This room does not or no longer exist.')
     except exceptions.UnauthenticatedWithSpotifyException:
         abort(412, 'This room is inactive.')
-    except exceptions.NoSpotifyDeviceException as e:
-        if e.user.is_current_user_room_owner:
-            message = 'Your are the host of this room: please open Spotify on any device of your like, then reload this page.'
-        else:
-            message = 'The host must be active for this room to be joinable.'
-
-        abort(412, message)
     except SpotifyException as e:
         abort(502, f'Spotify error: {e.reason} ({e.http_status})')
     except exceptions.PasswordRequiredException as e:

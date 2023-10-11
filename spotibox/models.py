@@ -58,10 +58,6 @@ class User(TimestampedMixin, UserMixin, db.Model):
         return bool(self.room_password)
 
     @property
-    def has_spotify_device(self) -> bool:
-        return bool(self.create_spotify_api_client().devices()['devices'])
-
-    @property
     def is_current_user_room_owner(self) -> bool:
         return current_user.is_authenticated and current_user == self
 
@@ -104,9 +100,6 @@ class User(TimestampedMixin, UserMixin, db.Model):
 
         if not user.has_current_user_access_to_room:
             raise exceptions.PasswordRequiredException(user)
-
-        if not user.has_spotify_device:
-            raise exceptions.NoSpotifyDeviceException(user)
 
         return user
 

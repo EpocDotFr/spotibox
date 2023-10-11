@@ -13,9 +13,5 @@ class BaseExceptionWithUser(Exception):
         super().__init__()
 
 
-class NoSpotifyDeviceException(BaseExceptionWithUser):
-    pass
-
-
 class PasswordRequiredException(BaseExceptionWithUser):
     pass
