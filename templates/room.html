@@ -15,6 +15,14 @@
     </script>
 {% endblock %}
 
+{% block css %}
+    <style>
+        body {
+            margin-bottom: 115px;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     {% if current_user.is_authenticated %}
         <p class="text-center lead">Signed in with your Spotify account{% if current_user.profile_image_url %} <img src="{{ current_user.profile_image_url}}" class="rounded-1 avatar">{% endif %} <strong>{{ current_user.display_name }}</strong>. <a href="{{ url_for('home') }}">Settings</a></p>
@@ -36,7 +44,7 @@
         </div>
     {% endif %}
 
-    <main class="hstack gap-3 w-100">
+    <main class="ps-3 pe-3 hstack gap-3 w-100">
         <div class="col-6 vstack gap-3" x-data="playbackComponent">
             <template x-if="!!nowPlaying">
                 <div class="card">
@@ -141,9 +149,9 @@
         </div>
         <div class="ms-auto me-auto vstack gap-2">
             <div class="hstack justify-content-center align-items-center gap-2">
-                <button type="button" class="btn btn-secondary"><i class="bi bi-chevron-double-left"></i></button>
+                <button type="button" class="btn btn-secondary"><i class="bi bi-chevron-bar-left"></i></button>
                 <button type="button" class="btn btn-primary"><i class="bi bi-play"></i></button>
-                <button type="button" class="btn btn-secondary"><i class="bi bi-chevron-double-right"></i></button>
+                <button type="button" class="btn btn-secondary"><i class="bi bi-chevron-bar-right"></i></button>
             </div>
             <div class="hstack justify-content-center align-items-center gap-2">
                 <span class="text-body-secondary">02:30</span>
