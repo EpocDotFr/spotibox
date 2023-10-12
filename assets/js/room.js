@@ -10,130 +10,109 @@
             this.api = new Spotibox.Api(spotifyId);
 
             this.initAlpine();
+            this.refresh();
         }
 
         initAlpine() {
             const room = this;
 
-            Alpine.data('playbackComponent', function () {
-                return {
-                    canPause: false,
-                    canStartOrResume: false,
-                    canSkipToNext: false,
-                    canSkipToPrevious: false,
-                    volume: 0,
-                    nowPlaying: null,
-                    progressText: '',
-                    progressMs: 0,
-                    queue: [],
-                    init() {
-                        this.refresh();
-                    },
-                    refresh() {
-                        const component = this;
+            Alpine.store('playerComponent', {
+                canPause: false,
+                canStartOrResume: false,
+                canSkipToNext: false,
+                canSkipToPrevious: false,
+                volume: 0,
+                nowPlaying: null,
+                progressText: '',
+                progressMs: 0,
+                prev($button) {
+                    $button.disabled = true;
 
-                        room.api.getPlaybackState()
-                            .then(function (data) {
-                                component.canPause = data.can_pause;
-                                component.canStartOrResume = data.can_start_or_resume;
-                                component.canSkipToNext = data.can_skip_to_next;
-                                component.canSkipToPrevious = data.can_skip_to_previous;
-                                component.volume = data.volume;
-                                component.nowPlaying = data.now_playing;
-                                component.progressText = data.progress_text;
-                                component.progressMs = data.progress_ms;
-                                component.queue = data.queue;
+                    room.api.previousTrack()
+                        .catch(function (error) {
+                            $button.disabled = false;
+                        })
+                        .then(function (data) {
+                            $button.disabled = false;
+                        });
+                },
+                playPause($button) {
+                    $button.disabled = true;
 
-                                setTimeout(function () {
-                                    component.refresh();
-                                }, 2500);
-                            });
-                    },
-                    prev($button) {
-                        $button.disabled = true;
-
-                        room.api.previousTrack()
+                    if (this.canPause) {
+                        room.api.pausePlayback()
                             .catch(function (error) {
                                 $button.disabled = false;
                             })
                             .then(function (data) {
                                 $button.disabled = false;
                             });
-                    },
-                    playPause($button) {
-                        $button.disabled = true;
-
-                        if (this.canPause) {
-                            room.api.pausePlayback()
-                                .catch(function (error) {
-                                    $button.disabled = false;
-                                })
-                                .then(function (data) {
-                                    $button.disabled = false;
-                                });
-                        } else if (this.canStartOrResume) {
-                            room.api.startOrResumePlayback()
-                                .catch(function (error) {
-                                    $button.disabled = false;
-                                })
-                                .then(function (data) {
-                                    $button.disabled = false;
-                                });
-                        }
-                    },
-                    next($button) {
-                        $button.disabled = true;
-
-                        room.api.nextTrack()
+                    } else if (this.canStartOrResume) {
+                        room.api.startOrResumePlayback()
                             .catch(function (error) {
                                 $button.disabled = false;
                             })
                             .then(function (data) {
                                 $button.disabled = false;
                             });
-                    },
-                    requeue($button, track) {
-                        $button.disabled = true;
-
-                        room.api.addToQueue(track.id)
-                            .catch(function (error) {
-                                $button.disabled = false;
-                            })
-                            .then(function (data) {
-                                $button.disabled = false;
-                            });
-                    },
-                    setVolume($input) {
-                        $input.disabled = true;
-
-                        room.api.setVolume(this.volume)
-                            .catch(function (error) {
-                                $input.disabled = false;
-                            })
-                            .then(function (data) {
-                                $input.disabled = false;
-                            });
-                    },
-                    seek($input) {
-                        $input.disabled = true;
-
-                        room.api.seek(this.progressMs)
-                            .catch(function (error) {
-                                $input.disabled = false;
-                            })
-                            .then(function (data) {
-                                $input.disabled = false;
-                            });
-                    },
-                    isFirst(track) {
-                        return Spotibox.Utils.isFirst(this.queue, track);
-                    },
-                    isLast(track) {
-                        return Spotibox.Utils.isLast(this.queue, track);
-                    },
-                    isEmpty() {
-                        return Spotibox.Utils.isEmpty(this.queue);
                     }
+                },
+                next($button) {
+                    $button.disabled = true;
+
+                    room.api.nextTrack()
+                        .catch(function (error) {
+                            $button.disabled = false;
+                        })
+                        .then(function (data) {
+                            $button.disabled = false;
+                        });
+                },
+                setVolume($input) {
+                    $input.disabled = true;
+
+                    room.api.setVolume(this.volume)
+                        .catch(function (error) {
+                            $input.disabled = false;
+                        })
+                        .then(function (data) {
+                            $input.disabled = false;
+                        });
+                },
+                seek($input) {
+                    $input.disabled = true;
+
+                    room.api.seek(this.progressMs)
+                        .catch(function (error) {
+                            $input.disabled = false;
+                        })
+                        .then(function (data) {
+                            $input.disabled = false;
+                        });
+                }
+            });
+
+            Alpine.store('queueComponent', {
+                queue: [],
+                requeue($button, track) {
+                    $button.disabled = true;
+
+                    room.api.addToQueue(track.id)
+                        .catch(function (error) {
+                            $button.disabled = false;
+                        })
+                        .then(function (data) {
+                            $button.disabled = false;
+                        });
+                },
+                isFirst(track) {
+                    return Spotibox.Utils.isFirst(this.queue, track);
+                },
+                isLast(track) {
+                    return Spotibox.Utils.isLast(this.queue, track);
+                },
+                isEmpty() {
+                    return Spotibox.Utils.isEmpty(this.queue);
                 }
             });
 
@@ -190,6 +169,29 @@
                     }
                 };
             });
+        }
+
+        refresh() {
+            const room = this;
+            const playerComponent = Alpine.store('playerComponent');
+            const queueComponent = Alpine.store('queueComponent');
+
+            this.api.getPlaybackState()
+                .then(function (data) {
+                    playerComponent.canPause = data.can_pause;
+                    playerComponent.canStartOrResume = data.can_start_or_resume;
+                    playerComponent.canSkipToNext = data.can_skip_to_next;
+                    playerComponent.canSkipToPrevious = data.can_skip_to_previous;
+                    playerComponent.volume = data.volume;
+                    playerComponent.nowPlaying = data.now_playing;
+                    playerComponent.progressText = data.progress_text;
+                    playerComponent.progressMs = data.progress_ms;
+                    queueComponent.queue = data.queue;
+
+                    setTimeout(function () {
+                        room.refresh();
+                    }, 2500);
+                });
         }
     };
 })();
