@@ -116,7 +116,7 @@
                     <div class="text-body-secondary small" x-text="nowPlaying.artist_name"></div>
                 </div>
             </div>
-            <div class="col vstack gap-2">
+            <div class="col vstack gap-1">
                 <div class="hstack justify-content-center align-items-center gap-2">
                     <button type="button" class="btn btn-secondary" @click="prev($el)" :disabled="!canSkipToPrevious"><i class="bi bi-chevron-bar-left"></i></button>
                     <button type="button" class="btn btn-primary" @click="playPause($el)" :disabled="!canStartOrResume && !canPause"><i class="bi bi-play" x-show="canStartOrResume"></i><i class="bi bi-pause" x-show="canPause"></i></button>
