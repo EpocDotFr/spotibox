@@ -5,9 +5,9 @@ from flask import url_for, session
 from datetime import datetime
 from spotipy import Spotify
 from typing import Optional
-from hashlib import sha256
 from app import db
 import spotibox.exceptions as exceptions
+import secrets
 
 
 class TimestampedMixin:
@@ -20,10 +20,11 @@ class User(TimestampedMixin, UserMixin, db.Model):
 
     spotify_id = mapped_column(db.String(255), primary_key=True)
 
-    display_name = mapped_column(db.String(255))
+    display_name = mapped_column(db.String(255), nullable=False)
     profile_image_url = mapped_column(db.String(255))
     access_token = mapped_column(db.JSON)
     room_password = mapped_column(db.String(30))
+    access_granted_token = mapped_column(db.String(8))
 
     def get_id(self):
         return self.spotify_id
@@ -76,15 +77,6 @@ class User(TimestampedMixin, UserMixin, db.Model):
     def access_granted_key(self) -> str:
         return f'agk-{self.spotify_id}'
 
-    @property
-    def access_granted_token(self) -> str:
-        return sha256(
-            '-'.join((
-                self.spotify_id,
-                self.room_password,
-            )).encode()
-        ).hexdigest()
-
     @classmethod
     def get_by_spotify_id(cls: Self, spotify_id: str, checks: bool = True) -> Optional[Self]:
         user = db.session.get(cls, spotify_id)
@@ -105,3 +97,12 @@ class User(TimestampedMixin, UserMixin, db.Model):
 
     def __repr__(self):
         return f'User:{self.spotify_id}'
+
+
+@db.event.listens_for(User.room_password, 'set')
+def user_room_password_set(user: User, value, oldvalue, initiator):
+    if value:
+        if value != oldvalue:
+            user.access_granted_token = secrets.token_hex(4)
+    else:
+        user.access_granted_token = None
