@@ -43,6 +43,10 @@ class User(TimestampedMixin, UserMixin, db.Model):
         session[self.access_granted_key] = self.access_granted_token
 
     @property
+    def is_active(self) -> bool:
+        return self.is_authenticated_with_spotify
+
+    @property
     def room_url(self) -> str:
         return self.get_room_url()
 

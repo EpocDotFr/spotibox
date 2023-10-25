@@ -131,7 +131,7 @@ login_manager.login_message_category = 'info'
 
 
 @login_manager.user_loader
-def load_user(user_id: int):
+def load_user(user_id: str):
     from spotibox.models import User
 
     return db.session.get(User, user_id)
