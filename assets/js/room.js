@@ -23,6 +23,8 @@
                 canSkipToPrevious: false,
                 volume: 0,
                 nowPlaying: null,
+                showRemaining: false,
+                remainingText: '',
                 progressText: '',
                 progressMs: 0,
                 prev($button) {
@@ -185,12 +187,13 @@
                     playerComponent.volume = data.volume;
                     playerComponent.nowPlaying = data.now_playing;
                     playerComponent.progressText = data.progress_text;
+                    playerComponent.remainingText = data.remaining_text;
                     playerComponent.progressMs = data.progress_ms;
                     queueComponent.queue = data.queue;
 
                     setTimeout(function () {
                         room.refresh();
-                    }, 2500);
+                    }, 3000);
                 });
         }
     };

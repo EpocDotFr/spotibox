@@ -125,7 +125,8 @@
                 <div class="hstack justify-content-center align-items-center gap-2">
                     <span class="text-body-secondary small" x-text="progressText"></span>
                     <input type="range" class="form-range playback-progress" min="0" x-model="progressMs" :max="nowPlaying.duration_ms" @change="seek($el)">
-                    <span class="text-body-secondary small" x-text="nowPlaying.duration_text"></span>
+                    <span class="text-body-secondary small" role="button" x-text="nowPlaying.duration_text" x-show="!showRemaining" @click="showRemaining = !showRemaining"></span>
+                    <span class="text-body-secondary small" role="button" x-text="remainingText" x-show="showRemaining" @click="showRemaining = !showRemaining"></span>
                 </div>
             </div>
             <div class="col hstack justify-content-end align-items-center">
