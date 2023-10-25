@@ -22,13 +22,7 @@ class DurationField(fields.String):
 
 class RemainingField(DurationField):
     def format(self, value):
-        try:
-            progress_ms = value['progress_ms']
-            duration_ms = value['item']['duration_ms']
-        except IndexError:
-            return ''
-
-        return '-' + super().format(duration_ms - progress_ms)
+        return '-' + super().format(value)
 
 
 class SmallestAlbumCoverField(fields.String):
@@ -60,8 +54,9 @@ playback_state = OrderedDict([
     ('can_skip_to_previous', ActionField(attribute='playback.actions.disallows.skipping_prev', default=True)),
     ('volume', fields.Integer(attribute='playback.device.volume_percent', default=0)),
     ('now_playing', fields.Nested(track, attribute='playback.item', allow_null=True, default=None)),
-    ('remaining_text', RemainingField(attribute='playback', default='')),
+    ('remaining_text', RemainingField(attribute='playback.remaining_ms', default='')),
     ('progress_text', DurationField(attribute='playback.progress_ms', default='')),
     ('progress_ms', fields.Integer(attribute='playback.progress_ms', default=0)),
-    ('queue', fields.List(fields.Nested(track), attribute='queue', default=[])),
+    ('total_text', DurationField(attribute='queue.total_ms', default='')),
+    ('queue', fields.List(fields.Nested(track), attribute='queue.items', default=[])),
 ])

@@ -91,12 +91,27 @@ class RoomPlaybackStateResource(Resource):
 
     @cache.memoize(timeout=3)
     def _fetch_and_cache_playback_state(self, user: User) -> Dict:
+        playback = user.create_spotify_api_client().current_playback()
+
+        try:
+            playback['remaining_ms'] = playback['item']['duration_ms'] - playback['progress_ms']
+        except IndexError:
+            pass
+
+        queue_items = [
+            item for item in user.create_spotify_api_client().queue()['queue'] if item['type'] == 'track'
+        ]
+
+        queue_total_ms = sum([
+            track['duration_ms'] for track in queue_items
+        ])
+
         return {
-            # TODO Check if currently_playing_type == 'track'
-            'playback': user.create_spotify_api_client().current_playback(),
-            'queue': [
-                item for item in user.create_spotify_api_client().queue()['queue'] if item['type'] == 'track'
-            ]
+            'playback': playback, # TODO Check if currently_playing_type == 'track'
+            'queue': {
+                'items': queue_items,
+                'total_ms': queue_total_ms
+            }
         }
 
     def __repr__(self):

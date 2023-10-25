@@ -38,19 +38,19 @@
 
     <main class="ps-3 pe-3 hstack gap-3 align-items-start w-100">
         <div class="col-6">
-            <div class="card">
+            <div class="card" x-data="$store.queueComponent">
                 <div class="card-header">
                     Coming next
                 </div>
-                <div class="list-group list-group-flush" x-data="$store.queueComponent">
+                <div class="list-group list-group-flush">
                     <div class="list-group-item list-group-item-info text-center" x-show="isEmpty()">
                         Add tracks by first searching on Spotify on the right.
                     </div>
 
                     <template x-for="track in queue">
-                        <div class="list-group-item p-0 hstack align-items-center gap-2" :class="{'rounded-top': isFirst(track), 'rounded-bottom': isLast(track)}">
+                        <div class="list-group-item p-0 hstack align-items-center gap-2">
                             <div>
-                                <img :src="track.album_cover" class="album-cover" :class="{'rounded-start-bottom': isLast(track)}">
+                                <img :src="track.album_cover" class="album-cover">
                             </div>
                             <div class="me-auto">
                                 <div x-text="track.title"></div>
@@ -61,6 +61,9 @@
                             </div>
                         </div>
                     </template>
+                </div>
+                <div class="card-footer small">
+                    <span x-text="queue.length"></span> <span x-text="queue.length == 1 ? 'track' : 'tracks'"></span> • <span x-text="totalText"></span>
                 </div>
             </div>
         </div>

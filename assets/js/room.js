@@ -95,6 +95,7 @@
             });
 
             Alpine.store('queueComponent', {
+                totalText: '',
                 queue: [],
                 requeue($button, track) {
                     $button.disabled = true;
@@ -189,6 +190,7 @@
                     playerComponent.progressText = data.progress_text;
                     playerComponent.remainingText = data.remaining_text;
                     playerComponent.progressMs = data.progress_ms;
+                    queueComponent.totalText = data.total_text;
                     queueComponent.queue = data.queue;
 
                     setTimeout(function () {
