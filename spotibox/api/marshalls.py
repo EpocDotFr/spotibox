@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from flask_restful import fields
+from flask import url_for
 
 
 class ActionField(fields.Boolean):
@@ -27,16 +28,23 @@ class RemainingField(DurationField):
 
 class SmallestAlbumCoverField(fields.String):
     def format(self, value):
-        album_covers = sorted(value, key=lambda i: i['height'])
+        try:
+            album_covers = sorted(value, key=lambda i: i['height'])
 
-        return album_covers[0]['url']
+            return album_covers[0]['url']
+        except IndexError:
+            return url_for('static', filename='images/no_cover.png')
 
 
 class ArtistsField(fields.String):
     def format(self, value):
-        return ', '.join(
-            [artist['name'] for artist in value]
-        )
+        try:
+            return ', '.join(
+                [artist['name'] for artist in value]
+            )
+        except IndexError:
+            return ''
+
 
 track = OrderedDict([
     ('id', fields.String),
@@ -50,9 +58,11 @@ track = OrderedDict([
 playback_state = OrderedDict([
     ('can_pause', ActionField(attribute='playback.actions.disallows.pausing', default=True)),
     ('can_start_or_resume', ActionField(attribute='playback.actions.disallows.resuming', default=True)),
+    ('can_seek', ActionField(attribute='playback.actions.disallows.seeking', default=True)),
     ('can_skip_to_next', ActionField(attribute='playback.actions.disallows.skipping_next', default=True)),
     ('can_skip_to_previous', ActionField(attribute='playback.actions.disallows.skipping_prev', default=True)),
     ('volume', fields.Integer(attribute='playback.device.volume_percent', default=0)),
+    ('can_change_volume', fields.Boolean(attribute='playback.device.supports_volume', default=True)),
     ('now_playing', fields.Nested(track, attribute='playback.item', allow_null=True, default=None)),
     ('remaining_text', RemainingField(attribute='playback.remaining_ms', default='')),
     ('progress_text', DurationField(attribute='playback.progress_ms', default='')),

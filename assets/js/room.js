@@ -19,9 +19,11 @@
             Alpine.store('playerComponent', {
                 canPause: false,
                 canStartOrResume: false,
+                canSeek: false,
                 canSkipToNext: false,
                 canSkipToPrevious: false,
                 volume: 0,
+                canChangeVolume: false,
                 nowPlaying: null,
                 showRemaining: false,
                 remainingText: '',
@@ -183,9 +185,11 @@
                 .then(function (data) {
                     playerComponent.canPause = data.can_pause;
                     playerComponent.canStartOrResume = data.can_start_or_resume;
+                    playerComponent.canSeek = data.can_seek;
                     playerComponent.canSkipToNext = data.can_skip_to_next;
                     playerComponent.canSkipToPrevious = data.can_skip_to_previous;
                     playerComponent.volume = data.volume;
+                    playerComponent.canChangeVolume = data.can_change_volume;
                     playerComponent.nowPlaying = data.now_playing;
                     playerComponent.progressText = data.progress_text;
                     playerComponent.remainingText = data.remaining_text;
