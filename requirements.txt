@@ -2,7 +2,7 @@ Flask==2.3.3
 Flask-Assets==2.0
 Flask-SQLAlchemy==3.1.1
 Flask-Migrate==4.0.5
-git+https://github.com/maxcountryman/flask-login.git@7d98a49bc38d0849367b348bfe37a2b689323419#egg=Flask-Login
+Flask-Login==0.6.3
 Flask-WTF==1.2.1
 Flask-RESTful==0.3.10
 Flask-Caching==2.0.2
