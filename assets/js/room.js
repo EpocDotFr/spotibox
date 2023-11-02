@@ -23,6 +23,7 @@
                 canSkipToNext: false,
                 canSkipToPrevious: false,
                 volume: 0,
+                oldVolume: null,
                 canChangeVolume: false,
                 nowPlaying: null,
                 showRemaining: false,
@@ -65,6 +66,29 @@
                     $button.disabled = true;
 
                     room.api.nextTrack()
+                        .catch(function (error) {
+                            $button.disabled = false;
+                        })
+                        .then(function (data) {
+                            $button.disabled = false;
+                        });
+                },
+                muteUnmute($button) {
+                    $button.disabled = true;
+
+                    let newVolume = null;
+
+                    if (this.volume > 0) {
+                        newVolume = 0;
+
+                        this.oldVolume = this.volume;
+                    } else if (this.oldVolume) {
+                        newVolume = this.oldVolume;
+
+                        this.oldVolume = null;
+                    }
+
+                    room.api.setVolume(newVolume)
                         .catch(function (error) {
                             $button.disabled = false;
                         })

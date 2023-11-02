@@ -128,7 +128,10 @@
             <div class="col vstack gap-1">
                 <div class="hstack justify-content-center align-items-center gap-2">
                     <button type="button" class="btn btn-secondary" @click="prev($el)" :disabled="!canSkipToPrevious"><i class="bi bi-chevron-bar-left"></i></button>
-                    <button type="button" class="btn btn-primary" @click="playPause($el)" :disabled="!canStartOrResume && !canPause"><i class="bi bi-play" x-show="canStartOrResume"></i><i class="bi bi-pause" x-show="canPause"></i></button>
+                    <button type="button" class="btn btn-primary" @click="playPause($el)" :disabled="!canStartOrResume && !canPause">
+                        <i class="bi bi-play" x-show="canStartOrResume"></i>
+                        <i class="bi bi-pause" x-show="canPause"></i>
+                    </button>
                     <button type="button" class="btn btn-secondary" @click="next($el)" :disabled="!canSkipToNext"><i class="bi bi-chevron-bar-right"></i></button>
                 </div>
                 <div class="hstack justify-content-center align-items-center gap-2">
@@ -138,7 +141,13 @@
                     <span class="text-body-secondary small" role="button" x-text="remainingText" x-show="showRemaining" @click="showRemaining = !showRemaining"></span>
                 </div>
             </div>
-            <div class="col hstack justify-content-end align-items-center">
+            <div class="col hstack justify-content-end align-items-center gap-2">
+                <button type="button" class="btn btn-secondary btn-sm" @click="muteUnmute($el)" :disabled="!canChangeVolume || (volume === 0 && !oldVolume)">
+                    <i class="bi bi-volume-mute" x-show="volume === 0"></i>
+                    <i class="bi bi-volume-off" x-show="volume >= 1 && volume <= 32"></i>
+                    <i class="bi bi-volume-down" x-show="volume >= 33 && volume <= 65"></i>
+                    <i class="bi bi-volume-up" x-show="volume >= 66"></i>
+                </button>
                 <input type="range" class="form-range playback-volume" min="0" max="100" x-model.number="volume" :disabled="!canChangeVolume" @change="setVolume($el)">
             </div>
         </aside>
