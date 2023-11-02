@@ -91,15 +91,16 @@ class RoomPlaybackStateResource(Resource):
 
     @cache.memoize(timeout=3)
     def _fetch_and_cache_playback_state(self, user: User) -> Dict:
-        playback = user.create_spotify_api_client().current_playback()
+        client = user.create_spotify_api_client()
+        playback = client.current_playback() or {}
 
         try:
             playback['remaining_ms'] = playback['item']['duration_ms'] - playback['progress_ms']
-        except IndexError:
+        except KeyError:
             pass
 
         queue_items = [
-            item for item in user.create_spotify_api_client().queue()['queue'] if item['type'] == 'track'
+            item for item in client.queue()['queue'] if item['type'] == 'track'
         ]
 
         queue_total_ms = sum([

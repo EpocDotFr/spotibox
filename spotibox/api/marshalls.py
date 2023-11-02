@@ -32,7 +32,7 @@ class SmallestAlbumCoverField(fields.String):
             album_covers = sorted(value, key=lambda i: i['height'])
 
             return album_covers[0]['url']
-        except IndexError:
+        except (IndexError, KeyError):
             return url_for('static', filename='images/no_cover.png')
 
 
@@ -42,7 +42,7 @@ class ArtistsField(fields.String):
             return ', '.join(
                 [artist['name'] for artist in value]
             )
-        except IndexError:
+        except (IndexError, KeyError):
             return ''
 
 
@@ -53,6 +53,7 @@ track = OrderedDict([
     ('duration_ms', fields.Integer(attribute='duration_ms')),
     ('artist_name', ArtistsField(attribute='artists')),
     ('album_cover', SmallestAlbumCoverField(attribute='album.images')),
+    ('is_explicit', fields.Boolean(attribute='explicit')),
 ])
 
 playback_state = OrderedDict([
