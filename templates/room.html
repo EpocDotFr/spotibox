@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                             <div class="actions pe-2">
-                                <button type="button" class="btn btn-secondary btn-sm" @click="requeue(track)"><i class="bi bi-arrow-clockwise"></i></button>
+                                <button type="button" class="btn p-0 btn-link fs-5" @click="requeue(track)"><i class="bi bi-arrow-clockwise"></i></button>
                             </div>
                         </div>
                     </template>
@@ -102,7 +102,7 @@
                                     </div>
                                 </div>
                                 <div class="actions pe-2">
-                                    <button type="button" class="btn btn-secondary btn-sm" @click="queue(track)"><i class="bi bi-plus"></i></button>
+                                    <button type="button" class="btn p-0 btn-link fs-5" @click="queue(track)"><i class="bi bi-plus"></i></button>
                                 </div>
                             </div>
                         </template>
@@ -126,13 +126,13 @@
                 </div>
             </div>
             <div class="col vstack gap-1">
-                <div class="hstack justify-content-center align-items-center gap-2">
-                    <button type="button" class="btn btn-secondary" @click="prev()" :disabled="!canSkipToPrevious"><i class="bi bi-chevron-bar-left"></i></button>
-                    <button type="button" class="btn btn-primary" @click="playPause()" :disabled="!canStartOrResume && !canPause">
+                <div class="hstack justify-content-center align-items-center gap-3">
+                    <button type="button" class="btn p-0 btn-link fs-3" @click="prev()" :disabled="!canSkipToPrevious"><i class="bi bi-chevron-bar-left"></i></button>
+                    <button type="button" class="btn py-0 px-2 btn-primary fs-3" @click="playPause()" :disabled="!canStartOrResume && !canPause">
                         <i class="bi bi-play" x-show="canStartOrResume"></i>
                         <i class="bi bi-pause" x-show="canPause"></i>
                     </button>
-                    <button type="button" class="btn btn-secondary" @click="next()" :disabled="!canSkipToNext"><i class="bi bi-chevron-bar-right"></i></button>
+                    <button type="button" class="btn p-0 btn-link fs-3" @click="next()" :disabled="!canSkipToNext"><i class="bi bi-chevron-bar-right"></i></button>
                 </div>
                 <div class="hstack justify-content-center align-items-center gap-2">
                     <span class="text-body-secondary small" x-text="progressText"></span>
@@ -142,7 +142,7 @@
                 </div>
             </div>
             <div class="col hstack justify-content-end align-items-center gap-2">
-                <button type="button" class="btn btn-secondary btn-sm" @click="muteUnmute()" :disabled="!canChangeVolume || (volume === 0 && !oldVolume)">
+                <button type="button" class="btn p-0 btn-link fs-5" @click="muteUnmute()" :disabled="!canChangeVolume || (volume === 0 && !oldVolume)">
                     <i class="bi bi-volume-mute" x-show="volume === 0"></i>
                     <i class="bi bi-volume-off" x-show="volume >= 1 && volume <= 32"></i>
                     <i class="bi bi-volume-down" x-show="volume >= 33 && volume <= 65"></i>
