@@ -30,52 +30,44 @@
                 remainingText: '',
                 progressText: '',
                 progressMs: 0,
-                prev($button) {
-                    $button.disabled = true;
-
+                prev() {
                     room.api.previousTrack()
                         .catch(function (error) {
-                            $button.disabled = false;
+
                         })
                         .then(function (data) {
-                            $button.disabled = false;
+
                         });
                 },
-                playPause($button) {
-                    $button.disabled = true;
-
+                playPause() {
                     if (this.canPause) {
                         room.api.pausePlayback()
                             .catch(function (error) {
-                                $button.disabled = false;
+
                             })
                             .then(function (data) {
-                                $button.disabled = false;
+
                             });
                     } else if (this.canStartOrResume) {
                         room.api.startOrResumePlayback()
                             .catch(function (error) {
-                                $button.disabled = false;
+
                             })
                             .then(function (data) {
-                                $button.disabled = false;
+
                             });
                     }
                 },
-                next($button) {
-                    $button.disabled = true;
-
+                next() {
                     room.api.nextTrack()
                         .catch(function (error) {
-                            $button.disabled = false;
+
                         })
                         .then(function (data) {
-                            $button.disabled = false;
+
                         });
                 },
-                muteUnmute($button) {
-                    $button.disabled = true;
-
+                muteUnmute() {
                     let newVolume = null;
 
                     if (this.volume > 0) {
@@ -90,32 +82,28 @@
 
                     room.api.setVolume(newVolume)
                         .catch(function (error) {
-                            $button.disabled = false;
+
                         })
                         .then(function (data) {
-                            $button.disabled = false;
+
                         });
                 },
-                setVolume($input) {
-                    $input.disabled = true;
-
+                setVolume() {
                     room.api.setVolume(this.volume)
                         .catch(function (error) {
-                            $input.disabled = false;
+
                         })
                         .then(function (data) {
-                            $input.disabled = false;
+
                         });
                 },
-                seek($input) {
-                    $input.disabled = true;
-
+                seek() {
                     room.api.seek(this.progressMs)
                         .catch(function (error) {
-                            $input.disabled = false;
+
                         })
                         .then(function (data) {
-                            $input.disabled = false;
+
                         });
                 }
             });
@@ -123,15 +111,13 @@
             Alpine.store('queueComponent', {
                 totalText: '',
                 queue: [],
-                requeue($button, track) {
-                    $button.disabled = true;
-
+                requeue(track) {
                     room.api.addToQueue(track.id)
                         .catch(function (error) {
-                            $button.disabled = false;
+
                         })
                         .then(function (data) {
-                            $button.disabled = false;
+
                         });
                 },
                 isFirst(track) {
@@ -170,15 +156,13 @@
                                 component.submitting = false;
                             });
                     },
-                    queue($button, track) {
-                        $button.disabled = true;
-
+                    queue(track) {
                         room.api.addToQueue(track.id)
                             .catch(function (error) {
-                                $button.disabled = false;
+
                             })
                             .then(function (data) {
-                                $button.disabled = false;
+
                             });
                     },
                     clear() {
