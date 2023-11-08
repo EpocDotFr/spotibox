@@ -1,8 +1,8 @@
 from flask_restful import Resource, marshal_with, abort
 from spotipy import SpotifyException
 from spotibox.models import User
+from app import app, cache
 from typing import Dict
-from app import cache
 import spotibox.api.validators as validators
 import spotibox.api.marshalls as marshalls
 import spotibox.exceptions as exceptions
@@ -29,6 +29,13 @@ class RoomCatalogResource(Resource):
 
             return user.create_spotify_api_client().search(args.q, limit=20, offset=0, type='track')['tracks']['items']
         except SpotifyException as e:
+            app.logger.exception('Spotify error')
+
+            if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+                import sentry_sdk
+
+                sentry_sdk.capture_exception()
+
             abort(502, message=f'Spotify error: {e.reason} ({e.http_status})')
 
 
@@ -42,6 +49,13 @@ class RoomPlaybackResource(Resource):
 
             return {}, 202
         except SpotifyException as e:
+            app.logger.exception('Spotify error')
+
+            if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+                import sentry_sdk
+
+                sentry_sdk.capture_exception()
+
             abort(502, message=f'Spotify error: {e.reason} ({e.http_status})')
 
     def delete(self, spotify_id: str):
@@ -53,6 +67,13 @@ class RoomPlaybackResource(Resource):
 
             return {}, 202
         except SpotifyException as e:
+            app.logger.exception('Spotify error')
+
+            if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+                import sentry_sdk
+
+                sentry_sdk.capture_exception()
+
             abort(502, message=f'Spotify error: {e.reason} ({e.http_status})')
 
     def patch(self, spotify_id: str):
@@ -64,6 +85,13 @@ class RoomPlaybackResource(Resource):
 
             return {}, 202
         except SpotifyException as e:
+            app.logger.exception('Spotify error')
+
+            if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+                import sentry_sdk
+
+                sentry_sdk.capture_exception()
+
             abort(502, message=f'Spotify error: {e.reason} ({e.http_status})')
 
     def post(self, spotify_id: str):
@@ -75,6 +103,13 @@ class RoomPlaybackResource(Resource):
 
             return {}, 202
         except SpotifyException as e:
+            app.logger.exception('Spotify error')
+
+            if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+                import sentry_sdk
+
+                sentry_sdk.capture_exception()
+
             abort(502, message=f'Spotify error: {e.reason} ({e.http_status})')
 
 
@@ -87,25 +122,50 @@ class RoomPlaybackStateResource(Resource):
 
             return self._fetch_and_cache_playback_state(user)
         except SpotifyException as e:
+            app.logger.exception('Spotify error')
+
+            if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+                import sentry_sdk
+
+                sentry_sdk.capture_exception()
+
             abort(502, message=f'Spotify error: {e.reason} ({e.http_status})')
 
     @cache.memoize(timeout=3)
     def _fetch_and_cache_playback_state(self, user: User) -> Dict:
         client = user.create_spotify_api_client()
-        playback = client.current_playback() or {}
+        playback = client.current_playback()
 
-        try:
-            playback['remaining_ms'] = playback['item']['duration_ms'] - playback['progress_ms']
-        except KeyError:
-            pass
+        if playback:
+            try:
+                playback['remaining_ms'] = playback['item']['duration_ms'] - playback['progress_ms']
+            except KeyError:
+                pass
+        else:
+            playback = {}
 
-        queue_items = [
-            item for item in client.queue()['queue'] if item['type'] == 'track'
-        ]
+        queue = client.queue()
 
-        queue_total_ms = sum([
-            track['duration_ms'] for track in queue_items
-        ])
+        if queue:
+            try:
+                queue_items = [
+                    item for item in queue['queue'] if item['type'] == 'track'
+                ]
+            except KeyError:
+                queue_items = []
+
+            if queue_items:
+                try:
+                    queue_total_ms = sum([
+                        track['duration_ms'] for track in queue_items
+                    ])
+                except KeyError:
+                    queue_total_ms = 0
+            else:
+                queue_total_ms = 0
+        else:
+            queue_items = []
+            queue_total_ms = 0
 
         return {
             'playback': playback, # TODO Check if currently_playing_type == 'track'
@@ -130,6 +190,13 @@ class RoomPlaybackVolumeResource(Resource):
 
             return {}, 202
         except SpotifyException as e:
+            app.logger.exception('Spotify error')
+
+            if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+                import sentry_sdk
+
+                sentry_sdk.capture_exception()
+
             abort(502, message=f'Spotify error: {e.reason} ({e.http_status})')
 
 
@@ -144,6 +211,13 @@ class RoomPlaybackPositionResource(Resource):
 
             return {}, 202
         except SpotifyException as e:
+            app.logger.exception('Spotify error')
+
+            if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+                import sentry_sdk
+
+                sentry_sdk.capture_exception()
+
             abort(502, message=f'Spotify error: {e.reason} ({e.http_status})')
 
 
@@ -158,4 +232,11 @@ class RoomQueueResource(Resource):
 
             return {}, 202
         except SpotifyException as e:
+            app.logger.exception('Spotify error')
+
+            if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+                import sentry_sdk
+
+                sentry_sdk.capture_exception()
+
             abort(502, message=f'Spotify error: {e.reason} ({e.http_status})')
