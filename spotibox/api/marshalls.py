@@ -18,7 +18,9 @@ class DurationField(fields.String):
 
         minutes, seconds = divmod(value / 1000, 60)
 
-        return f'{minutes:02.0f}:{seconds:02.0f}'
+        minutes, seconds = int(minutes), int(seconds)
+
+        return f'{minutes}:{seconds:02d}'
 
 
 class RemainingField(DurationField):
