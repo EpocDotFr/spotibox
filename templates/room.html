@@ -23,7 +23,7 @@
     <p class="text-center lead">Welcome to{% if user.profile_image_url %} <img src="{{ user.profile_image_url}}" class="rounded-1 avatar">{% endif %} <strong>{{ user.display_name }}</strong>'s room.</p>
 
     {% if user.is_current_user_room_owner %}
-        <template x-data="{infoHidden: false}" x-if="!infoHidden">
+        <template x-data="{hidden: false}" x-if="!hidden">
             <div class="container">
                 <div class="alert alert-info alert-dismissible">
                     <h4>This is your room.</h4>
@@ -32,7 +32,7 @@
                         <li>Your Spotify playback will be remote-controlled by Spotibox.</li>
                         <li>Signing out of Spotibox will permanently disable this room, unless you sign in back (your account will not be deleted).</li>
                     </ul>
-                    <button type="button" class="btn-close" @click="infoHidden = true"></button>
+                    <button type="button" class="btn-close" @click="hidden = true"></button>
                 </div>
             </div>
         </template>
