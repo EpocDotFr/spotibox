@@ -1,4 +1,4 @@
 -r requirements.txt
-git+https://github.com/pallets-eco/flask-debugtoolbar.git@ce02d2da3c37b3212eebafa9392c429b91d13923#egg=Flask-DebugToolbar
+Flask-DebugToolbar==0.14.0
 Pygments==2.16.1
 python-dotenv==1.0.0
